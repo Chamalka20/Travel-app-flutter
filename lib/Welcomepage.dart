@@ -136,16 +136,34 @@ class _welcomePageState extends State<welcomePage> {
                                                             ),
                                                           ),
                                                         ),
-                                                      )
-
-                                                    Text("fghfghfg")
+                                                      ),
 
 
                                                   ],
 
-
                                                 ),
-                                      
+                                                Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(left: 12.0,top: 12.0),
+                                                          child: SizedBox(
+                                                              width: 250,
+                                                              height: 40,
+                                                              child: TextButton(
+                                                                onPressed: () {
+                                                                  // Do something when the button is pressed
+                                                                },
+                                                                style: ButtonStyle(
+                                                                  backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 10, 124, 132)),
+                                                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                                                ),
+                                                                child: const Text('Continue'),
+                                                              ),
+                                                            ),
+                                                        ),
+                                                      ],
+                                                 )
+
                                             ],
                                       
                                       
