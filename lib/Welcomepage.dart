@@ -116,21 +116,30 @@ class _welcomePageState extends State<welcomePage> {
                                             
                                             children: [
                                                 Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
                                                   // ignore: prefer_const_literals_to_create_immutables
                                                   children: [
-                                                      Container(
-                                                        width: 250,
-                                                        height: 40,
-                                                        
-                                                        child: const TextField(
-                                                          decoration: InputDecoration(
-                                                            focusedBorder: OutlineInputBorder(
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left: 12.0,top: 12.0),
+                                                        child: Container(
+                                                          width: 250,
+                                                          height: 40,
+                                                          
+                                                          child: const TextField(
+                                                            decoration: InputDecoration(
+                                                              filled: true,
+                                                              fillColor: Color.fromARGB(255, 255, 255, 255),
+                                                              border: OutlineInputBorder(
+                                                                borderSide: BorderSide.none,
                                                               
-                                                            )
+                                                              ),
+                                                              contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                                                            ),
                                                           ),
                                                         ),
                                                       )
+
+                                                    Text("fghfghfg")
+
 
                                                   ],
 
