@@ -157,7 +157,14 @@ class _welcomePageState extends State<welcomePage> {
                                                                   backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 10, 124, 132)),
                                                                   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                                                                 ),
-                                                                child: const Text('Continue'),
+                                                                child: Text('Continue',
+                                                                    style: GoogleFonts.roboto(
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 15,
+
+                                                                    ),
+                                                                
+                                                                ),
                                                               ),
                                                             ),
                                                         ),
@@ -197,21 +204,29 @@ class _welcomePageState extends State<welcomePage> {
                                                                   // Do something when the button is pressed
                                                                 },
                                                                 style: ButtonStyle(
-                                                                  backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 255, 255, 255)),
+                                                                  backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 231, 231, 231)),
                                                                   foregroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 0, 0, 0)),
                                                                 ),
                                                                 child:Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  padding: const EdgeInsets.only(left: 17.0),
                                                                   child: Column(
                                                                     children: [
                                                                       Row(
                                                                         // ignore: prefer_const_literals_to_create_immutables
                                                                         children: [
-                                                                          Text("hyyyyyyyy",
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.only(right: 8.0),
+                                                                            child: Image.asset("assets/images/Facebook_Logo_(2019).png.webp",
+                                                                              width:24,
+                                                                              height: 24,
+                                                                            ),
+                                                                          ),
+                                                                          Text("Continue with Facebook",
                                                                               style:GoogleFonts.roboto(
                                                                               textStyle: const TextStyle(
                                                                               color: Color.fromARGB(255, 0, 0, 0),
                                                                               fontSize: 14,
+                                                                              fontWeight: FontWeight.bold,
                                                                               ),  
                                                                             ),
                                                                           
@@ -227,6 +242,68 @@ class _welcomePageState extends State<welcomePage> {
                                                             ),
                                                         ),
                                                       ],
+                                                 ),
+                                                 Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(left: 12.0,top: 12.0),
+                                                          child: SizedBox(
+                                                              width: 250,
+                                                              height: 40,
+                                                              child: TextButton(
+                                                                onPressed: () {
+                                                                  // Do something when the button is pressed
+                                                                },
+                                                                style: ButtonStyle(
+                                                                  backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 231, 231, 231)),
+                                                                  foregroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 0, 0, 0)),
+                                                                ),
+                                                                child:Padding(
+                                                                  padding: const EdgeInsets.only(left: 17.0),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Row(
+                                                                        // ignore: prefer_const_literals_to_create_immutables
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.only(right: 8.0),
+                                                                            child: Image.asset("assets/images/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png",
+                                                                              width:24,
+                                                                              height: 24,
+                                                                            ),
+                                                                          ),
+                                                                          Text("Continue with Google",
+                                                                              style:GoogleFonts.roboto(
+                                                                              textStyle: const TextStyle(
+                                                                              color: Color.fromARGB(255, 0, 0, 0),
+                                                                              fontSize: 14,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              ),  
+                                                                            ),
+                                                                          
+                                                                          ),
+                                                                        ],
+                                                                
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ), 
+                                                                
+                                                              ),
+                                                            ),
+                                                        ),
+                                                      ],
+                                                 ),
+                                                 Row(
+                                                    // ignore: prefer_const_literals_to_create_immutables
+                                                    children: [
+                                                      const Text("Don't have an account?")
+                                                      
+
+
+                                                    ],
+
+
                                                  ),
 
 
