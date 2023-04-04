@@ -294,14 +294,57 @@ class _welcomePageState extends State<welcomePage> {
                                                         ),
                                                       ],
                                                  ),
+                                                 Padding(
+                                                   padding: const EdgeInsets.only(left:12.0,bottom: 10.0),
+                                                   child: Row(
+                                                      // ignore: prefer_const_literals_to_create_immutables
+                                                      children: [
+                                                        Text("Don't have an account?",
+                                                          style: GoogleFonts.roboto(
+                                                              color: const Color.fromARGB(255, 255, 255, 255)
+                                                          ),
+                                                        ),
+                                                        TextButton(
+                                                                  onPressed: () {
+                                                                    // Do something when the button is pressed
+                                                                  },
+                                                                  style: ButtonStyle(
+                                                                    foregroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 0, 0, 0)),
+                                                                  ),
+                                                                  child:Text("Sign up",
+                                                                      style: GoogleFonts.roboto(
+                                                                        color: const Color.fromARGB(255, 27, 199, 211)
+                                                                      ),
+                                                                  ) ,
+                                                                  
+                                                                ),
+                                                        
+                                                 
+                                                 
+                                                      ],
+                                                 
+                                                 
+                                                   ),
+                                                 ),
                                                  Row(
-                                                    // ignore: prefer_const_literals_to_create_immutables
                                                     children: [
-                                                      const Text("Don't have an account?")
-                                                      
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            // Do something when the button is pressed
+                                                          },
+                                                          style: ButtonStyle(
+                                                            foregroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 0, 0, 0)),
+                                                          ),
+                                                          child:Text("Forgot your password?",
+                                                              style: GoogleFonts.roboto(
+                                                                color: const Color.fromARGB(255, 27, 199, 211)
+                                                              ),
+                                                          ) ,
+                                                          
+                                                        ),
 
 
-                                                    ],
+                                                    ],  
 
 
                                                  ),
