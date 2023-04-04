@@ -162,7 +162,73 @@ class _welcomePageState extends State<welcomePage> {
                                                             ),
                                                         ),
                                                       ],
-                                                 )
+                                                 ),
+                                                 Row(
+                                                    children: [
+                                                      Container(
+                                                        margin: const EdgeInsets.only(left: 123.0,top: 15.0),
+                                                        child: Text("Or",
+                                                          style:GoogleFonts.roboto(
+                                                              textStyle: const TextStyle(
+                                                                  color: Color.fromARGB(255, 255, 255, 255),
+                                                                  fontSize: 17,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  ),  
+                                                          ),
+                                                        
+                                                        )
+                                                        
+                                                        
+                                                        ),
+                                                    ],
+
+
+                                                 ),
+
+                                                  Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(left: 12.0,top: 12.0),
+                                                          child: SizedBox(
+                                                              width: 250,
+                                                              height: 40,
+                                                              child: TextButton(
+                                                                onPressed: () {
+                                                                  // Do something when the button is pressed
+                                                                },
+                                                                style: ButtonStyle(
+                                                                  backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 255, 255, 255)),
+                                                                  foregroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 0, 0, 0)),
+                                                                ),
+                                                                child:Padding(
+                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Row(
+                                                                        // ignore: prefer_const_literals_to_create_immutables
+                                                                        children: [
+                                                                          Text("hyyyyyyyy",
+                                                                              style:GoogleFonts.roboto(
+                                                                              textStyle: const TextStyle(
+                                                                              color: Color.fromARGB(255, 0, 0, 0),
+                                                                              fontSize: 14,
+                                                                              ),  
+                                                                            ),
+                                                                          
+                                                                          ),
+                                                                        ],
+                                                                
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ), 
+                                                                
+                                                              ),
+                                                            ),
+                                                        ),
+                                                      ],
+                                                 ),
+
 
                                             ],
                                       
