@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
-
+import 'package:go_router/go_router.dart';
+import 'SplashScreen.dart';
+import 'AppRoutes.dart';
+import 'Home.dart';
 import 'Welcomepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Travel app',
-      initialRoute: '/',
-      theme: ThemeData(
-       
-        primarySwatch: Colors.blue,
-      ),
-      routes: {
-        '/welcomePage':(context)=>const welcomePage(),
-
-      },
+    return MaterialApp.router(
+      
+      routerDelegate: myAppRoter().router.routerDelegate,
+      routeInformationParser: myAppRoter().router.routeInformationParser,
       
     );
   }
 }
-
-
