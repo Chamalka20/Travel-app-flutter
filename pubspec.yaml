@@ -38,6 +38,7 @@ dependencies:
   google_fonts: ^4.0.3
   go_router: ^2.1.4
   shared_preferences: ^2.1.0
+  google_sign_in: ^6.1.0
 
 dev_dependencies:
   flutter_test:

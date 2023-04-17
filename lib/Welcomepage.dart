@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'Google_signin.dart';
 
 class welcomePage extends StatefulWidget {
   const welcomePage({super.key});
@@ -204,8 +205,11 @@ class _welcomePageState extends State<welcomePage> {
                                                                     width: 250,
                                                                     height: 40,
                                                                     child: TextButton(
+                                                                      
                                                                       onPressed: () {
-                                                                        // Do something when the button is pressed
+                                                                        
+
+
                                                                       },
                                                                       style: ButtonStyle(
                                                                         backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 231, 231, 231)),
@@ -255,9 +259,7 @@ class _welcomePageState extends State<welcomePage> {
                                                                     width: 250,
                                                                     height: 40,
                                                                     child: TextButton(
-                                                                      onPressed: () {
-                                                                        // Do something when the button is pressed
-                                                                      },
+                                                                      onPressed:signIn, //google signin function--
                                                                       style: ButtonStyle(
                                                                         backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 231, 231, 231)),
                                                                         foregroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 0, 0, 0)),
@@ -331,22 +333,25 @@ class _welcomePageState extends State<welcomePage> {
                                                       ),
                                                       Row(
                                                           children: [
-                                                            TextButton(
-                                                                onPressed: () {
-                                                                  // Do something when the button is pressed
-                                                                },
-                                                                style: ButtonStyle(
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(left:12.0),
+                                                              child: TextButton(
+                                                                  onPressed: () {
+                                                                    // Do something when the button is pressed
+                                                                  },
+                                                                  style: ButtonStyle(
+                                                                    
+                                                                    padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                                                                  ),
+                                                                  child:Text("Forgot your password?",
+                                                                      style: GoogleFonts.roboto(
+                                                                        color: const Color.fromARGB(255, 27, 199, 211),
+                                                                        
+                                                                      ),
+                                                                  ) ,
                                                                   
-                                                                  padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
                                                                 ),
-                                                                child:Text("Forgot your password?",
-                                                                    style: GoogleFonts.roboto(
-                                                                      color: const Color.fromARGB(255, 27, 199, 211),
-                                                                      
-                                                                    ),
-                                                                ) ,
-                                                                
-                                                              ),
+                                                            ),
 
 
                                                           ],  
@@ -388,5 +393,12 @@ class _welcomePageState extends State<welcomePage> {
           )
         ) 
     );
+   
   }
+
+   Future signIn() async{
+        await GoogleSigninApi.login();
+
+    }
+
 }
