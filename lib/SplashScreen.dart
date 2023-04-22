@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'Home.dart';
 import 'Welcomepage.dart';
@@ -48,11 +48,29 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Image.asset("assets/images/Untitled-12.png",
-            width:400,
-            height:200
-          ), 
+        
+        child: Container(
+          decoration: const BoxDecoration(
+            color:Color.fromARGB(255, 0, 0, 0), 
+
+            
+
+          ),
+          child: Center(
+            child: Text("Sri travel",
+                      style: GoogleFonts.pacifico(
+                      // ignore: prefer_const_constructors
+                      textStyle: TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        fontSize: 50,
+                        
+                      ),
+                    
+                
+                    ),
+                  ),
+          ),
+          
         ),
       ),
     );

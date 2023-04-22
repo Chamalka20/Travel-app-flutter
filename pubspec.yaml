@@ -51,6 +51,13 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
+ 
+  #flutter_icons:
+  #image_path: "assets/images/Untitled-12.png"
+  #ios: true
+  #android: true
+ 
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -69,7 +76,8 @@ flutter:
     - assets/images/Rectangle 1.png
     - assets/images/Facebook_Logo_(2019).png.webp
     - assets/images/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png
-    - assets/images/Untitled-12.png
+    - assets/images/Untitled 13.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
