@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
+import 'Google_signin.dart';
 import 'Home.dart';
 import 'Welcomepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,11 +28,27 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
     if (isLoggedIn) {
+      final user = await GoogleSigninApi.login();
       // ignore: use_build_context_synchronously
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const home()),
-      );
+      if (user == null){
+
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content:Text("Login Faild"))); 
+
+
+      }else{
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          
+          builder:(context)=> home(user: user)));
+      
+      
+
+      }
     } else {
       // ignore: use_build_context_synchronously
       Navigator.push(

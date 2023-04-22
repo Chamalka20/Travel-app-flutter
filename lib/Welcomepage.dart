@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Google_signin.dart';
+import 'Home.dart';
 
 class welcomePage extends StatefulWidget {
   const welcomePage({super.key});
@@ -133,6 +135,7 @@ class _welcomePageState extends State<welcomePage> {
                                                                   decoration: InputDecoration(
                                                                     filled: true,
                                                                     fillColor: Color.fromARGB(255, 255, 255, 255),
+                                                                    hintText: 'Email',
                                                                     border: OutlineInputBorder(
                                                                       borderSide: BorderSide.none,
                                                                     
@@ -401,11 +404,22 @@ class _welcomePageState extends State<welcomePage> {
 
         if (user == null){
 
+          // ignore: use_build_context_synchronously
+           ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content:Text("Login Faild"))); 
 
 
         }else{
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', true);
 
-          
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            
+            builder:(context)=> home(user: user)));
+         
+        
+
         }
 
     }
