@@ -397,7 +397,16 @@ class _welcomePageState extends State<welcomePage> {
   }
 
    Future signIn() async{
-        await GoogleSigninApi.login();
+        final user = await GoogleSigninApi.login();
+
+        if (user == null){
+
+
+
+        }else{
+
+          
+        }
 
     }
 
