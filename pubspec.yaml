@@ -77,6 +77,8 @@ flutter:
     - assets/images/Facebook_Logo_(2019).png.webp
     - assets/images/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png
     - assets/images/Untitled 13.png
+    - assets/images/Rectangle 1 loging.png
+    - assets/images/youtube logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
