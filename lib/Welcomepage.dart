@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Google_signin.dart';
 import 'Home.dart';
+import 'login.dart';
 
 class welcomePage extends StatefulWidget {
   const welcomePage({super.key});
@@ -159,7 +160,9 @@ class _welcomePageState extends State<welcomePage> {
                                                                     height: 40,
                                                                     child: TextButton(
                                                                       onPressed: () {
-                                                                        // Do something when the button is pressed
+                                                                         Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                                          builder:(context)=> const login()));
+                                                                       
                                                                       },
                                                                       style: ButtonStyle(
                                                                         backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 10, 124, 132)),
