@@ -151,6 +151,7 @@ class _loginState extends State<login> {
                                                 width: 250,
                                                 height: 40,
                                                  child: const TextField(
+                                                    obscureText: true,
                                                     decoration: InputDecoration(
                                                       filled: true,
                                                       fillColor: Color.fromARGB(255, 255, 255, 255),
@@ -169,6 +170,37 @@ class _loginState extends State<login> {
                                           ],
 
 
+                                        ),
+                                        Row(
+                                          children: [
+                                             Padding(
+                                               padding: const EdgeInsets.only(left:25,top:24),
+                                               child: Container(
+                                                  width: 250,
+                                                  height: 40, 
+                                                 child: TextButton(
+                                                    onPressed: () {
+                                                       
+                                                      
+                                                    },
+                                                    style: ButtonStyle(
+                                                      backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 10, 124, 132)),
+                                                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                                    ),
+                                                    child: Text('Continue',
+                                                        style: GoogleFonts.roboto(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 15,
+                                               
+                                                        ),
+                                                    
+                                                    ),
+                                                  ),
+                                               ),
+                                             ),
+
+
+                                          ],
                                         )
                                     ], 
 
