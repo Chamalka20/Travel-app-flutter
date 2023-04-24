@@ -22,7 +22,7 @@ class _welcomePageState extends State<welcomePage> {
     return Scaffold(
         body:SafeArea(
             child: SingleChildScrollView(
-              
+              physics: const NeverScrollableScrollPhysics(),
               child:Container(
                 height: 700.0,  
               // ignore: prefer_const_constructors

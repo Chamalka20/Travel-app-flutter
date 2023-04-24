@@ -16,6 +16,7 @@ class _loginState extends State<login> {
     return Scaffold(
         body: SafeArea(
           child:SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
             child: Container(
               height: 700.0, 
               decoration: const BoxDecoration(
