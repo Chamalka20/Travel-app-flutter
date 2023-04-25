@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelapp/signup.dart';
 import 'Google_signin.dart';
 import 'Home.dart';
 import 'login.dart';
@@ -318,7 +319,9 @@ class _welcomePageState extends State<welcomePage> {
                                                               ),
                                                               TextButton(
                                                                     onPressed: () {
-                                                                      // Do something when the button is pressed
+                                                                       Navigator.of(context).pushReplacement(MaterialPageRoute(
+            
+                                                                        builder:(context)=> const signup()));
                                                                     },
                                                                     style: ButtonStyle(
                                                                       padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
@@ -419,7 +422,7 @@ class _welcomePageState extends State<welcomePage> {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             
-            builder:(context)=> home(user: user)));
+            builder:(context)=> home()));
          
         
 

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
+
+import 'Welcomepage.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -13,7 +16,16 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            
+        builder:(context)=> const welcomePage()));  
+
+        return false;
+      },
+     child:Scaffold(
         body: SafeArea(
           child:SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
@@ -202,6 +214,22 @@ class _loginState extends State<login> {
 
 
                                           ],
+                                        ),
+                                        Row(
+                                          children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(top:35.0,left: 25),
+                                                child: Container(
+                                                  child: Text("Forgot your password?",
+                                                      style: GoogleFonts.roboto(
+                                                        color: const Color.fromARGB(255, 27, 199, 211),
+                                                        
+                                                      ),
+                                                  ),
+                                                ),
+                                              ) ,
+                                          ],
+
                                         )
                                     ], 
 
@@ -227,6 +255,7 @@ class _loginState extends State<login> {
 
 
 
+      )
     );
   }
 }

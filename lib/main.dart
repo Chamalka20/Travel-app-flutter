@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'SplashScreen.dart';
+import 'app_routers.dart';
 
 
 
@@ -11,9 +12,10 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp.router(
       
-     home:SplashScreen(),
+     routeInformationParser: myAppRouters().router.routeInformationParser,
+     routerDelegate: myAppRouters().router.routerDelegate,
       
     );
   }
