@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'Google_signin.dart';
@@ -44,17 +45,16 @@ class _SplashScreenState extends State<SplashScreen> {
         // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           
-          builder:(context)=> home()));
+          builder:(context)=> const home()));
       
       
 
       }
     } else {
       // ignore: use_build_context_synchronously
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const welcomePage()),
-      );
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+            
+        builder:(context)=> const welcomePage()));
     }
   }
 

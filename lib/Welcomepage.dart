@@ -3,11 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/signup.dart';
 import 'Google_signin.dart';
 import 'Home.dart';
+import 'customPageRoutes.dart';
 import 'login.dart';
 
 class welcomePage extends StatefulWidget {
@@ -161,8 +163,9 @@ class _welcomePageState extends State<welcomePage> {
                                                                     height: 40,
                                                                     child: TextButton(
                                                                       onPressed: () {
-                                                                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                                                          builder:(context)=> const login()));
+                                                                           Navigator.of(context).pushReplacement(customPageRoutes(
+            
+                                                                          child:const login()));
                                                                        
                                                                       },
                                                                       style: ButtonStyle(
@@ -319,9 +322,9 @@ class _welcomePageState extends State<welcomePage> {
                                                               ),
                                                               TextButton(
                                                                     onPressed: () {
-                                                                       Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                                        Navigator.of(context).pushReplacement(MaterialPageRoute(
             
-                                                                        builder:(context)=> const signup()));
+                                                                          builder:(context)=> const signup()));
                                                                     },
                                                                     style: ButtonStyle(
                                                                       padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
