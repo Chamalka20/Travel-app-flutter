@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 
 import 'Welcomepage.dart';
+import 'customPageRoutes.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -19,9 +20,9 @@ class _loginState extends State<login> {
 
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
+        Navigator.of(context).pushReplacement(customPageRoutes(
             
-        builder:(context)=> const welcomePage()));
+        child:const welcomePage()));
 
         return false;
       },
@@ -49,7 +50,7 @@ class _loginState extends State<login> {
                           children: [
                             Container(
                               margin: const EdgeInsets.only(left: 50.0,top:180.0, ),
-                              child: Text("Login",
+                              child: Text("Log in",
                                 style: GoogleFonts.lato(
                                   // ignore: prefer_const_constructors
                                   textStyle: TextStyle(
