@@ -9,7 +9,7 @@ class customPageRoutes extends PageRouteBuilder {
    
     }) : super (
      
-      transitionDuration:const  Duration(milliseconds: 450),
+      transitionDuration:const  Duration(seconds: 1),
       reverseTransitionDuration: const Duration(seconds: 1),
       pageBuilder: (context,animation,secondaryAnimation)=>child
       );

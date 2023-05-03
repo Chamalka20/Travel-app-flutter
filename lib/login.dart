@@ -20,7 +20,7 @@ class _loginState extends State<login> {
 
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pushReplacement(customPageRoutes(
+        Navigator.of(context).push(customPageRoutes(
             
         child:const welcomePage()));
 
