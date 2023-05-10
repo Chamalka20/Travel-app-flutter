@@ -260,6 +260,38 @@ class _signupState extends State<signup> {
                                         ],
 
 
+                                      ),
+                                      Row(
+                                        children: [
+                                           Padding(
+                                              padding: const EdgeInsets.only(left: 15.0,top: 15.0),
+                                              child: SizedBox(
+                                                  width: 250,
+                                                  height: 40,
+                                                  child: TextButton(
+                                                    onPressed: () {
+                                                        
+                                                      
+                                                    },
+                                                    style: ButtonStyle(
+                                                      backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 10, 124, 132)),
+                                                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                                    ),
+                                                    child: Text('Continue',
+                                                        style: GoogleFonts.roboto(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 15,
+
+                                                        ),
+                                                    
+                                                    ),
+                                                  ),
+                                                ),
+                                            ),
+
+                                        ],
+
+
                                       )
 
                                     ],
