@@ -18,7 +18,7 @@ class _signupState extends State<signup> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Dismiss the keyboard when the user taps outside of the text fields
+        // Dismiss the keyboard when the user taps outside of the text fields 
         FocusScope.of(context).unfocus();
         
       },
@@ -54,8 +54,28 @@ class _signupState extends State<signup> {
                   children: [
                     Row(
                       children: [
+                       Padding(
+                         padding: const EdgeInsets.all(8.0),
+                         child: IconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            iconSize: 40,
+                            onPressed: () {
+
+                              Navigator.of(context).pushReplacement(customPageRoutes(
+                              child:const welcomePage()));
+
+                              // Handle back button press
+                            },
+                         ),
+                       ),
+                      ],
+
+                    ),
+                    Row(
+                      children: [
                           Container(
-                          margin: const EdgeInsets.only(left: 50.0,top:155.0,bottom:20.0 ),
+                          margin: const EdgeInsets.only(left: 50.0,top:80.0,bottom:20.0 ),
                             child: Text("Sign up",
                               style: GoogleFonts.lato(
                                   // ignore: prefer_const_constructors
@@ -195,11 +215,53 @@ class _signupState extends State<signup> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text("")
+                                           Padding(
+                                             padding: const EdgeInsets.only(left:20.0,top:15),
+                                             child: Text("By secting Agree and continue below,",
+                                                   style: GoogleFonts.roboto(
+                                                    color: const Color.fromARGB(255, 255, 255, 255),
+                                                    fontSize: 12.5,
+                                                ),
+                                                                 
+                                           
+                                              ),
+                                           ),
+                                      
                                         ],
+
                                         
 
+                                      ),
+                                      Row(
+                                        children: [
+                                           Padding(
+                                             padding: const EdgeInsets.only(left:20.0),
+                                             child: Text("I agree to",
+                                                   style: GoogleFonts.roboto(
+                                                    color: const Color.fromARGB(255, 255, 255, 255),
+                                                    fontSize: 12.5,
+                                                ),
+                                                                 
+                                           
+                                              ),
+                                           ),
+                                           Container(
+                                            //margin: EdgeInsets.only(right: 80.0,),
+                                             child: Text(" Terms of service and privacy policy",
+                                                   style: GoogleFonts.roboto(
+                                                    color: const Color.fromARGB(255, 27, 199, 211),
+                                                    fontSize: 12.5,
+                                                  ),
+                                                  
+                                             
+                                             ),
+                                           ) 
+                                          
+                                        ],
+
+
                                       )
+
                                     ],
 
                                   ),

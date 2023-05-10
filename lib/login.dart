@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:go_router/go_router.dart';
-
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
 
@@ -48,8 +44,27 @@ class _loginState extends State<login> {
                       children: [
                         Row(
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: IconButton(
+                                  icon: const Icon(Icons.arrow_back),
+                                  color: const Color.fromARGB(255, 255, 255, 255),
+                                  iconSize: 40,
+                                  onPressed: () {
+
+                                    Navigator.of(context).pushReplacement(customPageRoutes(
+                                    child:const welcomePage()));
+
+                                    // Handle back button press
+                                  },
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
                             Container(
-                              margin: const EdgeInsets.only(left: 50.0,top:180.0, ),
+                              margin: const EdgeInsets.only(left: 50.0,top:100.0, ),
                               child: Text("Log in",
                                 style: GoogleFonts.lato(
                                   // ignore: prefer_const_constructors
@@ -143,7 +158,7 @@ class _loginState extends State<login> {
                                                                                                           
                                                           ),
                                                                                                
-                                                                                                             ),
+                                                        ),
                                                        ),
 
 
