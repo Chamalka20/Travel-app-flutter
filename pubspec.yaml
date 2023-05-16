@@ -39,6 +39,7 @@ dependencies:
   go_router: ^2.1.4
   shared_preferences: ^2.1.0
   google_sign_in: ^6.1.0
+  lottie: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,7 @@ flutter:
     - assets/images/Untitled 13.png
     - assets/images/Rectangle 1 loging.png
     - assets/images/youtube logo.png
+    - assets/images/143784-checklist.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

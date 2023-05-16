@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
+import 'letsStart.dart';
 
 class signup extends StatefulWidget {
   const signup({super.key});
@@ -270,7 +271,10 @@ class _signupState extends State<signup> {
                                                   height: 40,
                                                   child: TextButton(
                                                     onPressed: () {
-                                                        
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(builder: (context) => const letsStart()),
+                                                            );
                                                       
                                                     },
                                                     style: ButtonStyle(
