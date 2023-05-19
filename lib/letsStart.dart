@@ -1,11 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:google_fonts/google_fonts.dart';
+ 
+import 'package:geocoding/geocoding.dart' hide Location;
+import 'package:google_fonts/google_fonts.dart' ;
+import 'package:location/location.dart' ;
 import 'package:lottie/lottie.dart';
 
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
+
+Future<String?> getLocation() async {
+  Location location = Location();
+ 
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  LocationData? _locationData;
+
+  // Check if location services are enabled
+  _serviceEnabled = await location.serviceEnabled();
+  if (!_serviceEnabled) {
+    _serviceEnabled = await location.requestService();
+    if (!_serviceEnabled) {
+      return null;
+    }
+  }
+
+  // Check if location permission is granted
+  _permissionGranted = await location.hasPermission();
+  if (_permissionGranted == PermissionStatus.denied) {
+    _permissionGranted = await location.requestPermission();
+    if (_permissionGranted != PermissionStatus.granted) {
+      return null;
+    }
+  }
+
+  // Get the current location
+  _locationData = await location.getLocation();
+  if (_locationData == null) {
+    return null;
+  }
+
+  // Fetch the country based on the latitude and longitude
+  List<Placemark> placemarks = await placemarkFromCoordinates(
+    _locationData.latitude!,
+    _locationData.longitude!,
+  );
+
+  if (placemarks.isEmpty) {
+    return null;
+  }
+
+  String country = placemarks.first.country ?? '';
+  return country;
+}
+
+
 
 class letsStart extends StatefulWidget {
   const letsStart({super.key});
@@ -89,16 +138,22 @@ class _MyWidgetState extends State<letsStart> {
                           width: 320,
                           height: 45,
                           child: TextButton(
-                            onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const letsStart()),
-                                    );
+                            onPressed: () async {
+                              String? country = await getLocation();
+
+                              if(country != null){
+
+                               print('Current country: $country');
+                              }else{
+                                print('Unable to fetch the current country');
+                              }
+
+
                               
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                              foregroundColor:Color.fromARGB(255, 245, 245, 245),
+                              foregroundColor:Color.fromARGB(255, 177, 152, 152),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20), // Set the radius here
                                 ),
@@ -130,10 +185,7 @@ class _MyWidgetState extends State<letsStart> {
                           height: 45,
                           child: TextButton(
                             onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const letsStart()),
-                                    );
+                                  print("jhiuhiuujj");
                               
                             },
                             style: ElevatedButton.styleFrom(
