@@ -10,6 +10,7 @@ import 'package:travelapp/signup.dart';
 import 'Google_signin.dart';
 import 'Home.dart';
 import 'customPageRoutes.dart';
+import 'letsStart.dart';
 import 'login.dart';
 
 class welcomePage extends StatefulWidget {
@@ -425,7 +426,7 @@ class _welcomePageState extends State<welcomePage> {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             
-            builder:(context)=> home()));
+            builder:(context)=> letsStart()));
          
         
 
