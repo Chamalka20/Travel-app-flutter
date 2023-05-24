@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
  
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:google_fonts/google_fonts.dart' ;
 import 'package:location/location.dart' ;
 import 'package:lottie/lottie.dart';
 
+import 'Home.dart';
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
 
@@ -68,158 +70,192 @@ class _MyWidgetState extends State<letsStart> {
   Widget build(BuildContext context) {
      return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).push(customPageRoutes(
-            
-        child:const welcomePage()));
-
-        return false;
-      },
-    child: Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Padding(
-               padding: const EdgeInsets.only(top:80),
-              child: SizedBox(
-                height: 250,
-                width:300,
-                child: Lottie.asset("assets/images/143784-checklist.json",
-                  repeat: false,
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left:15),
-                  child: Text("Let's get started",
-                    style: GoogleFonts.lato(
-                        // ignore: prefer_const_constructors
-                        textStyle: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                              
-                        ) 
-                      )
-                  
+        bool confirmExit = await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Confirm Exit'),
+                content: Text('Are you sure you want to exit the app?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      // User confirmed exit
+                       SystemNavigator.pop();
+                    },
+                    child: Text('Yes'),
                   ),
-                )
-              ],
-
-
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left:15),
-                  child: Text("your journey",
-                    style: GoogleFonts.lato(
-                        // ignore: prefer_const_constructors
-                        textStyle: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                              
-                        ) 
-                      )
-                  
+                  TextButton(
+                    onPressed: () {
+                      // User canceled exit
+                      Navigator.of(context).pop(false);
+                    },
+                    child: Text('No'),
                   ),
-                )
-              ],
-
-
-            ),
-             Row(
-                children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0,top: 20.0),
-                      child: SizedBox(
-                          width: 320,
-                          height: 45,
-                          child: TextButton(
-                            onPressed: () async {
-                              String? country = await getLocation();
-
-                              if(country != null){
-
-                               print('Current country: $country');
-                              }else{
-                                print('Unable to fetch the current country');
-                              }
-
-
-                              
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                              foregroundColor:Color.fromARGB(255, 177, 152, 152),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20), // Set the radius here
-                                ),
-                              
-                            ),
-                            child: Text('Track location automatically',
-                                style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    
-                            
-                                ),
-                            
-                            ),
-                          ),
-                        ),
-                    ),
-
                 ],
+              );
+            },
+          );
 
-
-              ),
-               Row(
-                children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0,top: 20.0),
-                      child: SizedBox(
-                          width: 320,
-                          height: 45,
-                          child: TextButton(
-                            onPressed: () {
-                                  print("jhiuhiuujj");
-                              
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                              foregroundColor:Color.fromARGB(255, 0, 0, 0),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20), // Set the radius here
-                                ),
-                              
-                            ),
-                            child: Text('Choose location',
-                                style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    
-                            
-                                ),
-                            
-                            ),
-                          ),
-                        ),
-                    ),
-
-                ],
-
-
-              )
-
-
-          ],
-        ),
+          return confirmExit ?? false;
         
-      ),
-      )
+      },
+        child:GestureDetector(
+        onTap: () {
+          // Dismiss the keyboard when the user taps outside of the text fields 
+          FocusScope.of(context).unfocus();
+          
+        },
+        child:Scaffold(
+          body: Center(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top:80),
+                  child: SizedBox(
+                    height: 250,
+                    width:300,
+                    child: Lottie.asset("assets/images/143784-checklist.json",
+                      repeat: false,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left:15),
+                      child: Text("Let's get started",
+                        style: GoogleFonts.lato(
+                            // ignore: prefer_const_constructors
+                            textStyle: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                                  
+                            ) 
+                          )
+                      
+                      ),
+                    )
+                  ],
+
+
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left:15),
+                      child: Text("your journey",
+                        style: GoogleFonts.lato(
+                            // ignore: prefer_const_constructors
+                            textStyle: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                                  
+                            ) 
+                          )
+                      
+                      ),
+                    )
+                  ],
+
+
+                ),
+                Row(
+                    children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0,top: 20.0),
+                          child: SizedBox(
+                              width: 320,
+                              height: 45,
+                              child: TextButton(
+                                onPressed: () async {
+                                  String? country = await getLocation();
+
+                                  if(country != null){
+
+                                  print('Current country: $country');
+                                  Navigator.of(context).pushReplacement(customPageRoutes(
+                
+                                    child:const home()));
+
+                                  }else{
+                                    print('Unable to fetch the current country');
+                                  }
+
+
+                                  
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                  foregroundColor:Color.fromARGB(255, 177, 152, 152),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20), // Set the radius here
+                                    ),
+                                  
+                                ),
+                                child: Text('Track location automatically',
+                                    style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        
+                                
+                                    ),
+                                
+                                ),
+                              ),
+                            ),
+                        ),
+
+                    ],
+
+
+                  ),
+                  Row(
+                    children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0,top: 20.0),
+                          child: SizedBox(
+                              width: 320,
+                              height: 45,
+                              child: TextButton(
+                                onPressed: () {
+                                      print("jhiuhiuujj");
+                                  
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                                  foregroundColor:Color.fromARGB(255, 0, 0, 0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20), // Set the radius here
+                                    ),
+                                  
+                                ),
+                                child: Text('Choose location',
+                                    style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        
+                                
+                                    ),
+                                
+                                ),
+                              ),
+                            ),
+                        ),
+
+                    ],
+
+
+                  )
+
+
+              ],
+            ),
+            
+          ),
+          )
+        )
     );
   }
 }

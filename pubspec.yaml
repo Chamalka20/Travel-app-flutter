@@ -42,6 +42,8 @@ dependencies:
   lottie: ^1.1.0
   location: ^4.3.0
   geocoding: ^2.0.0
+  http: ^0.13.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
