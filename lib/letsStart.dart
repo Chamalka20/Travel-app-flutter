@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
  
@@ -41,7 +43,8 @@ Future<String?> getLocation() async {
   if (_locationData == null) {
     return null;
   }
-
+  print(_locationData.latitude,);
+  print(_locationData.longitude,);
   // Fetch the country based on the latitude and longitude
   List<Placemark> placemarks = await placemarkFromCoordinates(
     _locationData.latitude!,

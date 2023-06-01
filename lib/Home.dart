@@ -4,11 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'Google_signin.dart';
-import 'Welcomepage.dart';
 
 class home extends StatefulWidget {
 
@@ -24,7 +19,7 @@ class home extends StatefulWidget {
 class _homeState extends State<home> {
 
   late List<Map<String, dynamic>> hotelList = [];
-  
+  String nextPageToken ='';
   @override
   void initState() {
     super.initState();
@@ -32,53 +27,124 @@ class _homeState extends State<home> {
   }
 
   Future<void> fetchHotels() async {
-  const apiKey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
-  const query = 'hotels in sri lanka';
-  const apiUrl =
-      'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$query&key=$apiKey';
 
-  final response = await http.get(Uri.parse(apiUrl));
+  const apiKey = 'apify_api_Ji36tnDOBH9eVjhgk2inWHfV57BIKr328Ogj';
+  var apiUrl = 'https://api.apify.com/v2/acts/maxcopell~free-tripadvisor/runs?token=$apiKey'; 
+  late List<Map<String, dynamic>> hotelList;
 
-  if (response.statusCode == 200) {
+ final payload = {
+    "currency": "USD",
+    "debugLog": false,
+    "includeAttractions": true,
+    "includeHotels": true,
+    "includeRestaurants": true,
+    "includeReviews": true,
+    "includeTags": true,
+    "language": "en",
+    "locationFullName": "Colombo, Sri Lanka", // Replace with your desired location
+    "maxItems": 39,
+    "maxReviews": 20,
+    "proxyConfiguration": {
+      "useApifyProxy": true
+    },
+    "scrapeReviewerInfo": true
+  };
+
+   final response = await http.post(
+    Uri.parse(apiUrl),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: json.encode(payload),
+  );
+
+
+
+
+  if (response.statusCode == 201) {
     // Request successful
-    final decodedData = json.decode(response.body);
     print("Request successful status:${response.statusCode}");
-    final results = decodedData['results'] as List<dynamic>;
-     print(decodedData);
-      setState(() {
-        hotelList = results.map((result) {
+    final decodedData = json.decode(response.body);
+    final runId = decodedData["data"]["id"];
+    print(runId);
 
-          final photos = result['photos'] as List<dynamic>;
-          final firstPhotoReference = photos.isNotEmpty ? photos[0]['photo_reference'] : '';
+    await waitForDataset (runId);
 
-          return {
-            'name': result['name'],
-            'rating': result['rating'],
-            'photo_reference': firstPhotoReference,
-           
-          };
-        }).toList();
-        
-      }); 
+
+
+    // print(results);
+    //  setState(() {
+    //     hotelList = results.map((result) {
+    //       return {
+    //         'name': result['name'],
+    //         'formatted_address': result['formatted_address'],
+    //         'rating': result['rating'],
+    //       };
+    //     }).toList();
+    //   });
+   
+    
   } else {
     // Request failed
     print('Request failed with status: ${response.statusCode}.');
   }
+
+  
 }
 
-String getPhotoUrl(String photoReference) {
-    if (photoReference.isEmpty) {
-      // Return a placeholder image URL if no photo reference is available
-      return 'https://via.placeholder.com/150';
+Future<void> waitForDataset(String runId) async {
+  const delayDuration = Duration(seconds: 2); 
+  bool datasetReady = false;
+  const apiKey = 'apify_api_Ji36tnDOBH9eVjhgk2inWHfV57BIKr328Ogj';
+
+  // ignore: unrelated_type_equality_checks
+  while (datasetReady == false) {
+    await Future.delayed(delayDuration);
+
+    final datasetStatusResponse = await http.get(Uri.parse('https://api.apify.com/v2/actor-runs/$runId?token=$apiKey'));
+    if (datasetStatusResponse.statusCode == 200) {
+      final datasetStatusData = json.decode(datasetStatusResponse.body);
+      final datasetStatus = datasetStatusData['data']['status'];
+      
+      print(datasetStatus);  
+      if (datasetStatus == 'SUCCEEDED') {
+        datasetReady = true;
+        final keyValue = datasetStatusData['data']['defaultDatasetId'];
+        print(keyValue);
+        final datasetItems = await getDatasetItems(keyValue);
+      }
     }
-
-    const apiKey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo'; 
-    final maxWidth = 400; 
-    final apiUrl =
-        'https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&photoreference=$photoReference&key=$apiKey';
-
-    return apiUrl;
   }
+}
+
+Future<List<dynamic>> getDatasetItems(String keyValue) async {
+  const apiKey = 'apify_api_Ji36tnDOBH9eVjhgk2inWHfV57BIKr328Ogj';
+  final datasetItemsResponse = await http.get(Uri.parse('https://api.apify.com/v2/datasets/$keyValue/items?token=$apiKey'));
+  if (datasetItemsResponse.statusCode == 200) {
+
+    print("Request successful status:${datasetItemsResponse.statusCode}");
+    final datasetItemsData = json.decode(datasetItemsResponse.body);
+    final results = datasetItemsData as List<dynamic>;
+    print(results.length);
+
+     setState(() {
+        hotelList = results.map((result) {
+          return {
+            'name': result['name'],
+            'image': result['image'],
+            'rating': result['rating'],
+            'address':result['address'],
+          };
+        }).toList();
+      });
+
+    print(hotelList);
+    return results;
+  } else {
+    throw Exception('Failed to retrieve dataset items status:${datasetItemsResponse.statusCode}');
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +154,8 @@ String getPhotoUrl(String photoReference) {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Confirm Exit'),
-                content: Text('Are you sure you want to exit the app?'),
+                title: const Text('Confirm Exit'),
+                content: const Text('Are you sure you want to exit the app?'),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -130,7 +196,7 @@ String getPhotoUrl(String photoReference) {
                          style: GoogleFonts.cabin(
                                     // ignore: prefer_const_constructors
                                     textStyle: TextStyle(
-                                    color: Color.fromARGB(255, 27, 27, 27),
+                                    color: const Color.fromARGB(255, 27, 27, 27),
                                     fontSize: 32,
                                     fontWeight: FontWeight.bold,
                             
@@ -148,7 +214,7 @@ String getPhotoUrl(String photoReference) {
                            style: GoogleFonts.cabin(
                                       // ignore: prefer_const_constructors
                                       textStyle: TextStyle(
-                                      color: Color.fromARGB(255, 143, 142, 142),
+                                      color: const Color.fromARGB(255, 143, 142, 142),
                                       fontSize: 20,
                                       fontWeight: FontWeight.w300,
                               
@@ -166,21 +232,26 @@ String getPhotoUrl(String photoReference) {
 
                  SizedBox(
                   height: 150,
+                  
                    child: Expanded(
                           child: ListView.builder(
+                            cacheExtent: 9999,
                             scrollDirection: Axis.horizontal, 
                             itemCount: hotelList.length,
                             itemBuilder: (context, index) {
                               final hotel = hotelList[index];
                               final hotelName = hotel['name'];
                               final hotelRating = hotel['rating'];
-                              final photoReference = hotel['photo_reference'];
-                              final photoUrl = getPhotoUrl(photoReference);
+                              final photoUrl = hotel['image'];
                  
                  
                                return Card(
                                 elevation: 0,
-                                color:Color.fromARGB(255, 247, 245, 245),
+                                color:const Color.fromARGB(255, 240, 238, 238),
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
                                 child:Column(
                                   children: [
                                     Row(
@@ -190,6 +261,7 @@ String getPhotoUrl(String photoReference) {
                                           width: 200,
                                           height: 100,
                                           fit: BoxFit.fill,
+                                          
                                         ),
                                    
 
@@ -197,14 +269,22 @@ String getPhotoUrl(String photoReference) {
                                     ),
                                     Row(
                                       children: [
-                                         Text(hotelName),
+                                         Container(
+                                          width: 200,
+                                           child: Text(hotelName,
+                                            overflow: TextOverflow.ellipsis,
+                                           ),
+                                         ),
                                          
                                       ],
-
+                                    
                                     ),
                                     Row(
                                       children: [
-                                        Text('Rating: $hotelRating'),
+                                        Container(
+                                          
+                                          child: Text('Rating: $hotelRating')
+                                          ),
                                       ],
                                     )
                                   ],
@@ -213,23 +293,7 @@ String getPhotoUrl(String photoReference) {
                                 )
                                   
                                   
-                                //   child: Column(
-                                //     crossAxisAlignment: CrossAxisAlignment.start,
-                                //     children: [
-                                //       if (photoUrl != null)
-                                //         Image.network(
-                                //           photoUrl,
-                                //           width: 200,
-                                //           height: 100,
-                                //           fit: BoxFit.fill,
-                                //         ),
-                                //       Text(hotelName),
-                                //       Text('Rating: $hotelRating'),
-                                //     ],
-                                //   ),
-                 
-                                  
-                                // )
+                                
                                ); 
                             },
                           ),
@@ -240,7 +304,10 @@ String getPhotoUrl(String photoReference) {
                Row(
                 children: [
 
-                  Text("gdfgdfghfg")
+                  ElevatedButton(onPressed: () {
+                                     
+                                  
+                                }, child: Text("get"))
                   
                 ],
 
