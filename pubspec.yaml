@@ -84,6 +84,11 @@ flutter:
     - assets/images/Rectangle 1 loging.png
     - assets/images/youtube logo.png
     - assets/images/143784-checklist.json
+    - assets/images/hotel.png
+    - assets/images/burger.png
+    - assets/images/forest.png
+    - assets/images/flash.png
+    - assets/images/gas-pump.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +10,6 @@ class home extends StatefulWidget {
 
   @override
   State<home> createState() => _homeState();
-
 
 
 }
@@ -71,18 +69,6 @@ class _homeState extends State<home> {
     await waitForDataset (runId);
 
 
-
-    // print(results);
-    //  setState(() {
-    //     hotelList = results.map((result) {
-    //       return {
-    //         'name': result['name'],
-    //         'formatted_address': result['formatted_address'],
-    //         'rating': result['rating'],
-    //       };
-    //     }).toList();
-    //   });
-   
     
   } else {
     // Request failed
@@ -145,6 +131,28 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
   }
 }
 
+//set categorie list-----------------------------
+ late List<Map<String, dynamic>> categorieList = [
+    {
+      "photo":"assets/images/hotel.png","name":"Hotel"
+    },
+    {
+      "photo":"assets/images/burger.png","name":"Cafes"
+    },
+    {
+      "photo":"assets/images/forest.png","name":"Parks"
+    },
+    {
+      "photo":"assets/images/flash.png","name":"Attractions"
+    },
+    {
+      "photo":"assets/images/gas-pump.png","name":"Gas station"
+    },
+
+
+ ];
+ 
+
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +195,7 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left:12.0,top:20.0),
+                  padding: const EdgeInsets.only(left:12.0,top:20.0,bottom:15.0),
                   child: Row(
                     
                     children: [
@@ -229,11 +237,108 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                   ),
 
                 ),
-
-                 SizedBox(
+                Padding(
+                  padding: const EdgeInsets.only(left:13.0,right:6),
+                  child: SizedBox(
+                    height:45,
+                    child: Expanded(
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal, 
+                              itemCount: categorieList.length,
+                              itemBuilder: (context, index) {
+                                final categorie = categorieList[index];
+                                final catName = categorie['name'];
+                                final catPhoto = categorie['photo'];
+                    
+                    
+                                  return Card(
+                                  elevation: 0,
+                                  color:const Color.fromARGB(255, 240, 238, 238),
+                                  //clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(17.0),
+                                        ),
+                                  child:Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center, 
+                                    children: [
+                                      SizedBox(
+                                        width: 101,
+                                        
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              catPhoto,
+                                              width: 23,
+                                              height:23,
+                                              
+                                              
+                                            ),
+                                            
+                                            Padding(
+                                              padding: const EdgeInsets.only(left:5.0),
+                                              child: FittedBox(
+                                                 fit: BoxFit.cover,
+                                                child: Text(catName,
+                                                      style: GoogleFonts.cabin(
+                                                  // ignore: prefer_const_constructors
+                                                  textStyle: TextStyle(
+                                                  color: const Color.fromARGB(255, 27, 27, 27),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                          
+                                                  ) 
+                                  )
+                                                ),
+                                              ),
+                                            ),          
+                                          ],
+                                        ),
+                                      ),
+                                      
+                                    ],
+                  
+                  
+                                  )
+                                    
+                                    
+                                  
+                                  ); 
+                              },
+                            ),
+                       
+                        ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:14.0,top:16),
+                  child: Row(
+                    children: [
+                      Text("You might like these",
+                        style: GoogleFonts.cabin(
+                                    // ignore: prefer_const_constructors
+                                    textStyle: TextStyle(
+                                    color: const Color.fromARGB(255, 27, 27, 27),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                            
+                                    ) 
+                                  )
+                      
+                      ),
+                
+                    ],
+                
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:13.0),
+                  child: SizedBox(
                   height: 150,
                   
-                   child: Expanded(
+                    child: Expanded(
                           child: ListView.builder(
                             cacheExtent: 9999,
                             scrollDirection: Axis.horizontal, 
@@ -243,9 +348,9 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                               final hotelName = hotel['name'];
                               final hotelRating = hotel['rating'];
                               final photoUrl = hotel['image'];
-                 
-                 
-                               return Card(
+                  
+                  
+                                return Card(
                                 elevation: 0,
                                 color:const Color.fromARGB(255, 240, 238, 238),
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -263,19 +368,19 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                                           fit: BoxFit.fill,
                                           
                                         ),
-                                   
-
+                                    
+                
                                       ],
                                     ),
                                     Row(
                                       children: [
-                                         Container(
+                                          Container(
                                           width: 200,
-                                           child: Text(hotelName,
+                                            child: Text(hotelName,
                                             overflow: TextOverflow.ellipsis,
-                                           ),
-                                         ),
-                                         
+                                            ),
+                                          ),
+                                          
                                       ],
                                     
                                     ),
@@ -288,18 +393,19 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                                       ],
                                     )
                                   ],
-
-
+                
+                
                                 )
                                   
                                   
                                 
-                               ); 
+                                ); 
                             },
                           ),
-                   
-                         ),
-                 ),
+                    
+                          ),
+                  ),
+                ),
 
                Row(
                 children: [
