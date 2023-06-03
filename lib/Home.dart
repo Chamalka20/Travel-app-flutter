@@ -212,9 +212,9 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                                   )
                       
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(left:115.0,top:7.0),
-                        child: Icon(Icons.location_on,color: Color.fromARGB(255, 143, 142, 142),),
+                      Padding(
+                        padding: const EdgeInsets.only(left:117,top:3),
+                        child: Container(child: Image.asset("assets/images/location.png",width:25,height:25)),
                       ),
                        Padding(
                          padding: const EdgeInsets.only(top:9.0),
@@ -334,10 +334,30 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.only(left:15.0,top:0,bottom: 4),
+                  child: Row(
+                    children: [
+                      Text("Discover more in Sri lanka",
+                        style: GoogleFonts.cabin(
+                                    // ignore: prefer_const_constructors
+                                    textStyle: TextStyle(
+                                    color: const Color.fromARGB(255, 143, 142, 142),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                            
+                                    ) 
+                                  )
+                      
+                      ),
+                
+                    ],
+                
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(left:13.0),
                   child: SizedBox(
-                  height: 150,
-                  
+                  height: 190,
                     child: Expanded(
                           child: ListView.builder(
                             cacheExtent: 9999,
@@ -348,6 +368,7 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                               final hotelName = hotel['name'];
                               final hotelRating = hotel['rating'];
                               final photoUrl = hotel['image'];
+                              final address = hotel['address'];
                   
                   
                                 return Card(
@@ -357,44 +378,98 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                                 shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10.0),
                                       ),
-                                child:Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.network(
-                                          photoUrl,
-                                          width: 200,
-                                          height: 100,
-                                          fit: BoxFit.fill,
-                                          
-                                        ),
-                                    
-                
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                          Container(
-                                          width: 200,
-                                            child: Text(hotelName,
-                                            overflow: TextOverflow.ellipsis,
+                                child:Container(
+                                  width: 230,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Image.network(
+                                            photoUrl,
+                                            width: 230,
+                                            height: 120,
+                                            fit: BoxFit.fill,
+                                            
+                                          ),
+                                      
+                                                
+                                        ],
+                                      ),
+                                      Row(
+                                        
+                                        children: [
+                                            SizedBox(
+                                            width: 190,
+                                            height:30,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(left:6,top:5),
+                                                child: Text(hotelName,
+                                                
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.cabin(
+                                                    // ignore: prefer_const_constructors
+                                                    textStyle: TextStyle(
+                                                    color: const Color.fromARGB(255, 27, 27, 27),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                                                    
+                                                    ) 
+                                                  )
+                                                                                        
+                                                ),
+                                              ),
                                             ),
+
+                                          Image.asset("assets/images/star.png",width:14,height:14),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left:4),
+                                            child: Text("$hotelRating",
+                                                 style: GoogleFonts.cabin(
+                                              // ignore: prefer_const_constructors
+                                              textStyle: TextStyle(
+                                              color: const Color.fromARGB(255, 27, 27, 27),
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                                                              
+                                              ) 
+                                            )
+                                            
+                                            ),
+                                          ),  
+                                        ],
+                                      
+                                      ),
+                                      Row(
+                                       
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(left:4),
+                                            child: Image.asset('assets/images/location.png',width:15,height:15),
                                           ),
-                                          
-                                      ],
-                                    
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          
-                                          child: Text('Rating: $hotelRating')
-                                          ),
-                                      ],
-                                    )
-                                  ],
-                
-                
+                                          SizedBox(
+                                            width:200,
+                                            height:7,
+                                            child: Text(address,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.cabin(
+                                                // ignore: prefer_const_constructors
+                                                textStyle: TextStyle(
+                                                color: Color.fromARGB(255, 94, 94, 94),
+                                                fontSize: 7,
+                                                fontWeight: FontWeight.bold,
+                                                                                
+                                                ) 
+                                              )
+                                            
+                                            
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                                
+                                                
+                                  ),
                                 )
                                   
                                   

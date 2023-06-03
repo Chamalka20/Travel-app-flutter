@@ -89,6 +89,9 @@ flutter:
     - assets/images/forest.png
     - assets/images/flash.png
     - assets/images/gas-pump.png
+    - assets/images/location.png
+    - assets/images/star.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
