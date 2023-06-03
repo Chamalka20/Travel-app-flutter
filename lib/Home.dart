@@ -120,6 +120,7 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
             'image': result['image'],
             'rating': result['rating'],
             'address':result['address'],
+            'type':result['type'],
           };
         }).toList();
       });
@@ -369,7 +370,7 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                               final hotelRating = hotel['rating'];
                               final photoUrl = hotel['image'];
                               final address = hotel['address'];
-                  
+                              final type = hotel['type'];
                   
                                 return Card(
                                 elevation: 0,
@@ -384,11 +385,96 @@ Future<List<dynamic>> getDatasetItems(String keyValue) async {
                                     children: [
                                       Row(
                                         children: [
-                                          Image.network(
-                                            photoUrl,
+                                          Container(
                                             width: 230,
                                             height: 120,
-                                            fit: BoxFit.fill,
+                                            
+                                                decoration:  BoxDecoration(
+                                                  
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(photoUrl,),
+                                                    fit: BoxFit.fill,
+                                                    
+                                              
+                                                      ),
+                                                  
+                                                  ),
+                                             child: Column(
+                                               children: [
+                                                 Row(
+                                                   children: [
+                                                     Padding(
+                                                       padding: const EdgeInsets.all(6.0),
+                                                       child: SizedBox(
+                                                         
+                                                         height:25,
+                                                          
+                                                         child: Card(
+                                                             elevation: 0,
+                                                              color:const Color.fromARGB(200, 240, 238, 238),
+                                                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                              shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(5.0),
+                                                                    ),
+                                                            child: FittedBox(
+                                                                    fit: BoxFit.cover,
+                                                                    child:Padding(
+                                                                      padding: const EdgeInsets.all(8.0),
+                                                                      child: Text('$type',
+                                                                        style: GoogleFonts.cabin(
+                                                                          // ignore: prefer_const_constructors
+                                                                          textStyle: TextStyle(
+                                                                          color: Color.fromARGB(255, 95, 95, 95),
+                                                                          fontSize: 24,
+                                                                          fontWeight: FontWeight.bold,
+                                                                                                                                    
+                                                                          ) 
+                                                                        )
+                                                                                                                                      
+                                                                                                                                      ),
+                                                                    ), 
+                                                              )
+                                                            
+                                                         ),
+                                                       ),
+                                                     ),
+
+                                                     Padding(
+                                                       padding: const EdgeInsets.only(left:108,top:5),
+                                                       child: SizedBox(
+                                                          width:37,
+                                                          height:37,
+                                                          child: Card(
+                                                             elevation: 0,
+                                                                color:const Color.fromARGB(200, 240, 238, 238),
+                                                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                                shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(50.0),
+                                                                      ),
+                                                                child:Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        Image.asset("assets/images/heart.png",width:18,height:18),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),  
+                                                     
+                                                          ),
+                                                     
+                                                       ),
+                                                     ),
+
+                                                   ],
+                                                 ),
+                                               ],
+                                             ), 
+                                              
                                             
                                           ),
                                       
