@@ -524,25 +524,25 @@ class _homeState extends State<home> {
                                 Row(
                                   children: [
                                      SizedBox(
-                                      height:35,
-                                      width:75,
+                                      height:30,
+                                      width:70,
                                       child: Card(
                                           elevation: 0,
                                           color:const Color.fromARGB(200, 240, 238, 238),
                                           clipBehavior: Clip.antiAliasWithSaveLayer,
                                           shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(5.0),
+                                                  borderRadius: BorderRadius.circular(3.0),
                                                 ),
                                             child: FittedBox(
                                                     fit: BoxFit.cover,
                                                     child:Padding(
-                                                      padding: const EdgeInsets.all(9.0),
+                                                      padding: const EdgeInsets.all(5.0),
                                                       child: Text('LASTVIEWS',
                                                         style: GoogleFonts.cabin(
                                                           // ignore: prefer_const_constructors
                                                           textStyle: TextStyle(
                                                           color: Color.fromARGB(255, 95, 95, 95),
-                                                          fontSize: 15,
+                                                          fontSize: 9,
                                                           fontWeight: FontWeight.bold,
                                                                                                                     
                                                           ) 
