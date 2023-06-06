@@ -92,10 +92,16 @@ flutter:
     - assets/images/location.png
     - assets/images/star.png
     - assets/images/heart.png
+    - assets/images/like.png
     - assets/images/home.png
     - assets/images/map.png
     - assets/images/search.png
     - assets/images/user.png
+    - assets/images/like.png
+    - assets/images/homeClick.png
+    - assets/images/mapClick.png
+    - assets/images/searchClick.png
+    - assets/images/userClick.png
 
 
 
