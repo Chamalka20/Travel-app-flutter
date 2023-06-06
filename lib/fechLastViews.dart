@@ -3,20 +3,22 @@ import 'package:http/http.dart' as http;
 
 class fechLastViews{
 
- static  fetchSuggestions() async {
+
+ static  fetchSuggestions(var apiUrl, final payload) async {
 
   const apiKey = 'apify_api_i3o0mIz66q0XQLwEJUyefixu3GnZAA1IqEw2';
-  var apiUrl = 'https://api.apify.com/v2/actor-tasks/detailed_camel~google-maps-scraper-task/runs?token=$apiKey'; 
+  var newApiUrl = '$apiUrl$apiKey'; 
   dynamic runId;
   dynamic keyValue;
 
  
 
    final response = await http.post(
-    Uri.parse(apiUrl),
+    Uri.parse(newApiUrl),
     headers: {
       'Content-Type': 'application/json',
     },
+    body: json.encode(payload),
     
   );
 

@@ -92,6 +92,11 @@ flutter:
     - assets/images/location.png
     - assets/images/star.png
     - assets/images/heart.png
+    - assets/images/home.png
+    - assets/images/map.png
+    - assets/images/search.png
+    - assets/images/user.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

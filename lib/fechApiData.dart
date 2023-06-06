@@ -3,33 +3,17 @@ import 'package:http/http.dart' as http;
 
 class fechApiData {
 
-  static  fetchSuggestions() async {
+  static  fetchSuggestions(var apiUrl, final payload) async {
 
-  const apiKey = 'apify_api_Ji36tnDOBH9eVjhgk2inWHfV57BIKr328Ogj';
-  var apiUrl = 'https://api.apify.com/v2/acts/maxcopell~free-tripadvisor/runs?token=$apiKey'; 
+  const apiKey = 'apify_api_i3o0mIz66q0XQLwEJUyefixu3GnZAA1IqEw2';
+  var newApiUrl = '$apiUrl$apiKey'; 
   dynamic runId;
   dynamic keyValue;
 
- final payload = {
-    "currency": "USD",
-    "debugLog": false,
-    "includeAttractions": true,
-    "includeHotels": true,
-    "includeRestaurants": true,
-    "includeReviews": true,
-    "includeTags": true,
-    "language": "en",
-    "locationFullName": "Colombo, Sri Lanka", // Replace with your desired location
-    "maxItems": 39,
-    "maxReviews": 20,
-    "proxyConfiguration": {
-      "useApifyProxy": true
-    },
-    "scrapeReviewerInfo": true
-  };
+ 
 
    final response = await http.post(
-    Uri.parse(apiUrl),
+    Uri.parse(newApiUrl),
     headers: {
       'Content-Type': 'application/json',
     },

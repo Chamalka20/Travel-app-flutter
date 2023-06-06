@@ -56,7 +56,8 @@ Future<String?> getLocation() async {
   }
 
   String country = placemarks.first.country ?? '';
-  return country;
+  String cityName = placemarks.first.locality ?? '';
+  return cityName;
 }
 
 
@@ -173,11 +174,11 @@ class _MyWidgetState extends State<letsStart> {
                               height: 45,
                               child: TextButton(
                                 onPressed: () async {
-                                  String? country = await getLocation();
+                                  String? cityName = await getLocation();
 
-                                  if(country != null){
+                                  if(cityName != null){
 
-                                  print('Current country: $country');
+                                  print('Current city: $cityName');
                                   Navigator.of(context).pushReplacement(customPageRoutes(
                 
                                     child:const home()));
