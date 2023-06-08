@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class fechLastViews{
 
@@ -72,7 +73,7 @@ class fechLastViews{
   
   final datasetItemsResponse = await http.get(Uri.parse('https://api.apify.com/v2/datasets/$keyValue/items?token=$apiKey'));
   if (datasetItemsResponse.statusCode == 200) {
-
+      
     print("Request successful status:${datasetItemsResponse.statusCode}");
     final datasetItemsData = json.decode(datasetItemsResponse.body);
     final results = datasetItemsData as List<dynamic>;
@@ -81,7 +82,7 @@ class fechLastViews{
        hotelList = results.map((result) {
           
           return {
-            'name': result['title'] ?? '',
+          'name': result['title'] ?? '',
           'image': result['imageUrls'] != null && result['imageUrls'].isNotEmpty ? result['imageUrls'][0] : '',
           'city': result['city'] ?? '',
           };
@@ -89,8 +90,7 @@ class fechLastViews{
     }
        
       
-
-    print(hotelList.isNotEmpty ? hotelList[0] : 'No hotel data found');
+    print(hotelList[0]);
     return hotelList;
   } else {
     throw Exception('Failed to retrieve dataset items status:${datasetItemsResponse.statusCode}');

@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Home.dart';
 
 import 'Welcomepage.dart';
+import 'navigationPage.dart';
 
 Future<bool> checkLoggedIn() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
      initialRoute:initialRoute,
      routes: {
         '/login': (context) => welcomePage(),
-        '/home': (context) => home(),
+        '/home': (context) => const navigationPage(),
       },
       
     );

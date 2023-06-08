@@ -11,6 +11,7 @@ import 'package:lottie/lottie.dart';
 import 'Home.dart';
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
+import 'navigationPage.dart';
 
 Future<String?> getLocation() async {
   Location location = Location();
@@ -181,7 +182,7 @@ class _MyWidgetState extends State<letsStart> {
                                   print('Current city: $cityName');
                                   Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                                    child:const home()));
+                                    child:const navigationPage()));
 
                                   }else{
                                     print('Unable to fetch the current country');

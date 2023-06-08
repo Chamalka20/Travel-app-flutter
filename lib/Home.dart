@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/fechApiData.dart';
 import "package:travelapp/fechLastViews.dart";
 import 'package:travelapp/bottomNavigationBar.dart';
 
 class home extends StatefulWidget {
 
-   const home({super.key});
+  final bool isBackButtonClick;
+  const home({required this.isBackButtonClick, Key? key}) : super(key: key);
 
   @override
-  State<home> createState() => _homeState();
+  State<home> createState() => _homeState(isBackButtonClick);
 
 
 }
@@ -22,8 +24,11 @@ class _homeState extends State<home> {
   late List<Map<String, dynamic>> hotelList = [];
   late List<Map<String, dynamic>> lastViewsList = [];
   late List<Map<String, dynamic>> myLocationList = [];
-  
+  bool isBackButtonClick;
   String nextPageToken ='';
+  
+  _homeState(this.isBackButtonClick);
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +36,28 @@ class _homeState extends State<home> {
     getData();
   }
 
-  void getData () async{
+//set categorie list-----------------------------
+ late List<Map<String, dynamic>> categorieList = [
+    {
+      "photo":"assets/images/hotel.png","name":"Hotel"
+    },
+    {
+      "photo":"assets/images/burger.png","name":"Cafes"
+    },
+    {
+      "photo":"assets/images/forest.png","name":"Parks"
+    },
+    {
+      "photo":"assets/images/flash.png","name":"Attractions"
+    },
+    {
+      "photo":"assets/images/gas-pump.png","name":"Gas station"
+    },
+
+
+ ];
+
+ void getData () async{
      
     
     var apiUrl1 = 'https://api.apify.com/v2/actor-tasks/detailed_camel~google-maps-scraper-task/runs?token=';
@@ -72,39 +98,47 @@ final payload3 = {
     },
     "scrapeReviewerInfo": true
   };
+    
+    
+    //myLocationList= await fechApiData.fetchSuggestions(apiUrl2,payload2);
+
+    
+    
+    if(lastViewsList.isEmpty && isBackButtonClick == false){
+
+   
     hotelList = await fechApiData.fetchSuggestions(apiUrl2,payload3);
     lastViewsList = await fechLastViews.fetchSuggestions(apiUrl1,payload1);
-    //myLocationList= await fechApiData.fetchSuggestions(apiUrl2,payload2);
-    if(lastViewsList.isNotEmpty){
+    
+      if (lastViewsList.isNotEmpty ){
+        final prefs = await SharedPreferences.getInstance();
+        final  lastViweListArray = jsonEncode( lastViewsList);
+        prefs.setString('lastViweListArray', lastViweListArray);
+
+        setState(() {
+         buildBody();
+        });
+
+        
+
+      }
+    
+      
+     
+
+    }else if(lastViewsList.isEmpty && isBackButtonClick == true){
+      final prefs = await SharedPreferences.getInstance();
+       final jsonString = prefs.getString('lastViweListArray');
+       final decodedArray = jsonDecode(jsonString!) as List<dynamic>;
+      lastViewsList = decodedArray.cast<Map<String, dynamic>>();
+      
       setState(() {
          buildBody();
-      });
-     
+        });
 
     }
     
   }
-  
-//set categorie list-----------------------------
- late List<Map<String, dynamic>> categorieList = [
-    {
-      "photo":"assets/images/hotel.png","name":"Hotel"
-    },
-    {
-      "photo":"assets/images/burger.png","name":"Cafes"
-    },
-    {
-      "photo":"assets/images/forest.png","name":"Parks"
-    },
-    {
-      "photo":"assets/images/flash.png","name":"Attractions"
-    },
-    {
-      "photo":"assets/images/gas-pump.png","name":"Gas station"
-    },
-
-
- ];
 
   @override
   Widget build(BuildContext context) {
@@ -114,44 +148,12 @@ final payload3 = {
     );
   }
 
-
   
+ 
   Widget buildBody() {
     if(lastViewsList.isNotEmpty){
-      return WillPopScope(
-      onWillPop: () async {
-        bool confirmExit = await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Confirm Exit'),
-                content: const Text('Are you sure you want to exit the app?'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      // User confirmed exit
-                       SystemNavigator.pop();
-                    },
-                    child: Text('Yes'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // User canceled exit
-                      Navigator.of(context).pop(false);
-                    },
-                    child: Text('No'),
-                  ),
-                ],
-              );
-            },
-          );
-
-          return confirmExit ;
-        
-      }, 
-    
-      child:Scaffold(
-        body:SafeArea(
+      return 
+        SafeArea(
           child:Center(
           child: Column(
             children: [
@@ -899,7 +901,7 @@ final payload3 = {
                 ),
               ),
                //bottom navigaion bar-------------------------------------------------------
-              navigaionBar(),
+             
               //------------------------------------------------------------------------------- 
           
             ],
@@ -907,9 +909,9 @@ final payload3 = {
           ) 
           
           ),
-        )
-      )
-     );
+        );
+       
+      
       
     }else{
        return const Center(

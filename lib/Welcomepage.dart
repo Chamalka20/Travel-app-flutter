@@ -96,7 +96,7 @@ class _welcomePageState extends State<welcomePage> {
                                                 style: GoogleFonts.lato(
                                                 // ignore: prefer_const_constructors
                                                 textStyle: TextStyle(
-                                                color: const Color.fromARGB(255, 255, 255, 255),
+                                                color: Color.fromARGB(255, 255, 255, 255),
                                             
                                                   ) 
                                             
