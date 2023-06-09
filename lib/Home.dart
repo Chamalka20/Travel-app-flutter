@@ -29,10 +29,10 @@ class _homeState extends State<home> {
   _homeState(this.isBackButtonClick);
 
   @override
-  void initState() {
-    super.initState();
+  void initState(){
+     super.initState();
     //get data list from api-------------------------------
-    getData();
+     getData();
   }
 
 //set categorie list-----------------------------
@@ -111,8 +111,15 @@ final payload3 = {
     
       if (lastViewsList.isNotEmpty ){
         final prefs = await SharedPreferences.getInstance();
+        //store last views------------------
         final  lastViweListArray = jsonEncode( lastViewsList);
         prefs.setString('lastViweListArray', lastViweListArray);
+
+        //store hotel list ------------------------
+        final  hotelListArray = jsonEncode( hotelList);
+        prefs.setString('hotelListListArray', hotelListArray);
+
+
 
         setState(() {
          buildBody();
@@ -127,9 +134,15 @@ final payload3 = {
 
     }else if(lastViewsList.isEmpty && isBackButtonClick == true){
       final prefs = await SharedPreferences.getInstance();
-       final jsonString = prefs.getString('lastViweListArray');
-       final decodedArray = jsonDecode(jsonString!) as List<dynamic>;
-      lastViewsList = decodedArray.cast<Map<String, dynamic>>();
+
+      final jsonStringlastViewsList = prefs.getString('lastViweListArray');
+      final decodedArraylastViewsList = jsonDecode(jsonStringlastViewsList!) as List<dynamic>;
+      lastViewsList = decodedArraylastViewsList.cast<Map<String, dynamic>>();
+
+      final jsonStringhotelList = prefs.getString('hotelListListArray');
+      final decodedArrayhotelList = jsonDecode(jsonStringhotelList!) as List<dynamic>;
+      hotelList = decodedArrayhotelList.cast<Map<String, dynamic>>();
+
       
       setState(() {
          buildBody();
