@@ -27,35 +27,35 @@ class navigationBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           NavigationBarItem(
-            icon: 'assets/images/homeClick.png',
+            icon: 'home',
             title: 'Home',
             index: 0,
             selectedIndex: selectedIndex,
             onTap: onItemTapped,
           ),
           NavigationBarItem(
-            icon: 'assets/images/search.png',
+            icon: 'search',
             title: 'Search',
             index: 1,
             selectedIndex: selectedIndex,
             onTap: onItemTapped,
           ),
           NavigationBarItem(
-            icon: 'assets/images/map.png',
+            icon: 'map',
             title: 'Plan',
             index: 2,
             selectedIndex: selectedIndex,
             onTap: onItemTapped,
           ),
           NavigationBarItem(
-            icon: 'assets/images/like.png',
+            icon: 'like',
             title: 'Favorite',
             index: 3,
             selectedIndex: selectedIndex,
             onTap: onItemTapped,
           ),
           NavigationBarItem(
-            icon: 'assets/images/user.png',
+            icon: 'user',
             title: 'Account',
             index: 4,
             selectedIndex: selectedIndex,
@@ -93,7 +93,11 @@ class NavigationBarItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(icon, width: 20, height: 20),
+          Image.asset(
+               index == selectedIndex
+               ?'assets/images/${icon}Click.png':
+               "assets/images/$icon.png",
+            width: 20,height:20),
           SizedBox(height: 5),
           Text(
             title,

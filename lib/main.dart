@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
      initialRoute:initialRoute,
      routes: {
         '/login': (context) => welcomePage(),
-        '/home': (context) => const navigationPage(),
+        '/home': (context) =>  navigationPage(isBackButtonClick:false),
       },
       
     );

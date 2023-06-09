@@ -1,41 +1,64 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/fechApiData.dart';
-import "package:travelapp/fechLastViews.dart";
 import 'package:travelapp/search.dart';
 import 'package:travelapp/bottomNavigationBar.dart';
 
 import 'Home.dart';
+import 'customPageRoutes.dart';
 
 class navigationPage extends StatefulWidget {
-  
- const navigationPage({super.key});
+
+ final   bool isBackButtonClick;  
+ const navigationPage({required this.isBackButtonClick, Key? key}) : super(key: key);
 
   @override
-  State<navigationPage> createState() => _navigationPageState();
+  State<navigationPage> createState() => _navigationPageState(isBackButtonClick);
 }
+
+
 
 class _navigationPageState extends State<navigationPage> {
 
+  bool isBackButtonClick;
   int _selectedIndex = 0;
- 
-  static const List<Widget> _pages = <Widget>[
-    home(isBackButtonClick: true),
-    search(),
-    // PlanPage(),
-    // FavoritePage(),
-    // AccountPage(),
-  ];
+  late List<Widget> _pages;
 
+   _navigationPageState(this.isBackButtonClick);
   
-  void _onItemTapped(int index) {
+ 
+ void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+       isBackButtonClick = true;
+
+      _pages = [
+      home(isBackButtonClick: isBackButtonClick),
+      const search(),
+      // PlanPage(),
+      // FavoritePage(),
+      // AccountPage(),
+    ] ;
+
     });
+  }
+
+   @override
+  void initState() {
+    super.initState();
+    isBackButtonClick = isBackButtonClick;
+    _selectedIndex =_selectedIndex;
+    
+    _pages = [
+      home(isBackButtonClick: isBackButtonClick),
+      const search(),
+      // PlanPage(),
+      // FavoritePage(),
+      // AccountPage(),
+    ];
   }
 
 
@@ -52,7 +75,9 @@ class _navigationPageState extends State<navigationPage> {
    Widget buildBody() {
       return WillPopScope(
       onWillPop: () async {
-        bool confirmExit = await showDialog(
+         
+        if(_selectedIndex==0){
+            bool confirmExit = await showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -78,7 +103,20 @@ class _navigationPageState extends State<navigationPage> {
             },
           );
 
-          return confirmExit ;
+          
+
+        }else{
+          
+            Navigator.of(context).pushReplacement(customPageRoutes(
+                
+            child: navigationPage(isBackButtonClick:true)));  
+
+       
+        
+          
+        }
+        
+       return false ;
         
       }, child: Scaffold(
 
@@ -87,15 +125,10 @@ class _navigationPageState extends State<navigationPage> {
           bottomNavigationBar:navigationBar(
             selectedIndex: _selectedIndex,
             onItemTapped: _onItemTapped,
-            
-
-
-              
-            
 
           )
 
-      ), 
+        ), 
 
       );
 

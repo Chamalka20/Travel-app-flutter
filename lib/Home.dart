@@ -2,15 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/fechApiData.dart';
 import "package:travelapp/fechLastViews.dart";
-import 'package:travelapp/bottomNavigationBar.dart';
 
 class home extends StatefulWidget {
 
   final bool isBackButtonClick;
+  
   const home({required this.isBackButtonClick, Key? key}) : super(key: key);
 
   @override

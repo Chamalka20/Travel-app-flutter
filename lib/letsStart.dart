@@ -182,7 +182,7 @@ class _MyWidgetState extends State<letsStart> {
                                   print('Current city: $cityName');
                                   Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                                    child:const navigationPage()));
+                                    child: navigationPage(isBackButtonClick:false)));
 
                                   }else{
                                     print('Unable to fetch the current country');
