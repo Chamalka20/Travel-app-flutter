@@ -73,63 +73,70 @@ class _navigationPageState extends State<navigationPage> {
 
 
    Widget buildBody() {
-      return WillPopScope(
-      onWillPop: () async {
-         
-        if(_selectedIndex==0){
-            bool confirmExit = await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Confirm Exit'),
-                content: const Text('Are you sure you want to exit the app?'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      // User confirmed exit
-                       SystemNavigator.pop();
-                    },
-                    child: Text('Yes'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // User canceled exit
-                      Navigator.of(context).pop(false);
-                    },
-                    child: Text('No'),
-                  ),
-                ],
+      return GestureDetector(
+         onTap: () {
+        // Dismiss the keyboard when the user taps outside of the text fields 
+        FocusScope.of(context).unfocus();
+        
+        },
+        child: WillPopScope(
+          onWillPop: () async {
+            
+            if(_selectedIndex==0){
+                bool confirmExit = await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirm Exit'),
+                    content: const Text('Are you sure you want to exit the app?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          // User confirmed exit
+                          SystemNavigator.pop();
+                        },
+                        child: Text('Yes'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // User canceled exit
+                          Navigator.of(context).pop(false);
+                        },
+                        child: Text('No'),
+                      ),
+                    ],
+                  );
+                },
               );
-            },
-          );
-
-          
-
-        }else{
-          
-            Navigator.of(context).pushReplacement(customPageRoutes(
-                
-            child: navigationPage(isBackButtonClick:true)));  
-
-       
+        
+              
+        
+            }else{
+              
+                Navigator.of(context).pushReplacement(customPageRoutes(
+                    
+                child: navigationPage(isBackButtonClick:true)));  
         
           
-        }
+            
+              
+            }
+            
+          return false ;
+            
+          }, child: Scaffold(
         
-       return false ;
+              body:_pages[_selectedIndex],
         
-      }, child: Scaffold(
-
-          body:_pages[_selectedIndex],
-
-          bottomNavigationBar:navigationBar(
-            selectedIndex: _selectedIndex,
-            onItemTapped: _onItemTapped,
-
-          )
-
-        ), 
-
+              bottomNavigationBar:navigationBar(
+                selectedIndex: _selectedIndex,
+                onItemTapped: _onItemTapped,
+        
+              )
+        
+            ), 
+        
+          ),
       );
 
     

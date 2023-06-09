@@ -157,13 +157,13 @@ final payload3 = {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left:12.0,top:20.0,bottom:15.0),
+                padding: const EdgeInsets.only(left:13.0,top:20.0,bottom:15.0),
                 child: Row(
                   
                   children: [
                     
                     Text("Hi Nimal",
-                      style: GoogleFonts.cabin(
+                      style: GoogleFonts.nunito(
                                   // ignore: prefer_const_constructors
                                   textStyle: TextStyle(
                                   color: const Color.fromARGB(255, 27, 27, 27),
@@ -175,18 +175,18 @@ final payload3 = {
                     
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left:117,top:3),
+                      padding: const EdgeInsets.only(left:105,top:3),
                       child: Container(child: Image.asset("assets/images/location.png",width:25,height:25)),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top:9.0),
                       child: Text("Sri lanka",
-                        style: GoogleFonts.cabin(
+                        style: GoogleFonts.nunito(
                                     // ignore: prefer_const_constructors
                                     textStyle: TextStyle(
                                     color: const Color.fromARGB(255, 143, 142, 142),
                                     fontSize: 20,
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w400,
                             
                                     ) 
                                   )
@@ -664,7 +664,7 @@ final payload3 = {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(left:16.0,top:10),
-                                child: Text("My Location",
+                                child: Text("Nearby experience",
                                   style: GoogleFonts.cabin(
                                           // ignore: prefer_const_constructors
                                           textStyle: TextStyle(
