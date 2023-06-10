@@ -21,7 +21,7 @@ class _searchState extends State<search> {
 
   bool  isTextFieldClicked= false;
   String keyboardInput='';
- 
+  var searchResults=[];
   
  Future<void> fetchSearchResults(String input) async {
 
@@ -40,16 +40,16 @@ class _searchState extends State<search> {
        
         final results = data['results'] as List<dynamic>;
 
-       
-          late final searchResults = results.map((result) {
+           setState(() {
+           searchResults = results.map((result) {
           
-          return {
-          'name': result['name'] ?? '',
-          'city': result['formatted_address']
-              
-          };
-        }).toList();
-
+              return {
+              'name': result['name'] ?? '',
+              'address': result['formatted_address']
+                  
+              };
+            }).toList();
+           });
           print( searchResults);
       
       }else{
@@ -133,6 +133,7 @@ class _searchState extends State<search> {
                           onTap: () {
                             setState(() {
                               isTextFieldClicked = true;
+                              searchResults = [];
                             });
                           },
                           //get keyboard input value-------------
@@ -203,9 +204,33 @@ class _searchState extends State<search> {
               ),
             ),
             //show search results-----------------------------------
-            Expanded(
-              child:
-              
+            Visibility(
+              visible: isTextFieldClicked,
+              child: Expanded(
+                child:ListView.builder(
+                  itemCount: searchResults.length,
+                  itemBuilder: (context, index) {
+                    final searchRe = searchResults[index];
+                    final name = searchRe['name'];
+                    final address = searchRe['address'];
+            
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(name)
+                          ],
+                        )
+            
+                      ],
+            
+                    );
+            
+                  }
+                )
+                
+                
+              ),
             ),
             //------------------------------------------------------
             Visibility(

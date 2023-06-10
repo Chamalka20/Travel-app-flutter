@@ -101,7 +101,7 @@ class _MyWidgetState extends State<letsStart> {
             },
           );
 
-          return confirmExit ?? false;
+          return confirmExit;
         
       },
         child:GestureDetector(

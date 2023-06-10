@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/fechApiData.dart';
 import 'package:travelapp/search.dart';
 import 'package:travelapp/bottomNavigationBar.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'Home.dart';
 import 'customPageRoutes.dart';
@@ -26,6 +28,9 @@ class _navigationPageState extends State<navigationPage> {
   bool isBackButtonClick;
   int _selectedIndex = 0;
   late List<Widget> _pages;
+   late StreamSubscription<bool> keyboardSubscription;
+  bool isKeyboardVisible = false;
+
 
    _navigationPageState(this.isBackButtonClick);
   
@@ -51,7 +56,7 @@ class _navigationPageState extends State<navigationPage> {
     super.initState();
     isBackButtonClick = isBackButtonClick;
     _selectedIndex =_selectedIndex;
-    
+    var keyboardVisibilityController = KeyboardVisibilityController();
     _pages = [
       home(isBackButtonClick: isBackButtonClick),
       const search(),
@@ -59,11 +64,23 @@ class _navigationPageState extends State<navigationPage> {
       // FavoritePage(),
       // AccountPage(),
     ];
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+    
+    setState(() { isKeyboardVisible = visible; });
+    });
+     
+  }
+
+  @override
+  void dispose() {
+    keyboardSubscription.cancel();
+    super.dispose();
   }
 
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       
       body: buildBody(),
@@ -118,26 +135,31 @@ class _navigationPageState extends State<navigationPage> {
                 child: navigationPage(isBackButtonClick:true)));  
         
           
-            
               
             }
             
           return false ;
             
-          }, child: Scaffold(
+          }, 
+          child: Scaffold(
         
               body:_pages[_selectedIndex],
-        
-              bottomNavigationBar:navigationBar(
-                selectedIndex: _selectedIndex,
-                onItemTapped: _onItemTapped,
-        
-              )
+
+
+              
+              bottomNavigationBar: Visibility(
+                visible: !isKeyboardVisible,
+                child: navigationBar(
+                  selectedIndex: _selectedIndex,
+                  onItemTapped: _onItemTapped,
+                ),
+              ),
+            ),
         
             ), 
         
-          ),
-      );
+          );
+      
 
     
   }

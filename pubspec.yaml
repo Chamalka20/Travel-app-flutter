@@ -43,6 +43,7 @@ dependencies:
   location: ^4.3.0
   geocoding: ^2.0.0
   http: ^0.13.4
+  flutter_keyboard_visibility: ^5.4.1
 
 dev_dependencies:
   flutter_test:
