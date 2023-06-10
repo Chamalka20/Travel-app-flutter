@@ -62,13 +62,15 @@ class _searchState extends State<search> {
                         iconSize: 26,
                         onPressed: () {
                    
-                          Navigator.of(context).pushReplacement(customPageRoutes(
-                          child:const search()));
+                          setState(() {
+                          isTextFieldClicked = false;
+                          });       
                    
                           // Handle back button press
                         },
                      ),
                    ),
+                   
                   isTextFieldClicked?
                   Container(
                     
@@ -107,41 +109,44 @@ class _searchState extends State<search> {
                   
                     ),
                   ):
-                  Container(
-                    
-                    width: 330,
-                    height: 35,
-                    
-                    child:  TextField(
+                  Padding(
+                    padding: const EdgeInsets.only(left:11),
+                    child: Container(
                       
-                       onTap: () {
-                        setState(() {
-                          isTextFieldClicked = true;
-                        });
-                      },
-                      decoration: InputDecoration(
-                      filled: true,
-                      fillColor:  Color.fromARGB(255, 240, 238, 238),
-                      hintText: 'Search',
-                      prefixIcon: Icon(Icons.search),
-                      hintStyle: GoogleFonts.cabin(
-                                    // ignore: prefer_const_constructors
-                                    textStyle: TextStyle(
-                                    color: Color.fromARGB(255, 145, 144, 144),
-                                    fontSize: 17,
-                                    fontWeight:FontWeight.w400,
-                                    
-                                    ) 
-                                  ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(19.0),
+                      width: 330,
+                      height: 35,
+                      
+                      child:  TextField(
                         
+                         onTap: () {
+                          setState(() {
+                            isTextFieldClicked = true;
+                          });
+                        },
+                        decoration: InputDecoration(
+                        filled: true,
+                        fillColor:  Color.fromARGB(255, 240, 238, 238),
+                        hintText: 'Search',
+                        prefixIcon: Icon(Icons.search),
+                        hintStyle: GoogleFonts.cabin(
+                                      // ignore: prefer_const_constructors
+                                      textStyle: TextStyle(
+                                      color: Color.fromARGB(255, 145, 144, 144),
+                                      fontSize: 17,
+                                      fontWeight:FontWeight.w400,
+                                      
+                                      ) 
+                                    ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(19.0),
+                          
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                    
+                    
                       ),
-                  
-                  
                     ),
                   )
 
@@ -177,7 +182,120 @@ class _searchState extends State<search> {
               
                 ),
               ),
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                      
+                        child: Card(
+                          elevation: 0,
+                          color:const Color.fromARGB(255, 240, 238, 238),
+                          //clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(17.0),
+                                ),
+                      
+                          child:Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center, 
+                            children: [
+                              SizedBox(
+                               
+                                
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                   
+                                    FittedBox(
+                                      fit: BoxFit.cover,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left:8,right:8,top:8,bottom:8),
+                                        child: Text("Galle",
+                                              style: GoogleFonts.cabin(
+                                          // ignore: prefer_const_constructors
+                                          textStyle: TextStyle(
+                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                                                        
+                                          ) 
+                                          )
+                                        ),
+                                      ),
+                                    ),          
+                                  ],
+                                ),
+                              ),
+                              
+                            ],
+                                          
+                                          
+                          )
+                        ),
+                      ),
+                    ],
+                  ),
+                   Row(
+                    children: [
+                      SizedBox(
+                      
+                        child: Card(
+                          elevation: 0,
+                          color:const Color.fromARGB(255, 240, 238, 238),
+                          //clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(17.0),
+                                ),
+                      
+                          child:Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center, 
+                            children: [
+                              SizedBox(
+                                
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                   
+                                    FittedBox(
+                                      fit: BoxFit.cover,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left:8,right:8,top:8,bottom:8),
+                                        child: Text("Kurunagala",
+                                              style: GoogleFonts.cabin(
+                                          // ignore: prefer_const_constructors
+                                          textStyle: TextStyle(
+                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                                                        
+                                          ) 
+                                          )
+                                        ),
+                                      ),
+                                    ),          
+                                  ],
+                                ),
+                              ),
+                              
+                            ],
+                                          
+                                          
+                          )
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
           ],
         )
          
