@@ -40,12 +40,23 @@ class _searchState extends State<search> {
        
         final results = data['results'] as List<dynamic>;
 
+          
+
            setState(() {
            searchResults = results.map((result) {
-          
+               final photos = result['photos'] as List<dynamic>?;
+
+              String firstPhotoReference = '';
+
+              if (photos != null && photos.isNotEmpty) {
+                final firstPhoto = photos[0] as Map<String, dynamic>;
+                firstPhotoReference = firstPhoto['photo_reference'] ?? '';
+              }
+            
               return {
               'name': result['name'] ?? '',
-              'address': result['formatted_address']
+              'address': result['formatted_address'],
+              'photo_reference': firstPhotoReference.isNotEmpty?firstPhotoReference:'',
                   
               };
             }).toList();
@@ -64,7 +75,19 @@ class _searchState extends State<search> {
     }
   }
 
+ String getPhotoUrl(String photoReference) {
+    if (photoReference =='') {
+      // Return a placeholder image URL if no photo reference is available
+      return 'https://via.placeholder.com/150';
+    }
 
+    const apiKey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
+    final maxWidth = 200;
+    final apiUrl =
+        'https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&photoreference=$photoReference&key=$apiKey';
+
+    return apiUrl;
+  }
   
   
 
@@ -213,14 +236,37 @@ class _searchState extends State<search> {
                     final searchRe = searchResults[index];
                     final name = searchRe['name'];
                     final address = searchRe['address'];
+                    final photoReference = searchRe['photo_reference'];
+                    final photoUrl = getPhotoUrl(photoReference);
             
                     return Column(
                       children: [
-                        Row(
-                          children: [
-                            Text(name)
-                          ],
+                        //set bottom border-----------------------------
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.grey.withOpacity(0.5), 
+                                width: 1, 
+                              ),
+                            ),
+                          ),//------------------------
+                          child: Row(
+                            children: [
+                              Container(
+                                width:30,
+                                height:30,
+                                child: CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage:NetworkImage(photoUrl),
+                                  
+                                ),
+                              ),
+                              Text(name,)
+                            ],
+                          ), 
                         )
+                        
             
                       ],
             
