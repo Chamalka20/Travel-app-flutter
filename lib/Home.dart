@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -155,7 +156,16 @@ final payload3 = {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
+      extendBodyBehindAppBar: true,
+       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark, 
+          ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+
+      ),
       body: buildBody(),
     );
   }
@@ -164,8 +174,11 @@ final payload3 = {
  
   Widget buildBody() {
     if(lastViewsList.isNotEmpty){
+      
       return 
-        SafeArea(
+        ColorfulSafeArea(
+          
+          overflowRules: OverflowRules.all(true),
           child:Center(
           child: Column(
             children: [

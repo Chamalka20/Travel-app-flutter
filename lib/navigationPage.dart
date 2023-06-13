@@ -142,7 +142,7 @@ class _navigationPageState extends State<navigationPage> {
             
           }, 
           child: Scaffold(
-        
+              backgroundColor: Color.fromARGB(255, 255, 255, 255),
               body:_pages[_selectedIndex],
 
 

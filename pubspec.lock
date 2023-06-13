@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
+  colorful_safe_area:
+    dependency: "direct main"
+    description:
+      name: colorful_safe_area
+      sha256: aed448f38de1bcd57f7c1dd4a18b259092c5c9cabf5da239e3e1dfa859ff0a20
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   convert:
     dependency: transitive
     description:

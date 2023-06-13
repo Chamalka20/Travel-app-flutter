@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import 'Home.dart';
 import 'customPageRoutes.dart';
+import 'locationDetails.dart';
 
 class search extends StatefulWidget {
   const search({super.key,});
@@ -251,97 +252,104 @@ class _searchState extends State<search> {
                     return Column(
                       children: [
                         //set bottom border-----------------------------
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left:6),
-                              child: Container(
-                                width: 340,
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Color.fromARGB(255, 226, 226, 226).withOpacity(0.5), 
-                                      width: 1, 
+                        GestureDetector(
+                          onTap: () {
+                             Navigator.of(context).pushReplacement(customPageRoutes(
+                
+                            child:const locationDetails()));
+                          },
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left:6),
+                                child: Container(
+                                  width: 340,
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Color.fromARGB(255, 226, 226, 226).withOpacity(0.5), 
+                                        width: 1, 
+                                      ),
                                     ),
-                                  ),
-                                ),//------------------------
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 9),
-                                        child: Container(
-                                          width:37,
-                                          height:37,
-                                          child: CircleAvatar(
-                                            radius: 40,
-                                            backgroundImage:NetworkImage(photoUrl),
-                                            
+                                  ),//------------------------
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 9),
+                                          child: Container(
+                                            width:37,
+                                            height:37,
+                                            child: CircleAvatar(
+                                              radius: 40,
+                                              backgroundImage:NetworkImage(photoUrl),
+                                              
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left:6),
-                                        child: Container(
-                                          width:265,
-                                          child: Column(
-                                            
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(bottom:4),
-                                                child: Row(
+                                        Padding(
+                                          padding: const EdgeInsets.only(left:6),
+                                          child: Container(
+                                            width:265,
+                                            child: Column(
+                                              
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(bottom:4),
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width:255,
+                                                        child: Text(name,
+                                                           overflow: TextOverflow.ellipsis,
+                                                          style: GoogleFonts.cabin(
+                                                            // ignore: prefer_const_constructors
+                                                            textStyle: TextStyle(
+                                                            color: const Color.fromARGB(255, 27, 27, 27),
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w700,
+                                                                                                    
+                                                            ) 
+                                                          )
+                                                        ),
+                                                      ),
+                                                      
+                                                    ],
+                                                  ),
+                                                ),
+                                                Row(
                                                   children: [
                                                     SizedBox(
                                                       width:255,
-                                                      child: Text(name,
-                                                         overflow: TextOverflow.ellipsis,
-                                                        style: GoogleFonts.cabin(
+                                                      child: Text(address,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: GoogleFonts.cabin(
                                                           // ignore: prefer_const_constructors
                                                           textStyle: TextStyle(
-                                                          color: const Color.fromARGB(255, 27, 27, 27),
-                                                          fontSize: 14,
+                                                          color: Color.fromARGB(255, 138, 138, 138),
+                                                          fontSize: 10,
                                                           fontWeight: FontWeight.w700,
                                                                                                   
                                                           ) 
                                                         )
                                                       ),
-                                                    ),
-                                                    
+                                                    )
                                                   ],
-                                                ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  SizedBox(
-                                                    width:255,
-                                                    child: Text(address,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: GoogleFonts.cabin(
-                                                        // ignore: prefer_const_constructors
-                                                        textStyle: TextStyle(
-                                                        color: Color.fromARGB(255, 138, 138, 138),
-                                                        fontSize: 10,
-                                                        fontWeight: FontWeight.w700,
-                                                                                                
-                                                        ) 
-                                                      )
-                                                    ),
-                                                  )
-                                                ],
-                                                      
-                                              )
-                                            ],
+                                                        
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ), 
+                                        )
+                                      ],
+                                    ),
+                                  ), 
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         )
                         
                               
