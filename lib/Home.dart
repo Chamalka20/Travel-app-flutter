@@ -403,6 +403,7 @@ final payload3 = {
                                                 children: [
                                                   Row(
                                                     children: [
+                                                      //place type tag-----------------------------------------------------
                                                       SizedBox(
                                                         height:25,
                                                         width:60,
@@ -434,7 +435,7 @@ final payload3 = {
                                                             
                                                         ),
                                                       ),
-                                
+                                                      //--------------------------------------------------------------------
                                                       Padding(
                                                         padding: const EdgeInsets.only(left:119,top:5),
                                                         child: SizedBox(

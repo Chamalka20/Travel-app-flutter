@@ -59,11 +59,11 @@ class _searchState extends State<search> {
               'name': result['name'] ?? '',
               'address': result['formatted_address'],
               'photo_reference': firstPhotoReference.isNotEmpty?firstPhotoReference:'',
+              'place_id':result['place_id'],
                   
               };
             }).toList();
            });
-          print( searchResults);
       
       }else{
         print("no Data"); 
@@ -247,7 +247,9 @@ class _searchState extends State<search> {
                     final name = searchRe['name'];
                     final address = searchRe['address'];
                     final photoReference = searchRe['photo_reference'];
+                    final  id = searchRe['place_id'];
                     final photoUrl = getPhotoUrl(photoReference);
+                    
             
                     return Column(
                       children: [
@@ -256,7 +258,8 @@ class _searchState extends State<search> {
                           onTap: () {
                              Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                            child:const locationDetails()));
+                            child: locationDetails(placeId:id,)));
+                           
                           },
                           child: Row(
                             children: [

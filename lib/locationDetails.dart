@@ -13,20 +13,105 @@ import 'customPageRoutes.dart';
 import 'navigationPage.dart';
 
 class locationDetails extends StatefulWidget {
-  const locationDetails({super.key});
+  final String placeId;
+ const locationDetails({required this.placeId, Key? key}) : super(key: key);
+
 
   @override
-  State<locationDetails> createState() => _locationDetailsState();
+  State<locationDetails> createState() => _locationDetailsState(placeId);
 }
 
 class _locationDetailsState extends State<locationDetails> {
+  final String placeId;
+  late final String placeName;
+  late final  placeType;
+  late final placeOpenTimes;
+  late final double placeRating;
+  late final bool isPlaceOpenNow;
+  late final bool isEstablishment ;
 
+  
+  _locationDetailsState(this.placeId);
   @override
   void initState(){
      super.initState();
     //get data list from api-------------------------------
-     getAboutData ();
+    getPlaceDetails ();
+    getAboutData ();
   }
+
+   Future <void> getPlaceDetails ()async {
+    const String apikey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
+    const String apiUrl = 'https://maps.googleapis.com/maps/api/place/details/json';
+    final String url = '$apiUrl?place_id=$placeId&key=$apikey';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      print("succses ${response.statusCode}");
+
+      final data = jsonDecode(response.body);
+      final results = data['result']??'';
+
+       if (results != null) {
+        placeType = results['types']??'';
+
+         if (results.containsKey('opening_hours') && results['opening_hours'] != null) {
+            placeOpenTimes = results['opening_hours']['weekday_text'] ?? '';
+          } else {
+            placeOpenTimes = ['No times found'];
+          }
+
+        //check place is establishment or not-------------------------
+        isEstablishment = false;
+        for(int i=0;i<placeType.length;i++){
+          
+          if(placeType[i]=='establishment'){
+
+            isEstablishment = true;
+            break;
+
+          }
+
+        }
+        
+        print(isEstablishment);
+         setState(() {
+       
+          placeName = results['name']??"No name";
+          placeRating = results['rating'] ?? 0.0;
+
+          if (results.containsKey('opening_hours') && results['open_now'] != null) {
+           isPlaceOpenNow =  results['opening_hours']['open_now'] ??false ;
+          } else {
+            isPlaceOpenNow = false;
+          }
+
+          
+          
+         });
+        
+
+        print( placeName);
+        print( placeOpenTimes);
+
+       }else{
+
+         print("Error: place data  value is null");
+       }
+
+      
+       
+
+    }else{
+      print(" not succses ${response.statusCode}");
+
+    }
+
+
+   }
+
+  
 
   Future <void> getAboutData ()async {
    
@@ -62,13 +147,7 @@ class _locationDetailsState extends State<locationDetails> {
         final jsonResponse = json.decode(response.body);
       final generatedText = jsonResponse['choices'][0]['message']['content'] as String?;
 
-      if (generatedText != null) {
-        print("Success: $generatedText");
-        // Update state or perform further actions with the generated text
-      } else {
-        print("Error: Text value is null");
-      }
-
+    
 
       // final jsonResponse = json.decode(response.body);
       // final generatedText = jsonResponse['text'] as String;
@@ -140,7 +219,7 @@ class _locationDetailsState extends State<locationDetails> {
                           
                           child: SizedBox(
                             width:360,
-                            height: 200,
+                            height: 800,
                             child: Container(
                               
                               decoration: BoxDecoration(
@@ -155,7 +234,7 @@ class _locationDetailsState extends State<locationDetails> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.only(top:16, left:6),
-                                          child: Text("Hikkaduwa Fish Market",
+                                          child: Text(placeName,
                                               style: GoogleFonts.cabin(
                                                         // ignore: prefer_const_constructors
                                                         textStyle: TextStyle(
@@ -173,20 +252,21 @@ class _locationDetailsState extends State<locationDetails> {
                                     ),
                                     
                                   ),
+                                  // ratings------------------------------------------------
                                   Padding(
-                                    padding: const EdgeInsets.only(left:10,top:6),
+                                    padding: const EdgeInsets.only(left:12,top:6),
                                     child: Row(
                                       children: [
                                          RatingBar.builder(
                                             itemSize: 15,
                                             
-                                            initialRating: 3,
+                                            initialRating: placeRating,
                                             minRating: 1,
                                             direction: Axis.horizontal,
                                             allowHalfRating: true,
                                             itemCount: 5,
-                                            itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                                            itemBuilder: (context, _) => Icon(
+                                            itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
+                                            itemBuilder: (context, _) => const Icon(
                                               Icons.star,
                                               color: Colors.amber,
                                             ),
@@ -197,7 +277,7 @@ class _locationDetailsState extends State<locationDetails> {
 
                                           Padding(
                                             padding: const EdgeInsets.only(left:7),
-                                            child: Text("5.5",style: GoogleFonts.cabin(
+                                            child: Text('${placeRating}',style: GoogleFonts.cabin(
                                                           // ignore: prefer_const_constructors
                                                           textStyle: TextStyle(
                                                           color: const Color.fromARGB(255, 27, 27, 27),
@@ -206,10 +286,126 @@ class _locationDetailsState extends State<locationDetails> {
                                                   
                                                           ) 
                                                           )),
-                                          )
+                                          ),
+                                          //----------------------------------------------------------
+                                         
                                       ],
                                     ),
-                                  )
+                                  ),
+                                  //place types------------------------------------------------------------
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(left:10,top:4),
+                                            child: SizedBox(
+                                              width:300,
+                                              height:25,
+                                              child: ListView.builder(
+                                                scrollDirection: Axis.horizontal, 
+                                                itemCount: placeType.length,
+                                                itemBuilder: (context, index) {
+                                                  return  SizedBox(
+                                                           
+                                                            child: Card(
+                                                              elevation: 0,
+                                                              color:const Color.fromARGB(255, 240, 238, 238),
+                                                              //clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                              shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(17.0),
+                                                                    ),
+                                                          
+                                                              child:Container(
+                                                               
+                                                                
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                  
+                                                                    FittedBox(
+                                                                      fit: BoxFit.cover,
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.only(left:4,right:4),
+                                                                        child: Text(placeType[index],
+                                                                              style: GoogleFonts.cabin(
+                                                                          // ignore: prefer_const_constructors
+                                                                          textStyle: TextStyle(
+                                                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                                                          fontSize: 8,
+                                                                          fontWeight: FontWeight.bold,
+                                                                                                        
+                                                                          ) 
+                                                                          )
+                                                                        ),
+                                                                      ),
+                                                                    ),          
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ),
+                                                          );
+                                                        }
+                                                    ),
+                                            ),
+                                          ), 
+                                              
+                                        ],
+                                              
+                                      ),
+                                    ],
+                                  ),
+                                  //open now--------------------------------------------------------
+                                  Padding(
+                                    padding: const EdgeInsets.only(left:13,top:7),
+                                    child: Row(
+                                      children: [
+                                        Text(isPlaceOpenNow?'Open now':'Closed',
+                                          style: GoogleFonts.cabin(
+                                              // ignore: prefer_const_constructors
+                                              textStyle: TextStyle(
+                                              color: const Color.fromARGB(255, 27, 27, 27),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                                                            
+                                              ) 
+                                            )
+                                        )
+                                      ],
+                                  
+                                    ),
+                                  ),
+                                  //open times---------------------------------------------------------------------------------
+                                 Padding(
+                                    padding: const EdgeInsets.only(left:13,top:5),
+                                   child: Row(
+                                     children: [
+                                       Container(
+                                          height: 110,
+                                          width:115,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: placeOpenTimes.map<Widget>((time) => Padding(
+                                              padding: const EdgeInsets.only(bottom: 4.0),
+                                              child: Text(
+                                                time,
+                                                style: GoogleFonts.cabin(
+                                                  textStyle:const TextStyle(
+                                                    color: const Color.fromARGB(255, 27, 27, 27),
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            )).toList(),
+                                          ),
+                                        ),
+                                     ],
+                                   ),
+                                 ),
+
+
                                 ],
                               ),
                             ),
