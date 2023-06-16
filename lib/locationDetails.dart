@@ -28,7 +28,13 @@ class _locationDetailsState extends State<locationDetails> {
   late final placeOpenTimes;
   late final double placeRating;
   late final bool isPlaceOpenNow;
-  late final bool isEstablishment ;
+  late final String PlaceAddress;
+  late final isEstablishment ;
+  late final String palceNumber;
+  late  String aboutDetails ='';
+  late final bool isDataLoading;
+
+
 
   
   _locationDetailsState(this.placeId);
@@ -36,8 +42,9 @@ class _locationDetailsState extends State<locationDetails> {
   void initState(){
      super.initState();
     //get data list from api-------------------------------
-    getPlaceDetails ();
-    getAboutData ();
+  
+   getPlaceDetails ();
+    
   }
 
    Future <void> getPlaceDetails ()async {
@@ -55,31 +62,38 @@ class _locationDetailsState extends State<locationDetails> {
 
        if (results != null) {
         placeType = results['types']??'';
+        palceNumber=results['formatted_phone_number']??'No phone number found';
 
          if (results.containsKey('opening_hours') && results['opening_hours'] != null) {
             placeOpenTimes = results['opening_hours']['weekday_text'] ?? '';
           } else {
-            placeOpenTimes = ['No times found'];
+            placeOpenTimes = [];
           }
 
         //check place is establishment or not-------------------------
-        isEstablishment = false;
+        late bool isEs;
         for(int i=0;i<placeType.length;i++){
           
           if(placeType[i]=='establishment'){
 
-            isEstablishment = true;
+            isEs = true;
             break;
 
+          }else{
+
+            isEs = false;
           }
 
         }
+        isEstablishment =isEs;
         
         print(isEstablishment);
-         setState(() {
-       
+        
+         
+          
           placeName = results['name']??"No name";
           placeRating = results['rating'] ?? 0.0;
+          PlaceAddress = results['formatted_address'];
 
           if (results.containsKey('opening_hours') && results['open_now'] != null) {
            isPlaceOpenNow =  results['opening_hours']['open_now'] ??false ;
@@ -89,11 +103,12 @@ class _locationDetailsState extends State<locationDetails> {
 
           
           
-         });
+         
         
-
+        getAboutData ();
         print( placeName);
         print( placeOpenTimes);
+        
 
        }else{
 
@@ -116,9 +131,9 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
-    String message = 'give details about galle';
+    String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
     final requestBody = jsonEncode({
       'model': 'gpt-3.5-turbo',
@@ -142,18 +157,24 @@ class _locationDetailsState extends State<locationDetails> {
       },
       body:requestBody,
     );
+    
 
      if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
       final generatedText = jsonResponse['choices'][0]['message']['content'] as String?;
+      
+      aboutDetails = generatedText ?? "";
 
-    
+      setState(() {
+        placeName;
+        placeRating;
+        isPlaceOpenNow;
+        aboutDetails;
 
-      // final jsonResponse = json.decode(response.body);
-      // final generatedText = jsonResponse['text'] as String;
+      });
 
       print("succses");
-
+      
       // setState(() {
       //   _response = generatedText;
       // });
@@ -166,17 +187,15 @@ class _locationDetailsState extends State<locationDetails> {
     }
 
   }
-
-
   @override
   Widget build(BuildContext context) {
-    return  WillPopScope(
+    return WillPopScope(
       onWillPop: () async {
          Navigator.of(context).pushReplacement(customPageRoutes(
                     
         child:const navigationPage(isBackButtonClick:true)));  
       return false;
-      },
+      }, 
       child: Scaffold(
        extendBodyBehindAppBar: true,
        appBar: AppBar(
@@ -189,7 +208,18 @@ class _locationDetailsState extends State<locationDetails> {
         backgroundColor: Color.fromARGB(0, 255, 255, 255),
 
       ),
-        body:Center(
+        body:buildBody(),
+      )
+    );
+
+  }
+
+  
+   Widget buildBody() {
+    if(aboutDetails.isNotEmpty){
+       
+      return
+      Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -253,43 +283,46 @@ class _locationDetailsState extends State<locationDetails> {
                                     
                                   ),
                                   // ratings------------------------------------------------
-                                  Padding(
-                                    padding: const EdgeInsets.only(left:12,top:6),
-                                    child: Row(
-                                      children: [
-                                         RatingBar.builder(
-                                            itemSize: 15,
-                                            
-                                            initialRating: placeRating,
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: true,
-                                            itemCount: 5,
-                                            itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-                                            itemBuilder: (context, _) => const Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
+                                  Visibility(
+                                    visible: isEstablishment,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left:12,top:6),
+                                      child: Row(
+                                        children: [
+                                           RatingBar.builder(
+                                              itemSize: 15,
+                                              
+                                              initialRating: placeRating,
+                                              minRating: 1,
+                                              direction: Axis.horizontal,
+                                              allowHalfRating: true,
+                                              itemCount: 5,
+                                              itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
+                                              itemBuilder: (context, _) => const Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                              ),
+                                              onRatingUpdate: (rating) {
+                                                print(rating);
+                                              },
                                             ),
-                                            onRatingUpdate: (rating) {
-                                              print(rating);
-                                            },
-                                          ),
-
-                                          Padding(
-                                            padding: const EdgeInsets.only(left:7),
-                                            child: Text('${placeRating}',style: GoogleFonts.cabin(
-                                                          // ignore: prefer_const_constructors
-                                                          textStyle: TextStyle(
-                                                          color: const Color.fromARGB(255, 27, 27, 27),
-                                                          fontSize: 15,
-                                                          //fontWeight: FontWeight.bold,
-                                                  
-                                                          ) 
-                                                          )),
-                                          ),
-                                          //----------------------------------------------------------
-                                         
-                                      ],
+                                  
+                                            Padding(
+                                              padding: const EdgeInsets.only(left:7),
+                                              child: Text('${placeRating}',style: GoogleFonts.cabin(
+                                                            // ignore: prefer_const_constructors
+                                                            textStyle: TextStyle(
+                                                            color: const Color.fromARGB(255, 27, 27, 27),
+                                                            fontSize: 15,
+                                                            //fontWeight: FontWeight.bold,
+                                                    
+                                                            ) 
+                                                            )),
+                                            ),
+                                            //----------------------------------------------------------
+                                           
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   //place types------------------------------------------------------------
@@ -357,54 +390,122 @@ class _locationDetailsState extends State<locationDetails> {
                                     ],
                                   ),
                                   //open now--------------------------------------------------------
-                                  Padding(
+                                  Visibility(
+                                    visible: isEstablishment,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left:12,top:7),
+                                      child: Row(
+                                        children: [
+                                          Text(isPlaceOpenNow?'Open now':' Closed now',
+                                            style: GoogleFonts.cabin(
+                                                // ignore: prefer_const_constructors
+                                                textStyle: TextStyle(
+                                                color: const Color.fromARGB(255, 27, 27, 27),
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                                              
+                                                ) 
+                                              )
+                                          )
+                                        ],
+                                    
+                                      ),
+                                    ),
+                                  ),
+                                  //open times---------------------------------------------------------------------------------
+                                 Visibility(
+                                  visible: placeOpenTimes.isNotEmpty?true:false,
+                                   child: Padding(
+                                      padding: const EdgeInsets.only(left:13,top:5),
+                                     child: Row(
+                                       children: [
+                                         Container(
+                                            width:115,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: placeOpenTimes.map<Widget>((time) => Padding(
+                                                padding: const EdgeInsets.only(bottom: 4.0),
+                                                child: Text(
+                                                  time,
+                                                  style: GoogleFonts.cabin(
+                                                    textStyle:const TextStyle(
+                                                      color: const Color.fromARGB(255, 27, 27, 27),
+                                                      fontSize: 8,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )).toList(),
+                                            ),
+                                          ),
+                                       ],
+                                     ),
+                                   ),
+                                 ),
+                                //phone number--------------------------------------------------------------
+                                Visibility(
+                                  visible: isEstablishment,
+                                  child: Padding(
                                     padding: const EdgeInsets.only(left:13,top:7),
                                     child: Row(
                                       children: [
-                                        Text(isPlaceOpenNow?'Open now':'Closed',
+                                        Text(palceNumber,
                                           style: GoogleFonts.cabin(
-                                              // ignore: prefer_const_constructors
-                                              textStyle: TextStyle(
-                                              color: const Color.fromARGB(255, 27, 27, 27),
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                                                            
-                                              ) 
-                                            )
+                                                      textStyle:const TextStyle(
+                                                        color: Color.fromARGB(255, 19, 148, 223),
+                                                        fontSize: 11,
+                                                        fontWeight:FontWeight.w400
+                                                        
+                                                      ),
+                                                    ),
                                         )
                                       ],
                                   
                                     ),
                                   ),
-                                  //open times---------------------------------------------------------------------------------
-                                 Padding(
-                                    padding: const EdgeInsets.only(left:13,top:5),
-                                   child: Row(
-                                     children: [
-                                       Container(
-                                          height: 110,
-                                          width:115,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: placeOpenTimes.map<Widget>((time) => Padding(
-                                              padding: const EdgeInsets.only(bottom: 4.0),
-                                              child: Text(
-                                                time,
-                                                style: GoogleFonts.cabin(
-                                                  textStyle:const TextStyle(
-                                                    color: const Color.fromARGB(255, 27, 27, 27),
-                                                    fontSize: 8,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            )).toList(),
-                                          ),
-                                        ),
-                                     ],
-                                   ),
-                                 ),
-
+                                ),
+                                // about details on the place----------------------------------------------------
+                                Padding(
+                                  padding: const EdgeInsets.only(left:12.0,top:7),
+                                  child: Row(
+                                    children: [
+                                      Text("About",
+                                         style: GoogleFonts.cabin(
+                                                        textStyle:const TextStyle(
+                                                          color: Color.fromARGB(255, 0, 0, 0),
+                                                          fontSize: 16,
+                                                          fontWeight:FontWeight.bold
+                                                          
+                                                        ),
+                                                      ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left:12.0,top:5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 340,
+                                        child: Text(aboutDetails,
+                                          style: GoogleFonts.cabin(
+                                                // ignore: prefer_const_constructors
+                                                textStyle: TextStyle(
+                                                color: Color.fromARGB(255, 83, 83, 83),
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w400,
+                                                                              
+                                                ) 
+                                              )  
+                                        
+                                        )
+                                        
+                                        )
+                                    ],
+                                                                
+                                  ),
+                                )
 
                                 ],
                               ),
@@ -422,8 +523,16 @@ class _locationDetailsState extends State<locationDetails> {
             ),
           ),
           
-        )
-      ),
-    );
+        );
+    
+    }else{
+
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+
+
+    }
+    
   }
 }
