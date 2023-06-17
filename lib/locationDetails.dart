@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -14,6 +15,8 @@ import 'navigationPage.dart';
 
 class locationDetails extends StatefulWidget {
   final String placeId;
+  
+
  const locationDetails({required this.placeId, Key? key}) : super(key: key);
 
 
@@ -23,19 +26,24 @@ class locationDetails extends StatefulWidget {
 
 class _locationDetailsState extends State<locationDetails> {
   final String placeId;
+  late final String placePhoto;
   late final String placeName;
+
   late final  placeType;
+  late  final placeLogLat;
+  late final LatLng placeLocation;
   late final placeOpenTimes;
   late final double placeRating;
   late final bool isPlaceOpenNow;
   late final String PlaceAddress;
+  late final String PlacePhotoReference;
   late final isEstablishment ;
   late final String palceNumber;
   late  String aboutDetails ='';
   late final bool isDataLoading;
 
 
-
+  bool showFullText = false;
   
   _locationDetailsState(this.placeId);
   @override
@@ -64,6 +72,12 @@ class _locationDetailsState extends State<locationDetails> {
         placeType = results['types']??'';
         palceNumber=results['formatted_phone_number']??'No phone number found';
 
+        //set place location-----------------------
+        placeLogLat =results['geometry']['location']!;
+        print(placeLogLat);
+        placeLocation = LatLng(placeLogLat!['lat'], placeLogLat!['lng']);
+        //---------------------------------------------------------------------------
+
          if (results.containsKey('opening_hours') && results['opening_hours'] != null) {
             placeOpenTimes = results['opening_hours']['weekday_text'] ?? '';
           } else {
@@ -86,12 +100,15 @@ class _locationDetailsState extends State<locationDetails> {
 
         }
         isEstablishment =isEs;
+        //--------------------------------------------------------------------
+
         
-        print(isEstablishment);
-        
-         
           
           placeName = results['name']??"No name";
+
+          PlacePhotoReference=results['photos'][0]['photo_reference'];
+          placePhoto=getPhotoUrl(PlacePhotoReference);
+          
           placeRating = results['rating'] ?? 0.0;
           PlaceAddress = results['formatted_address'];
 
@@ -125,27 +142,39 @@ class _locationDetailsState extends State<locationDetails> {
 
 
    }
+  //get place photo ---------------------------------------------------------------
+   String getPhotoUrl(String photoReference) {
+    if (photoReference =='') {
+      // Return a placeholder image URL if no photo reference is available
+      return 'https://via.placeholder.com/150';
+    }
+
+    const apiKey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
+    final maxWidth = 1000;
+    final maxHeight = 1250;
+    final apiUrl =
+        'https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&maxheight=$maxHeight&photoreference=$photoReference&key=$apiKey';
+
+    return apiUrl;
+  }
 
   
 
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
     final requestBody = jsonEncode({
       'model': 'gpt-3.5-turbo',
       'messages': [
-        {
-          'role': 'system',
-          'content': 'You are a helpful assistant.',
-        },
          {
           'role': 'user',
           'content': '$message',
         },
+        
       ],
     });
 
@@ -226,16 +255,16 @@ class _locationDetailsState extends State<locationDetails> {
                 Row(
                   children: [
                     Container(
-                      height:800,
+                      height:1200,
                       color: Color.fromARGB(255, 255, 255, 255),
                       child: Stack(
                         children:[ Container(
                           width:360,
                           height: 250,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                           
                           image: DecorationImage(
-                          image: AssetImage('assets/images/Boat-Windows-10-Wallpaper.jpg'),
+                          image: NetworkImage(placePhoto),
                           fit: BoxFit.cover
                                       
                             ),
@@ -466,47 +495,173 @@ class _locationDetailsState extends State<locationDetails> {
                                 ),
                                 // about details on the place----------------------------------------------------
                                 Padding(
-                                  padding: const EdgeInsets.only(left:12.0,top:7),
+                                  padding: const EdgeInsets.only(left: 13,top:7),
                                   child: Row(
                                     children: [
                                       Text("About",
-                                         style: GoogleFonts.cabin(
-                                                        textStyle:const TextStyle(
-                                                          color: Color.fromARGB(255, 0, 0, 0),
-                                                          fontSize: 16,
-                                                          fontWeight:FontWeight.bold
-                                                          
-                                                        ),
+                                        style: GoogleFonts.cabin(
+                                                      textStyle:const TextStyle(
+                                                        color: Color.fromARGB(255, 0, 0, 0),
+                                                        fontSize: 16,
+                                                        fontWeight:FontWeight.bold
+                                                        
                                                       ),
+                                                    ),
                                       )
                                     ],
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left:12.0,top:5),
+                                  padding: EdgeInsets.only(left: 13,top:4),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          final textSpan = TextSpan(
+                                            text: aboutDetails,
+                                            style: GoogleFonts.cabin(
+                                                    textStyle:const TextStyle(
+                                                      color: Color.fromARGB(255, 112, 112, 112),
+                                                      fontSize: 11,
+                                                      fontWeight:FontWeight.w400
+                                                      
+                                                    ),
+                                                  ),
+                                          );
+                                          final textPainter = TextPainter(
+                                            text: textSpan,
+                                            textDirection: TextDirection.ltr,
+                                            maxLines: 4, 
+                                          );
+                                          textPainter.layout(maxWidth: constraints.maxWidth);
+                                          final isTextOverflowed = textPainter.didExceedMaxLines;
+
+                                          return Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              RichText(
+                                                text: textSpan,
+                                                maxLines: showFullText ? null : 4, 
+                                                overflow: TextOverflow.clip,
+                                              ),
+                                              if (isTextOverflowed)
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      showFullText = !showFullText;
+                                                    });
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(left:140),
+                                                    child: Text(
+                                                      showFullText ? 'See Less' : 'See More',
+                                                      style: GoogleFonts.cabin(
+                                                        textStyle:const TextStyle(
+                                                         color: Color.fromARGB(255, 19, 148, 223),
+                                                          fontSize: 12,
+                                                          fontWeight:FontWeight.bold
+                                                          
+                                                        ),
+                                                  ),
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                //place address ----------------------------------------------------------
+                                Visibility(
+                                  visible: isEstablishment,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 13,top:7),
+                                    child: Row(
+                                      children: [
+                                        Text("Address",
+                                          style: GoogleFonts.cabin(
+                                                          textStyle:const TextStyle(
+                                                            color: Color.fromARGB(255, 0, 0, 0),
+                                                            fontSize: 16,
+                                                            fontWeight:FontWeight.bold
+                                                            
+                                                          ),
+                                                        ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isEstablishment,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 13,top:5),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width:250,
+                                          child: Text(PlaceAddress,
+                                            style: GoogleFonts.cabin(
+                                                              textStyle:const TextStyle(
+                                                                 color: Color.fromARGB(255, 19, 148, 223),
+                                                                fontSize: 11,
+                                                                fontWeight:FontWeight.bold
+                                                                
+                                                              ),
+                                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                //google map------------------------------------------------------------
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 13,top:8),
                                   child: Row(
                                     children: [
-                                      SizedBox(
-                                        width: 340,
-                                        child: Text(aboutDetails,
-                                          style: GoogleFonts.cabin(
-                                                // ignore: prefer_const_constructors
-                                                textStyle: TextStyle(
-                                                color: Color.fromARGB(255, 83, 83, 83),
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w400,
-                                                                              
-                                                ) 
-                                              )  
-                                        
-                                        )
-                                        
-                                        )
+                                      Text("How to get there",
+                                        style: GoogleFonts.cabin(
+                                                          textStyle:const TextStyle(
+                                                            color: Color.fromARGB(255, 0, 0, 0),
+                                                            fontSize: 16,
+                                                            fontWeight:FontWeight.bold
+                                                            
+                                                          ),
+                                                        ),
+                                      )
                                     ],
-                                                                
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top:9),
+                                  child: SizedBox(
+                                    width:355,
+                                    height:185,
+                                    child: GoogleMap(
+                                      initialCameraPosition: CameraPosition(
+                                        target: placeLocation,
+                                        zoom: 15,
+                                      ),
+                                      markers:{
+                                        Marker(
+                                          markerId: MarkerId('kjhuuu'),
+                                          position: placeLocation,
+                                          infoWindow: InfoWindow(
+                                            title: placeName,
+                                            snippet: PlaceAddress,
+                                          ),
+                                          
+                                          )
+                                  
+                                      },
+                                      
+                                    ),
                                   ),
                                 )
-
                                 ],
                               ),
                             ),

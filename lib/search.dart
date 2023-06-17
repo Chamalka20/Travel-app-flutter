@@ -84,7 +84,7 @@ class _searchState extends State<search> {
     }
 
     const apiKey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
-    final maxWidth = 200;
+    final maxWidth = 300;
     final apiUrl =
         'https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&photoreference=$photoReference&key=$apiKey';
 
@@ -258,7 +258,7 @@ class _searchState extends State<search> {
                           onTap: () {
                              Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                            child: locationDetails(placeId:id,)));
+                            child: locationDetails(placeId:id)));
                            
                           },
                           child: Row(
