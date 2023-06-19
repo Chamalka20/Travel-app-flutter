@@ -43,6 +43,7 @@ class _locationDetailsState extends State<locationDetails> {
   late final bool isDataLoading;
 
 
+
   bool showFullText = false;
   
   _locationDetailsState(this.placeId);
@@ -84,6 +85,8 @@ class _locationDetailsState extends State<locationDetails> {
             placeOpenTimes = [];
           }
 
+        placeName = results['name']??"No name";
+
         //check place is establishment or not-------------------------
         late bool isEs;
         for(int i=0;i<placeType.length;i++){
@@ -91,20 +94,22 @@ class _locationDetailsState extends State<locationDetails> {
           if(placeType[i]=='establishment'){
 
             isEs = true;
+            
             break;
 
-          }else{
 
+
+          }else{
+            findWeather ();
             isEs = false;
           }
 
         }
         isEstablishment =isEs;
         //--------------------------------------------------------------------
-
-        
+      
           
-          placeName = results['name']??"No name";
+         
 
           PlacePhotoReference=results['photos'][0]['photo_reference'];
           placePhoto=getPhotoUrl(PlacePhotoReference);
@@ -142,6 +147,55 @@ class _locationDetailsState extends State<locationDetails> {
 
 
    }
+
+  
+  late final double temperature;
+  late final weatherIcon;
+
+    Future<void> findWeather ()async {
+        const String apikey = '44uxmYtWX39vfBU6EgSPDrJI8TSJi4tViH6a2uojU9U';
+        const apiUrl = 'https://atlas.microsoft.com/weather/currentConditions/json';
+        final url ='$apiUrl?api-version=1.0&query=${placeLogLat!['lat']},${placeLogLat!['lng']}&subscription-key=$apikey';
+
+        final response = await http.get(Uri.parse(url));
+        
+        if (response.statusCode == 200) {
+          print("Weather calculate sucsuss:${response.statusCode}");
+
+          final responseData = jsonDecode(response.body);
+          List<dynamic> results = responseData['results'];
+
+
+          if(results !=null &&  results.isNotEmpty){
+            String getPhrase = results[0]['phrase']??'';
+            bool isDayTime = results[0]['isDayTime']??false;
+            bool tempvalue = results[0]['temperature']['value']??0.0;
+            print( "getPhrase:$getPhrase");
+            print( "daytime:$isDayTime");
+            print( "temperature:$temperature");
+
+            //change icon when weather changers---------------------------------
+            if(isDayTime==false && getPhrase=="Cloudy"){
+
+
+            }else if(isDayTime==false && getPhrase=="Some clouds"){
+
+
+            }else if(isDayTime==false && getPhrase=="Partly cloudy"){
+
+
+            } 
+
+          }else{
+            print( "no weather data");
+          }
+          
+        }else{
+
+          print("Weather calculate not sucsuss:${response.statusCode}");
+
+        }
+      }  
   //get place photo ---------------------------------------------------------------
    String getPhotoUrl(String photoReference) {
     if (photoReference =='') {
@@ -163,7 +217,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
@@ -619,21 +673,24 @@ class _locationDetailsState extends State<locationDetails> {
                                   ),
                                 ),
                                 //google map------------------------------------------------------------
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 13,top:8),
-                                  child: Row(
-                                    children: [
-                                      Text("How to get there",
-                                        style: GoogleFonts.cabin(
-                                                          textStyle:const TextStyle(
-                                                            color: Color.fromARGB(255, 0, 0, 0),
-                                                            fontSize: 16,
-                                                            fontWeight:FontWeight.bold
-                                                            
+                                Visibility(
+                                  visible: isEstablishment,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 13,top:8),
+                                    child: Row(
+                                      children: [
+                                        Text("How to get there",
+                                          style: GoogleFonts.cabin(
+                                                            textStyle:const TextStyle(
+                                                              color: Color.fromARGB(255, 0, 0, 0),
+                                                              fontSize: 16,
+                                                              fontWeight:FontWeight.bold
+                                                              
+                                                            ),
                                                           ),
-                                                        ),
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 Padding(
