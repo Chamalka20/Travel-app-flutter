@@ -42,7 +42,8 @@ class _locationDetailsState extends State<locationDetails> {
   late  String aboutDetails ='';
   late final bool isDataLoading;
 
-
+  late final double temperature;
+  late final String weatherIcon;
 
   bool showFullText = false;
   
@@ -148,14 +149,10 @@ class _locationDetailsState extends State<locationDetails> {
 
    }
 
-  
-  late final double temperature;
-  late final weatherIcon;
-
     Future<void> findWeather ()async {
         const String apikey = '44uxmYtWX39vfBU6EgSPDrJI8TSJi4tViH6a2uojU9U';
         const apiUrl = 'https://atlas.microsoft.com/weather/currentConditions/json';
-        final url ='$apiUrl?api-version=1.0&query=${placeLogLat!['lat']},${placeLogLat!['lng']}&subscription-key=$apikey';
+        final url ='$apiUrl?api-version=1.1&query=${placeLogLat!['lat']},${placeLogLat!['lng']}&unit=metric&subscription-key=$apikey';
 
         final response = await http.get(Uri.parse(url));
         
@@ -165,25 +162,44 @@ class _locationDetailsState extends State<locationDetails> {
           final responseData = jsonDecode(response.body);
           List<dynamic> results = responseData['results'];
 
-
+  
           if(results !=null &&  results.isNotEmpty){
             String getPhrase = results[0]['phrase']??'';
             bool isDayTime = results[0]['isDayTime']??false;
-            bool tempvalue = results[0]['temperature']['value']??0.0;
+            temperature = results[0]['temperature']['value']??0.0;
             print( "getPhrase:$getPhrase");
             print( "daytime:$isDayTime");
             print( "temperature:$temperature");
 
             //change icon when weather changers---------------------------------
             if(isDayTime==false && getPhrase=="Cloudy"){
-
+              weatherIcon = '';
 
             }else if(isDayTime==false && getPhrase=="Some clouds"){
-
+              weatherIcon = '';
 
             }else if(isDayTime==false && getPhrase=="Partly cloudy"){
+              weatherIcon = '';
 
+            }else if(isDayTime==false && getPhrase=="Rain"){
+              weatherIcon = '';
 
+            }else if(isDayTime==true && getPhrase=="Light rain"){
+              weatherIcon = 'assets/images/Light-rain.png';
+
+            }else if(isDayTime==true && getPhrase=="Cloudy"){
+              weatherIcon = 'assets/images/cloudy.png';
+
+            }else if(isDayTime==true && getPhrase=="Mostly cloudy"){
+              weatherIcon = 'assets/images/mostly-cloudy.png';
+
+            }else if(isDayTime==true && getPhrase=="Clouds and sun"){
+
+              weatherIcon = 'assets/images/cloudsAndSun.png';
+            }else if(isDayTime==true && getPhrase=="Partly sunny"){
+
+              weatherIcon = 'assets/images/Partly-sunny.png';
+              
             } 
 
           }else{
@@ -217,7 +233,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
@@ -253,18 +269,14 @@ class _locationDetailsState extends State<locationDetails> {
         placeRating;
         isPlaceOpenNow;
         aboutDetails;
+        weatherIcon;
 
       });
 
       print("succses");
-      
-      // setState(() {
-      //   _response = generatedText;
-      // });
+     
     } else {
-      // setState(() {
-      //   _response = 'Error: ${response.statusCode}';
-      // });
+     
       print(" not succses ${response.statusCode}");
       
     }
@@ -347,24 +359,57 @@ class _locationDetailsState extends State<locationDetails> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.only(top:16, left:6),
-                                          child: Text(placeName,
-                                              style: GoogleFonts.cabin(
-                                                        // ignore: prefer_const_constructors
-                                                        textStyle: TextStyle(
-                                                        color: const Color.fromARGB(255, 27, 27, 27),
-                                                        fontSize: 24,
-                                                        fontWeight: FontWeight.bold,
-                                                
-                                                        ) 
-                                                        )
+                                          child: SizedBox(
+                                            width:240,
+                                            child: Text(placeName,
+                                                style: GoogleFonts.cabin(
+                                                          // ignore: prefer_const_constructors
+                                                          textStyle: TextStyle(
+                                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                                          fontSize: 24,
+                                                          fontWeight: FontWeight.bold,
+                                                  
+                                                          ) 
+                                                          )
+                                            ),
                                           ),
                                         ),
                                        
+                                       //weather condion---------------------------------------------
+                                       //weather icon------------------------------------
+                                        Container(
+                                          margin: const EdgeInsets.only(top:6, ),
+                                          child: Row(
+                                            children: [
+                                              Image.asset(weatherIcon,width:35,height:35)
+                                            ],
+                                          ),
+                                        ),
+                                        //weather temperature ---------------------------------------
+                                        Padding(
+                                          padding: const EdgeInsets.only(top:7, left:5),
+                                          child: Row(
+                                            children: [
+                                              Text('${temperature} °',
+                                                 style: GoogleFonts.cabin(
+                                                          // ignore: prefer_const_constructors
+                                                          textStyle: TextStyle(
+                                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                                          fontSize: 20,
+                                                          fontWeight: FontWeight.w400,
+                                                                                        
+                                                          ) 
+                                                        )
+                                              )
+                                            ],
+                                          ),
+                                        )
                                       ],
                                       
                                     ),
                                     
                                   ),
+                                  
                                   // ratings------------------------------------------------
                                   Visibility(
                                     visible: isEstablishment,

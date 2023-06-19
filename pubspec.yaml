@@ -107,6 +107,12 @@ flutter:
     - assets/images/searchClick.png
     - assets/images/userClick.png
     - assets/images/Boat-Windows-10-Wallpaper.jpg
+    - assets/images/cloudy.png
+    - assets/images/mostly-cloudy.png
+    - assets/images/cloudsAndSun.png
+    - assets/images/Partly-sunny.png
+    - assets/images/Light-rain.png
+
 
 
 
