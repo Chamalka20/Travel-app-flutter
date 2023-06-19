@@ -178,8 +178,11 @@ class _locationDetailsState extends State<locationDetails> {
             }else if(isDayTime==false && getPhrase=="Some clouds"){
               weatherIcon = '';
 
+            }else if(isDayTime==false && getPhrase=="Mostly cloudy"){
+              weatherIcon = 'assets/images/MostlyCloudyNightV2.png';  
+
             }else if(isDayTime==false && getPhrase=="Partly cloudy"){
-              weatherIcon = '';
+              weatherIcon = 'assets/images/PartlyCloudyNightV2.png';
 
             }else if(isDayTime==false && getPhrase=="Rain"){
               weatherIcon = '';
@@ -200,7 +203,13 @@ class _locationDetailsState extends State<locationDetails> {
 
               weatherIcon = 'assets/images/Partly-sunny.png';
               
-            } 
+            }else if(isDayTime==true && getPhrase=="Mostly sunny"){ 
+              weatherIcon = 'assets/images/Mostly-Sunny-Day.png';
+
+            }else if(isDayTime==true && getPhrase=="Sunny"){ 
+               weatherIcon = 'assets/images/sunny.png';
+
+            }
 
           }else{
             print( "no weather data");
@@ -233,7 +242,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
