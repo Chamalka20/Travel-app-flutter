@@ -9,6 +9,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'customPageRoutes.dart';
 import 'navigationPage.dart';
@@ -41,11 +42,15 @@ class _locationDetailsState extends State<locationDetails> {
   late final String palceNumber;
   late  String aboutDetails ='';
   late final bool isDataLoading;
-
+  late final setgetPhrase;
   late final double temperature;
   late final String weatherIcon;
 
   bool showFullText = false;
+
+  late final currentCity;
+  late final distance;
+  late final duration;
   
   _locationDetailsState(this.placeId);
   @override
@@ -127,7 +132,7 @@ class _locationDetailsState extends State<locationDetails> {
           
           
          
-        
+        calculateDistance ();
         getAboutData ();
         print( placeName);
         print( placeOpenTimes);
@@ -165,6 +170,7 @@ class _locationDetailsState extends State<locationDetails> {
   
           if(results !=null &&  results.isNotEmpty){
             String getPhrase = results[0]['phrase']??'';
+            setgetPhrase = getPhrase;
             bool isDayTime = results[0]['isDayTime']??false;
             temperature = results[0]['temperature']['value']??0.0;
             print( "getPhrase:$getPhrase");
@@ -177,6 +183,9 @@ class _locationDetailsState extends State<locationDetails> {
 
             }else if(isDayTime==false && getPhrase=="Some clouds"){
               weatherIcon = '';
+
+            }else if(isDayTime==false && getPhrase=="Mostly clear"){  
+              weatherIcon = 'assets/images/MostlyClearNight.png';
 
             }else if(isDayTime==false && getPhrase=="Mostly cloudy"){
               weatherIcon = 'assets/images/MostlyCloudyNightV2.png';  
@@ -242,7 +251,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
@@ -291,6 +300,47 @@ class _locationDetailsState extends State<locationDetails> {
     }
 
   }
+
+  //----------------------------------------------------------------
+  //calculate distance between two points---------------------------
+  Future<void> calculateDistance ()async{
+
+    final prefs = await SharedPreferences.getInstance();
+    final getSheardData = prefs.getString('currentLocation');
+    final currentLocation = jsonDecode(getSheardData!) ;
+
+    currentCity = prefs.getString('currentCity');
+
+    const String apikey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
+    const String apiUrl = 'https://maps.googleapis.com/maps/api/directions/json';
+    final url ='$apiUrl?origin=${currentLocation['lat']},${currentLocation['lng']}&destination=${placeLogLat!['lat']},${placeLogLat!['lng']}&key=$apikey';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      print("compute route sucssus");
+
+      final data = jsonDecode(response.body);
+      final routes = data['routes'];
+
+      if (routes != null && routes.isNotEmpty) {
+        final firstRoute = routes[0];
+        final legs = firstRoute['legs'];
+
+        if (legs != null && legs.isNotEmpty) {
+          final firstLeg = legs[0];
+          distance = firstLeg['distance']['text'];
+          duration = firstLeg['duration']['text'];
+
+         
+        }
+      }
+    } else {
+      print('Failed to compute route');
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -386,31 +436,59 @@ class _locationDetailsState extends State<locationDetails> {
                                        
                                        //weather condion---------------------------------------------
                                        //weather icon------------------------------------
-                                        Container(
-                                          margin: const EdgeInsets.only(top:6, ),
-                                          child: Row(
-                                            children: [
-                                              Image.asset(weatherIcon,width:35,height:35)
-                                            ],
+                                        Visibility(
+                                          visible: !isEstablishment,
+                                          child: Container(
+                                            margin: const EdgeInsets.only(top:10,left:4 ),
+                                            child: Row(
+                                              children: [
+                                                Image.asset(weatherIcon,width:35,height:35)
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         //weather temperature ---------------------------------------
-                                        Padding(
-                                          padding: const EdgeInsets.only(top:7, left:5),
-                                          child: Row(
-                                            children: [
-                                              Text('${temperature} °',
-                                                 style: GoogleFonts.cabin(
-                                                          // ignore: prefer_const_constructors
-                                                          textStyle: TextStyle(
-                                                          color: const Color.fromARGB(255, 27, 27, 27),
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.w400,
-                                                                                        
-                                                          ) 
-                                                        )
-                                              )
-                                            ],
+                                        Visibility(
+                                          visible: !isEstablishment,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top:10, left:7),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text('${temperature} °',
+                                                       style: GoogleFonts.cabin(
+                                                                // ignore: prefer_const_constructors
+                                                                textStyle: TextStyle(
+                                                                color: const Color.fromARGB(255, 27, 27, 27),
+                                                                fontSize: 20,
+                                                                fontWeight: FontWeight.w400,
+                                                                                              
+                                                                ) 
+                                                              )
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width:30,
+                                                      child: Text("${setgetPhrase}",
+                                                        style: GoogleFonts.cabin(
+                                                                  // ignore: prefer_const_constructors
+                                                                  textStyle: TextStyle(
+                                                                  color: const Color.fromARGB(255, 27, 27, 27),
+                                                                  fontSize: 10,
+                                                                  fontWeight: FontWeight.w400,
+                                                                                                
+                                                                  ) 
+                                                                )
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         )
                                       ],
@@ -727,24 +805,39 @@ class _locationDetailsState extends State<locationDetails> {
                                   ),
                                 ),
                                 //google map------------------------------------------------------------
-                                Visibility(
-                                  visible: isEstablishment,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 13,top:8),
-                                    child: Row(
-                                      children: [
-                                        Text("How to get there",
-                                          style: GoogleFonts.cabin(
-                                                            textStyle:const TextStyle(
-                                                              color: Color.fromARGB(255, 0, 0, 0),
-                                                              fontSize: 16,
-                                                              fontWeight:FontWeight.bold
-                                                              
-                                                            ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 13,top:8),
+                                  child: Row(
+                                    children: [
+                                      Text("How to get there",
+                                        style: GoogleFonts.cabin(
+                                                          textStyle:const TextStyle(
+                                                            color: Color.fromARGB(255, 0, 0, 0),
+                                                            fontSize: 16,
+                                                            fontWeight:FontWeight.bold
+                                                            
                                                           ),
-                                        )
-                                      ],
-                                    ),
+                                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                //---Route----------------------------------------------
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 13,top:3),
+                                  child: Row(
+                                    children: [
+                                      Text("From ${currentCity}  ▪ ${distance}   ▪ ${duration}",
+                                        style: GoogleFonts.cabin(
+                                                      textStyle:const TextStyle(
+                                                        color: Color.fromARGB(255, 112, 112, 112),
+                                                        fontSize: 11,
+                                                        fontWeight:FontWeight.w400
+                                                        
+                                                      ),
+                                                    ),
+                                      )
+                                    ],
                                   ),
                                 ),
                                 Padding(
@@ -772,6 +865,12 @@ class _locationDetailsState extends State<locationDetails> {
                                       
                                     ),
                                   ),
+                                ),
+                                //Attractions in this place-------------------------------------------------------
+                                Row(
+                                  children: [
+                                    Text("Attractions in ${placeName}")
+                                  ],
                                 )
                                 ],
                               ),

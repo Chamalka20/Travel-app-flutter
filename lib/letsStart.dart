@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
  
@@ -7,6 +9,7 @@ import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:google_fonts/google_fonts.dart' ;
 import 'package:location/location.dart' ;
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Home.dart';
 import 'Welcomepage.dart';
@@ -44,6 +47,11 @@ Future<String?> getLocation() async {
   if (_locationData == null) {
     return null;
   }
+  //store current lat.lon --------------------------------------------------
+  final prefs = await SharedPreferences.getInstance();
+  final currentLocation = jsonEncode({"lat":'${_locationData.latitude}',"lng":'${_locationData.longitude}'});
+  prefs.setString('currentLocation', currentLocation );
+
   print(_locationData.latitude,);
   print(_locationData.longitude,);
   // Fetch the country based on the latitude and longitude
@@ -58,6 +66,8 @@ Future<String?> getLocation() async {
 
   String country = placemarks.first.country ?? '';
   String cityName = placemarks.first.locality ?? '';
+  prefs.setString('currentCity', cityName );
+  
   return cityName;
 }
 
