@@ -133,6 +133,7 @@ class _locationDetailsState extends State<locationDetails> {
           
          
         calculateDistance ();
+        getAttractionPlaces();
         getAboutData ();
         print( placeName);
         print( placeOpenTimes);
@@ -179,7 +180,7 @@ class _locationDetailsState extends State<locationDetails> {
 
             //change icon when weather changers---------------------------------
             if(isDayTime==false && getPhrase=="Cloudy"){
-              weatherIcon = '';
+              weatherIcon = 'assets/images/cloudy.png';
 
             }else if(isDayTime==false && getPhrase=="Some clouds"){
               weatherIcon = '';
@@ -192,6 +193,9 @@ class _locationDetailsState extends State<locationDetails> {
 
             }else if(isDayTime==false && getPhrase=="Partly cloudy"){
               weatherIcon = 'assets/images/PartlyCloudyNightV2.png';
+
+            }else if(isDayTime==false && getPhrase=="Light rain shower"){  
+              weatherIcon = 'assets/images/N210LightRainShowersV2.png';
 
             }else if(isDayTime==false && getPhrase=="Rain"){
               weatherIcon = '';
@@ -251,7 +255,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
@@ -340,6 +344,27 @@ class _locationDetailsState extends State<locationDetails> {
     }
 
   }
+  
+  Future <void> getAttractionPlaces()async{
+
+    const String apikey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
+    const String apiUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
+    final url ='$apiUrl?query=attractions%20in%20$placeName&key=$apikey';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      print('attractions get sucsses');
+
+    }else{
+
+      print('fail to get attractions');
+    }
+
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -472,7 +497,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                 Row(
                                                   children: [
                                                     SizedBox(
-                                                      width:30,
+                                                      width:35,
                                                       child: Text("${setgetPhrase}",
                                                         style: GoogleFonts.cabin(
                                                                   // ignore: prefer_const_constructors
@@ -867,10 +892,22 @@ class _locationDetailsState extends State<locationDetails> {
                                   ),
                                 ),
                                 //Attractions in this place-------------------------------------------------------
-                                Row(
-                                  children: [
-                                    Text("Attractions in ${placeName}")
-                                  ],
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 13,top:7),
+                                  child: Row(
+                                    children: [
+                                      Text("Attractions in ${placeName}",
+                                        style: GoogleFonts.cabin(
+                                                      textStyle:const TextStyle(
+                                                        color: Color.fromARGB(255, 0, 0, 0),
+                                                        fontSize: 16,
+                                                        fontWeight:FontWeight.bold
+                                                        
+                                                      ),
+                                                    ),
+                                      )
+                                    ],
+                                  ),
                                 )
                                 ],
                               ),
