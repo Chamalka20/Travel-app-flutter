@@ -279,7 +279,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
@@ -503,107 +503,115 @@ class _locationDetailsState extends State<locationDetails> {
     if(aboutDetails.isNotEmpty){
        
       return
-      Center(
-          child: SingleChildScrollView(
-            child: Column(
+      SingleChildScrollView(
+        child: Container(
+          width:360,
+          
+          color: Color.fromARGB(255, 255, 255, 255),
+          child: Stack(
+            children:[ Column(
               children: [
                 Row(
                   children: [
                     Container(
-                      height:1500,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      child: Stack(
-                        children:[ Container(
-                          width:360,
-                          height: 250,
-                          decoration: BoxDecoration(
-                          
-                          image: DecorationImage(
-                          image: NetworkImage(placePhoto),
-                          fit: BoxFit.cover
-                                      
-                            ),
-                          
-                          ),
-                         
+                      width:360,
+                      height: 250,
+                      decoration: BoxDecoration(
+                      
+                      image: DecorationImage(
+                      image: NetworkImage(placePhoto),
+                      fit: BoxFit.cover
+                                  
                         ),
-                        
-                        Positioned(
-                          
-                          top:190,
-                          
-                          child: SizedBox(
-                            width:360,
-                            
-                            child: Container(
-                              
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                borderRadius: BorderRadius.circular(27)
-                              ),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(top:16, left:6),
-                                          child: SizedBox(
-                                            width:240,
-                                            child: Text(placeName,
-                                                style: GoogleFonts.cabin(
-                                                          // ignore: prefer_const_constructors
-                                                          textStyle: TextStyle(
-                                                          color: const Color.fromARGB(255, 27, 27, 27),
-                                                          fontSize: 24,
-                                                          fontWeight: FontWeight.bold,
-                                                  
-                                                          ) 
-                                                          )
-                                            ),
+                      
+                      ),
+                     
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            //data container---------------------------------------------------------------
+            Padding(
+              padding: const EdgeInsets.only(top:195),
+              child: Container(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width:360,
+                          child: Container(
+                           
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(27)
+                            ),
+                            child: Column(
+                              //mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top:16, left:6),
+                                        child: SizedBox(
+                                          width:240,
+                                          child: Text(placeName,
+                                              style: GoogleFonts.cabin(
+                                                        // ignore: prefer_const_constructors
+                                                        textStyle: TextStyle(
+                                                        color: const Color.fromARGB(255, 27, 27, 27),
+                                                        fontSize: 24,
+                                                        fontWeight: FontWeight.bold,
+                                                
+                                                        ) 
+                                                        )
                                           ),
                                         ),
-                                       
-                                       //weather condion---------------------------------------------
-                                       //weather icon------------------------------------
-                                        Visibility(
-                                          visible: !isEstablishment,
-                                          child: Container(
-                                            margin: const EdgeInsets.only(top:10,left:4 ),
-                                            child: Row(
-                                              children: [
-                                                Image.asset(weatherIcon,width:35,height:35)
-                                              ],
-                                            ),
+                                      ),
+                                     
+                                     //weather condion---------------------------------------------
+                                     //weather icon------------------------------------
+                                      Visibility(
+                                        visible: !isEstablishment,
+                                        child: Container(
+                                          margin: const EdgeInsets.only(top:10,left:4 ),
+                                          child: Row(
+                                            children: [
+                                              Image.asset(weatherIcon,width:35,height:35)
+                                            ],
                                           ),
                                         ),
-                                        //weather temperature ---------------------------------------
-                                        Visibility(
-                                          visible: !isEstablishment,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top:10, left:7),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text('${temperature} °',
-                                                       style: GoogleFonts.cabin(
-                                                                // ignore: prefer_const_constructors
-                                                                textStyle: TextStyle(
-                                                                color: const Color.fromARGB(255, 27, 27, 27),
-                                                                fontSize: 20,
-                                                                fontWeight: FontWeight.w400,
-                                                                                              
-                                                                ) 
-                                                              )
-                                                    )
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width:35,
+                                      ),
+                                      //weather temperature ---------------------------------------
+                                      Visibility(
+                                        visible: !isEstablishment,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top:10, left:7),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text('${temperature} °',
+                                                     style: GoogleFonts.cabin(
+                                                              // ignore: prefer_const_constructors
+                                                              textStyle: TextStyle(
+                                                              color: const Color.fromARGB(255, 27, 27, 27),
+                                                              fontSize: 20,
+                                                              fontWeight: FontWeight.w400,
+                                                                                            
+                                                              ) 
+                                                            )
+                                                  )
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width:35,
+                                                    child: SizedBox(
                                                       child: Text("${setgetPhrase}",
                                                         style: GoogleFonts.cabin(
                                                                   // ignore: prefer_const_constructors
@@ -615,207 +623,397 @@ class _locationDetailsState extends State<locationDetails> {
                                                                   ) 
                                                                 )
                                                       ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                      
-                                    ),
-                                    
-                                  ),
-                                  
-                                  // ratings------------------------------------------------
-                                  Visibility(
-                                    visible: isEstablishment,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left:12,top:6),
-                                      child: Row(
-                                        children: [
-                                           RatingBar.builder(
-                                              itemSize: 15,
-                                              
-                                              initialRating: placeRating,
-                                              minRating: 1,
-                                              direction: Axis.horizontal,
-                                              allowHalfRating: true,
-                                              itemCount: 5,
-                                              itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-                                              itemBuilder: (context, _) => const Icon(
-                                                Icons.star,
-                                                color: Colors.amber,
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              onRatingUpdate: (rating) {
-                                                print(rating);
-                                              },
-                                            ),
-                                  
-                                            Padding(
-                                              padding: const EdgeInsets.only(left:7),
-                                              child: Text('${placeRating}',style: GoogleFonts.cabin(
-                                                            // ignore: prefer_const_constructors
-                                                            textStyle: TextStyle(
-                                                            color: const Color.fromARGB(255, 27, 27, 27),
-                                                            fontSize: 15,
-                                                            //fontWeight: FontWeight.bold,
-                                                    
-                                                            ) 
-                                                            )),
-                                            ),
-                                            //----------------------------------------------------------
-                                           
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  //place types------------------------------------------------------------
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(left:10,top:4),
-                                            child: SizedBox(
-                                              width:300,
-                                              height:25,
-                                              child: ListView.builder(
-                                                scrollDirection: Axis.horizontal, 
-                                                itemCount: placeType.length,
-                                                itemBuilder: (context, index) {
-                                                  return  SizedBox(
-                                                           
-                                                            child: Card(
-                                                              elevation: 0,
-                                                              color:const Color.fromARGB(255, 240, 238, 238),
-                                                              //clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                              shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(17.0),
-                                                                    ),
-                                                          
-                                                              child:Container(
-                                                               
-                                                                
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                  
-                                                                    FittedBox(
-                                                                      fit: BoxFit.cover,
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsets.only(left:4,right:4),
-                                                                        child: Text(placeType[index],
-                                                                              style: GoogleFonts.cabin(
-                                                                          // ignore: prefer_const_constructors
-                                                                          textStyle: TextStyle(
-                                                                          color: const Color.fromARGB(255, 27, 27, 27),
-                                                                          fontSize: 8,
-                                                                          fontWeight: FontWeight.bold,
-                                                                                                        
-                                                                          ) 
-                                                                          )
-                                                                        ),
-                                                                      ),
-                                                                    ),          
-                                                                  ],
-                                                                ),
-                                                              )
-                                                            ),
-                                                          );
-                                                        }
-                                                    ),
-                                            ),
-                                          ), 
-                                              
-                                        ],
-                                              
-                                      ),
-                                    ],
-                                  ),
-                                  //open now--------------------------------------------------------
-                                  Visibility(
-                                    visible: isEstablishment,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left:12,top:7),
-                                      child: Row(
-                                        children: [
-                                          Text(isPlaceOpenNow?'Open now':' Closed now',
-                                            style: GoogleFonts.cabin(
-                                                // ignore: prefer_const_constructors
-                                                textStyle: TextStyle(
-                                                color: const Color.fromARGB(255, 27, 27, 27),
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                                                              
-                                                ) 
-                                              )
-                                          )
-                                        ],
-                                    
-                                      ),
-                                    ),
-                                  ),
-                                  //open times---------------------------------------------------------------------------------
-                                 Visibility(
-                                  visible: placeOpenTimes.isNotEmpty?true:false,
-                                   child: Padding(
-                                      padding: const EdgeInsets.only(left:13,top:5),
-                                     child: Row(
-                                       children: [
-                                         Container(
-                                            width:115,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: placeOpenTimes.map<Widget>((time) => Padding(
-                                                padding: const EdgeInsets.only(bottom: 4.0),
-                                                child: Text(
-                                                  time,
-                                                  style: GoogleFonts.cabin(
-                                                    textStyle:const TextStyle(
-                                                      color: const Color.fromARGB(255, 27, 27, 27),
-                                                      fontSize: 8,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )).toList(),
-                                            ),
+                                            ],
                                           ),
-                                       ],
-                                     ),
-                                   ),
-                                 ),
-                                //phone number--------------------------------------------------------------
+                                        ),
+                                      )
+                                    ],
+                                    
+                                  ),
+                                  
+                                ),
+                                
+                                // ratings------------------------------------------------
                                 Visibility(
                                   visible: isEstablishment,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left:13,top:7),
+                                    padding: const EdgeInsets.only(left:12,top:6),
                                     child: Row(
                                       children: [
-                                        Text(palceNumber,
-                                          style: GoogleFonts.cabin(
-                                                      textStyle:const TextStyle(
-                                                        color: Color.fromARGB(255, 19, 148, 223),
-                                                        fontSize: 11,
-                                                        fontWeight:FontWeight.w400
+                                         RatingBar.builder(
+                                            itemSize: 15,
+                                            
+                                            initialRating: placeRating,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
+                                            itemBuilder: (context, _) => const Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            onRatingUpdate: (rating) {
+                                              print(rating);
+                                            },
+                                          ),
+                                
+                                          Padding(
+                                            padding: const EdgeInsets.only(left:7),
+                                            child: Text('${placeRating}',style: GoogleFonts.cabin(
+                                                          // ignore: prefer_const_constructors
+                                                          textStyle: TextStyle(
+                                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                                          fontSize: 15,
+                                                          //fontWeight: FontWeight.bold,
+                                                  
+                                                          ) 
+                                                          )),
+                                          ),
+                                          //----------------------------------------------------------
+                                         
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                //place types------------------------------------------------------------
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(left:10,top:4),
+                                          child: SizedBox(
+                                            width:300,
+                                            height:25,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal, 
+                                              itemCount: placeType.length,
+                                              itemBuilder: (context, index) {
+                                                return  SizedBox(
+                                                         
+                                                          child: Card(
+                                                            elevation: 0,
+                                                            color:const Color.fromARGB(255, 240, 238, 238),
+                                                            //clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                            shape: RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadius.circular(17.0),
+                                                                  ),
                                                         
-                                                      ),
-                                                    ),
+                                                            child:Container(
+                                                             
+                                                              
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                
+                                                                  FittedBox(
+                                                                    fit: BoxFit.cover,
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.only(left:4,right:4),
+                                                                      child: Text(placeType[index],
+                                                                            style: GoogleFonts.cabin(
+                                                                        // ignore: prefer_const_constructors
+                                                                        textStyle: TextStyle(
+                                                                        color: const Color.fromARGB(255, 27, 27, 27),
+                                                                        fontSize: 8,
+                                                                        fontWeight: FontWeight.bold,
+                                                                                                      
+                                                                        ) 
+                                                                        )
+                                                                      ),
+                                                                    ),
+                                                                  ),          
+                                                                ],
+                                                              ),
+                                                            )
+                                                          ),
+                                                        );
+                                                      }
+                                                  ),
+                                          ),
+                                        ), 
+                                            
+                                      ],
+                                            
+                                    ),
+                                  ],
+                                ),
+                                //open now--------------------------------------------------------
+                                Visibility(
+                                  visible: isEstablishment,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:12,top:7),
+                                    child: Row(
+                                      children: [
+                                        Text(isPlaceOpenNow?'Open now':' Closed now',
+                                          style: GoogleFonts.cabin(
+                                              // ignore: prefer_const_constructors
+                                              textStyle: TextStyle(
+                                              color: const Color.fromARGB(255, 27, 27, 27),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                                                            
+                                              ) 
+                                            )
                                         )
                                       ],
                                   
                                     ),
                                   ),
                                 ),
-                                // about details on the place----------------------------------------------------
-                                Padding(
+                                //open times---------------------------------------------------------------------------------
+                               Visibility(
+                                visible: placeOpenTimes.isNotEmpty?true:false,
+                                 child: Padding(
+                                    padding: const EdgeInsets.only(left:13,top:5),
+                                   child: Row(
+                                     children: [
+                                       Container(
+                                          width:115,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: placeOpenTimes.map<Widget>((time) => Padding(
+                                              padding: const EdgeInsets.only(bottom: 4.0),
+                                              child: Text(
+                                                time,
+                                                style: GoogleFonts.cabin(
+                                                  textStyle:const TextStyle(
+                                                    color: const Color.fromARGB(255, 27, 27, 27),
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            )).toList(),
+                                          ),
+                                        ),
+                                     ],
+                                   ),
+                                 ),
+                               ),
+                              //phone number--------------------------------------------------------------
+                              Visibility(
+                                visible: isEstablishment,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:13,top:7),
+                                  child: Row(
+                                    children: [
+                                      Text(palceNumber,
+                                        style: GoogleFonts.cabin(
+                                                    textStyle:const TextStyle(
+                                                      color: Color.fromARGB(255, 19, 148, 223),
+                                                      fontSize: 11,
+                                                      fontWeight:FontWeight.w400
+                                                      
+                                                    ),
+                                                  ),
+                                      )
+                                    ],
+                                
+                                  ),
+                                ),
+                              ),
+                              // about details on the place----------------------------------------------------
+                              Padding(
+                                padding: const EdgeInsets.only(left: 13,top:7),
+                                child: Row(
+                                  children: [
+                                    Text("About",
+                                      style: GoogleFonts.cabin(
+                                                    textStyle:const TextStyle(
+                                                      color: Color.fromARGB(255, 0, 0, 0),
+                                                      fontSize: 16,
+                                                      fontWeight:FontWeight.bold
+                                                      
+                                                    ),
+                                                  ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 13,top:4),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        final textSpan = TextSpan(
+                                          text: aboutDetails,
+                                          style: GoogleFonts.cabin(
+                                                  textStyle:const TextStyle(
+                                                    color: Color.fromARGB(255, 112, 112, 112),
+                                                    fontSize: 11,
+                                                    fontWeight:FontWeight.w400
+                                                    
+                                                  ),
+                                                ),
+                                        );
+                                        final textPainter = TextPainter(
+                                          text: textSpan,
+                                          textDirection: TextDirection.ltr,
+                                          maxLines: 4, 
+                                        );
+                                        textPainter.layout(maxWidth: constraints.maxWidth);
+                                        final isTextOverflowed = textPainter.didExceedMaxLines;
+                        
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            RichText(
+                                              text: textSpan,
+                                              maxLines: showFullText ? null : 4, 
+                                              overflow: TextOverflow.clip,
+                                            ),
+                                            if (isTextOverflowed)
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    showFullText = !showFullText;
+                                                  });
+                                                },
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(left:140),
+                                                  child: Text(
+                                                    showFullText ? 'See Less' : 'See More',
+                                                    style: GoogleFonts.cabin(
+                                                      textStyle:const TextStyle(
+                                                       color: Color.fromARGB(255, 19, 148, 223),
+                                                        fontSize: 12,
+                                                        fontWeight:FontWeight.bold
+                                                        
+                                                      ),
+                                                ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              //place address ----------------------------------------------------------
+                              Visibility(
+                                visible: isEstablishment,
+                                child: Padding(
                                   padding: const EdgeInsets.only(left: 13,top:7),
                                   child: Row(
                                     children: [
-                                      Text("About",
+                                      Text("Address",
+                                        style: GoogleFonts.cabin(
+                                                        textStyle:const TextStyle(
+                                                          color: Color.fromARGB(255, 0, 0, 0),
+                                                          fontSize: 16,
+                                                          fontWeight:FontWeight.bold
+                                                          
+                                                        ),
+                                                      ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: isEstablishment,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 13,top:5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:250,
+                                        child: Text(PlaceAddress,
+                                          style: GoogleFonts.cabin(
+                                                            textStyle:const TextStyle(
+                                                               color: Color.fromARGB(255, 19, 148, 223),
+                                                              fontSize: 11,
+                                                              fontWeight:FontWeight.bold
+                                                              
+                                                            ),
+                                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              //google map------------------------------------------------------------
+                              Padding(
+                                padding: const EdgeInsets.only(left: 13,top:8),
+                                child: Row(
+                                  children: [
+                                    Text("How to get there",
+                                      style: GoogleFonts.cabin(
+                                                        textStyle:const TextStyle(
+                                                          color: Color.fromARGB(255, 0, 0, 0),
+                                                          fontSize: 16,
+                                                          fontWeight:FontWeight.bold
+                                                          
+                                                        ),
+                                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              //---Route----------------------------------------------
+                              Padding(
+                                padding: const EdgeInsets.only(left: 13,top:3),
+                                child: Row(
+                                  children: [
+                                    Text("From ${currentCity}  ▪ ${distance??""}   ▪ ${duration}",
+                                      style: GoogleFonts.cabin(
+                                                    textStyle:const TextStyle(
+                                                      color: Color.fromARGB(255, 112, 112, 112),
+                                                      fontSize: 11,
+                                                      fontWeight:FontWeight.w400
+                                                      
+                                                    ),
+                                                  ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top:9),
+                                child: SizedBox(
+                                  width:355,
+                                  height:185,
+                                  child: GoogleMap(
+                                    initialCameraPosition: CameraPosition(
+                                      target: placeLocation,
+                                      zoom: 15,
+                                    ),
+                                    markers:{
+                                      Marker(
+                                        markerId: MarkerId('kjhuuu'),
+                                        position: placeLocation,
+                                        infoWindow: InfoWindow(
+                                          title: placeName,
+                                          snippet: PlaceAddress,
+                                        ),
+                                        
+                                        )
+                                
+                                    },
+                                    
+                                  ),
+                                ),
+                              ),
+                              //Attractions in this place-------------------------------------------------------
+                              Visibility(
+                                visible: !isEstablishment,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 13,top:14),
+                                  child: Row(
+                                    children: [
+                                      Text("Attractions in ${placeName}",
                                         style: GoogleFonts.cabin(
                                                       textStyle:const TextStyle(
                                                         color: Color.fromARGB(255, 0, 0, 0),
@@ -828,142 +1026,238 @@ class _locationDetailsState extends State<locationDetails> {
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 13,top:4),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final textSpan = TextSpan(
-                                            text: aboutDetails,
-                                            style: GoogleFonts.cabin(
-                                                    textStyle:const TextStyle(
-                                                      color: Color.fromARGB(255, 112, 112, 112),
-                                                      fontSize: 11,
-                                                      fontWeight:FontWeight.w400
-                                                      
-                                                    ),
+                              ),
+                              //list------------------------------------------------------
+                              Visibility(
+                                visible: !isEstablishment,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:10.0,top:10),
+                                  child: SizedBox(
+                                  height: 190,
+                                    child: Expanded(
+                                    child: ListView.builder(
+                                      cacheExtent: 9999,
+                                      scrollDirection: Axis.horizontal, 
+                                      itemCount: attractionList.length,
+                                      itemBuilder: (context, index) {
+                                        final attraction = attractionList[index];
+                                        final attractionName = attraction['name'];
+                                        final attractionRating = attraction['rating'];
+                                        final photoUrl = getPhotoUrl(attraction['photoRef']);
+                                        final address = attraction['address'];
+                                        final type = attraction['type'];
+                                        
+                                          return GestureDetector(
+                                            onTap: ()=>{print("hello")},
+                                            child: Card(
+                                            elevation: 0,
+                                            color:const Color.fromARGB(255, 240, 238, 238),
+                                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                                            shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10.0),
                                                   ),
-                                          );
-                                          final textPainter = TextPainter(
-                                            text: textSpan,
-                                            textDirection: TextDirection.ltr,
-                                            maxLines: 4, 
-                                          );
-                                          textPainter.layout(maxWidth: constraints.maxWidth);
-                                          final isTextOverflowed = textPainter.didExceedMaxLines;
-
-                                          return Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              RichText(
-                                                text: textSpan,
-                                                maxLines: showFullText ? null : 4, 
-                                                overflow: TextOverflow.clip,
-                                              ),
-                                              if (isTextOverflowed)
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      showFullText = !showFullText;
-                                                    });
-                                                  },
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(left:140),
-                                                    child: Text(
-                                                      showFullText ? 'See Less' : 'See More',
-                                                      style: GoogleFonts.cabin(
-                                                        textStyle:const TextStyle(
-                                                         color: Color.fromARGB(255, 19, 148, 223),
-                                                          fontSize: 12,
-                                                          fontWeight:FontWeight.bold
-                                                          
-                                                        ),
-                                                  ),
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                //place address ----------------------------------------------------------
-                                Visibility(
-                                  visible: isEstablishment,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 13,top:7),
-                                    child: Row(
-                                      children: [
-                                        Text("Address",
-                                          style: GoogleFonts.cabin(
-                                                          textStyle:const TextStyle(
-                                                            color: Color.fromARGB(255, 0, 0, 0),
-                                                            fontSize: 16,
-                                                            fontWeight:FontWeight.bold
-                                                            
-                                                          ),
-                                                        ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: isEstablishment,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 13,top:5),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width:250,
-                                          child: Text(PlaceAddress,
-                                            style: GoogleFonts.cabin(
-                                                              textStyle:const TextStyle(
-                                                                 color: Color.fromARGB(255, 19, 148, 223),
-                                                                fontSize: 11,
-                                                                fontWeight:FontWeight.bold
+                                            child:Container(
+                                              width: 230,
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 230,
+                                                        height: 120,
+                                                        
+                                                            decoration:  BoxDecoration(
+                                                              
+                                                              image: DecorationImage(
+                                                                image: NetworkImage(photoUrl,),
+                                                                fit: BoxFit.fill,
                                                                 
+                                                          
+                                                                  ),
+                                                              
                                                               ),
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  height:25,
+                                                                  width:60,
+                                                                  child: Card(
+                                                                      elevation: 0,
+                                                                        color:const Color.fromARGB(200, 240, 238, 238),
+                                                                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                                        shape: RoundedRectangleBorder(
+                                                                                borderRadius: BorderRadius.circular(5.0),
+                                                                              ),
+                                                                          child: FittedBox(
+                                                                                  fit: BoxFit.cover,
+                                                                                  child:Padding(
+                                                                                    padding: const EdgeInsets.all(10.0),
+                                                                                    child: Text('${type}',
+                                                                                      style: GoogleFonts.cabin(
+                                                                                        // ignore: prefer_const_constructors
+                                                                                        textStyle: TextStyle(
+                                                                                        color: Color.fromARGB(255, 95, 95, 95),
+                                                                                        fontSize: 12,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                                                                                  
+                                                                                        ) 
+                                                                                      )
+                                                                                                                                                    
+                                                                                    ),
+                                                                                  ), 
+                                                                            )
+                                                                      
+                                                                  ),
+                                                                ),
+                                          
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left:119,top:5),
+                                                                  child: SizedBox(
+                                                                      width:37,
+                                                                      height:37,
+                                                                      child: GestureDetector(
+                                                                        onTap: ()=>{print("hart")},
+                                                                        child: Card(
+                                                                          elevation: 0,
+                                                                              color:const Color.fromARGB(200, 240, 238, 238),
+                                                                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                                              shape: RoundedRectangleBorder(
+                                                                                      borderRadius: BorderRadius.circular(50.0),
+                                                                                    ),
+                                                                              child:Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                    children: [
+                                                                                      Image.asset("assets/images/heart.png",width:18,height:18),
+                                                                                    ],
+                                                                                  ),
+                                                                                ],
+                                                                              ),  
+                                                                                                                            
+                                                                        ),
+                                                                      ),
+                                                                
+                                                                  ),
+                                                                ),
+                                          
+                                                              ],
                                                             ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                //google map------------------------------------------------------------
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 13,top:8),
-                                  child: Row(
-                                    children: [
-                                      Text("How to get there",
-                                        style: GoogleFonts.cabin(
-                                                          textStyle:const TextStyle(
-                                                            color: Color.fromARGB(255, 0, 0, 0),
-                                                            fontSize: 16,
-                                                            fontWeight:FontWeight.bold
+                                                          ],
+                                                        ), 
+                                                          
+                                                        
+                                                      ),
+                                                  
                                                             
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    
+                                                    children: [
+                                                        SizedBox(
+                                                        width: 190,
+                                                        height:30,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left:6,top:5),
+                                                            child: Text(attractionName,
+                                                            
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.cabin(
+                                                                // ignore: prefer_const_constructors
+                                                                textStyle: TextStyle(
+                                                                color: const Color.fromARGB(255, 27, 27, 27),
+                                                                fontSize: 14,
+                                                                fontWeight: FontWeight.bold,
+                                                                                                
+                                                                ) 
+                                                              )
+                                                                                                    
+                                                            ),
                                                           ),
                                                         ),
-                                      )
-                                    ],
+                                          
+                                                      Image.asset("assets/images/star.png",width:14,height:14),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left:4),
+                                                        child: Text("$attractionRating",
+                                                            style: GoogleFonts.cabin(
+                                                          // ignore: prefer_const_constructors
+                                                          textStyle: TextStyle(
+                                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.bold,
+                                                                                          
+                                                          ) 
+                                                        )
+                                                        
+                                                        ),
+                                                      ),  
+                                                    ],
+                                                  
+                                                  ),
+                                                  Row(
+                                                  
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left:4),
+                                                        child: Image.asset('assets/images/location.png',width:15,height:15),
+                                                      ),
+                                                      SizedBox(
+                                                        width:200,
+                                                        height:7,
+                                                        child: Text(address,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.cabin(
+                                                            // ignore: prefer_const_constructors
+                                                            textStyle: TextStyle(
+                                                            color: Color.fromARGB(255, 94, 94, 94),
+                                                            fontSize: 7,
+                                                            fontWeight: FontWeight.bold,
+                                                                                            
+                                                            ) 
+                                                          )
+                                                        
+                                                        
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                                            
+                                                            
+                                              ),
+                                            )
+                                              
+                                              
+                                            
+                                            ),
+                                          ); 
+                                      },
+                                    ),  
+                                
                                   ),
-                                ),
-                                //---Route----------------------------------------------
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 13,top:3),
+                                    ),
+                                  ),
+                              ),
+                              //show resturents----------------------------------------------
+                              Visibility(
+                                visible: !isEstablishment,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 13,top:14),
                                   child: Row(
                                     children: [
-                                      Text("From ${currentCity}  ▪ ${distance??""}   ▪ ${duration}",
+                                      Text("Where to stay and eat ",
                                         style: GoogleFonts.cabin(
                                                       textStyle:const TextStyle(
-                                                        color: Color.fromARGB(255, 112, 112, 112),
-                                                        fontSize: 11,
-                                                        fontWeight:FontWeight.w400
+                                                        color: Color.fromARGB(255, 0, 0, 0),
+                                                        fontSize: 16,
+                                                        fontWeight:FontWeight.bold
                                                         
                                                       ),
                                                     ),
@@ -971,642 +1265,355 @@ class _locationDetailsState extends State<locationDetails> {
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top:9),
+                              ),
+                              //resturents list-------------------------------------------------------------
+                               Visibility(
+                                visible: !isEstablishment,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:10.0,top:10),
                                   child: SizedBox(
-                                    width:355,
-                                    height:185,
-                                    child: GoogleMap(
-                                      initialCameraPosition: CameraPosition(
-                                        target: placeLocation,
-                                        zoom: 15,
-                                      ),
-                                      markers:{
-                                        Marker(
-                                          markerId: MarkerId('kjhuuu'),
-                                          position: placeLocation,
-                                          infoWindow: InfoWindow(
-                                            title: placeName,
-                                            snippet: PlaceAddress,
-                                          ),
-                                          
-                                          )
-                                  
-                                      },
-                                      
-                                    ),
-                                  ),
-                                ),
-                                //Attractions in this place-------------------------------------------------------
-                                Visibility(
-                                  visible: !isEstablishment,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 13,top:14),
-                                    child: Row(
-                                      children: [
-                                        Text("Attractions in ${placeName}",
-                                          style: GoogleFonts.cabin(
-                                                        textStyle:const TextStyle(
-                                                          color: Color.fromARGB(255, 0, 0, 0),
-                                                          fontSize: 16,
-                                                          fontWeight:FontWeight.bold
-                                                          
-                                                        ),
-                                                      ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                //list------------------------------------------------------
-                                Visibility(
-                                  visible: !isEstablishment,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left:10.0,top:10),
-                                    child: SizedBox(
-                                    height: 190,
-                                      child: Expanded(
-                                      child: ListView.builder(
-                                        cacheExtent: 9999,
-                                        scrollDirection: Axis.horizontal, 
-                                        itemCount: attractionList.length,
-                                        itemBuilder: (context, index) {
-                                          final attraction = attractionList[index];
-                                          final attractionName = attraction['name'];
-                                          final attractionRating = attraction['rating'];
-                                          final photoUrl = getPhotoUrl(attraction['photoRef']);
-                                          final address = attraction['address'];
-                                          final type = attraction['type'];
-                                          
-                                            return GestureDetector(
-                                              onTap: ()=>{print("hello")},
-                                              child: Card(
-                                              elevation: 0,
-                                              color:const Color.fromARGB(255, 240, 238, 238),
-                                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                                              shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10.0),
-                                                    ),
-                                              child:Container(
-                                                width: 230,
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          width: 230,
-                                                          height: 120,
-                                                          
-                                                              decoration:  BoxDecoration(
-                                                                
-                                                                image: DecorationImage(
-                                                                  image: NetworkImage(photoUrl,),
-                                                                  fit: BoxFit.fill,
-                                                                  
-                                                            
-                                                                    ),
-                                                                
-                                                                ),
-                                                          child: Column(
-                                                            children: [
-                                                              Row(
-                                                                children: [
-                                                                  SizedBox(
-                                                                    height:25,
-                                                                    width:60,
-                                                                    child: Card(
-                                                                        elevation: 0,
-                                                                          color:const Color.fromARGB(200, 240, 238, 238),
-                                                                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                                          shape: RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.circular(5.0),
-                                                                                ),
-                                                                            child: FittedBox(
-                                                                                    fit: BoxFit.cover,
-                                                                                    child:Padding(
-                                                                                      padding: const EdgeInsets.all(10.0),
-                                                                                      child: Text('${type}',
-                                                                                        style: GoogleFonts.cabin(
-                                                                                          // ignore: prefer_const_constructors
-                                                                                          textStyle: TextStyle(
-                                                                                          color: Color.fromARGB(255, 95, 95, 95),
-                                                                                          fontSize: 12,
-                                                                                          fontWeight: FontWeight.bold,
-                                                                                                                                                    
-                                                                                          ) 
-                                                                                        )
-                                                                                                                                                      
-                                                                                      ),
-                                                                                    ), 
-                                                                              )
-                                                                        
-                                                                    ),
-                                                                  ),
-                                            
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.only(left:119,top:5),
-                                                                    child: SizedBox(
-                                                                        width:37,
-                                                                        height:37,
-                                                                        child: GestureDetector(
-                                                                          onTap: ()=>{print("hart")},
-                                                                          child: Card(
-                                                                            elevation: 0,
-                                                                                color:const Color.fromARGB(200, 240, 238, 238),
-                                                                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                                                shape: RoundedRectangleBorder(
-                                                                                        borderRadius: BorderRadius.circular(50.0),
-                                                                                      ),
-                                                                                child:Column(
-                                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                  children: [
-                                                                                    Row(
-                                                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                      children: [
-                                                                                        Image.asset("assets/images/heart.png",width:18,height:18),
-                                                                                      ],
-                                                                                    ),
-                                                                                  ],
-                                                                                ),  
-                                                                                                                              
-                                                                          ),
-                                                                        ),
-                                                                  
-                                                                    ),
-                                                                  ),
-                                            
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ), 
-                                                            
-                                                          
-                                                        ),
-                                                    
-                                                              
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      
-                                                      children: [
-                                                          SizedBox(
-                                                          width: 190,
-                                                          height:30,
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.only(left:6,top:5),
-                                                              child: Text(attractionName,
-                                                              
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: GoogleFonts.cabin(
-                                                                  // ignore: prefer_const_constructors
-                                                                  textStyle: TextStyle(
-                                                                  color: const Color.fromARGB(255, 27, 27, 27),
-                                                                  fontSize: 14,
-                                                                  fontWeight: FontWeight.bold,
-                                                                                                  
-                                                                  ) 
-                                                                )
-                                                                                                      
-                                                              ),
-                                                            ),
-                                                          ),
-                                            
-                                                        Image.asset("assets/images/star.png",width:14,height:14),
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(left:4),
-                                                          child: Text("$attractionRating",
-                                                              style: GoogleFonts.cabin(
-                                                            // ignore: prefer_const_constructors
-                                                            textStyle: TextStyle(
-                                                            color: const Color.fromARGB(255, 27, 27, 27),
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.bold,
-                                                                                            
-                                                            ) 
-                                                          )
-                                                          
-                                                          ),
-                                                        ),  
-                                                      ],
-                                                    
-                                                    ),
-                                                    Row(
-                                                    
-                                                      children: [
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(left:4),
-                                                          child: Image.asset('assets/images/location.png',width:15,height:15),
-                                                        ),
-                                                        SizedBox(
-                                                          width:200,
-                                                          height:7,
-                                                          child: Text(address,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: GoogleFonts.cabin(
-                                                              // ignore: prefer_const_constructors
-                                                              textStyle: TextStyle(
-                                                              color: Color.fromARGB(255, 94, 94, 94),
-                                                              fontSize: 7,
-                                                              fontWeight: FontWeight.bold,
-                                                                                              
-                                                              ) 
-                                                            )
-                                                          
-                                                          
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )
-                                                  ],
-                                                              
-                                                              
-                                                ),
-                                              )
-                                                
-                                                
-                                              
-                                              ),
-                                            ); 
-                                        },
-                                      ),  
-                                  
-                                    ),
-                                      ),
-                                    ),
-                                ),
-                                //show resturents----------------------------------------------
-                                Visibility(
-                                  visible: !isEstablishment,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 13,top:14),
-                                    child: Row(
-                                      children: [
-                                        Text("Where to stay and eat ",
-                                          style: GoogleFonts.cabin(
-                                                        textStyle:const TextStyle(
-                                                          color: Color.fromARGB(255, 0, 0, 0),
-                                                          fontSize: 16,
-                                                          fontWeight:FontWeight.bold
-                                                          
-                                                        ),
-                                                      ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                //resturents list-------------------------------------------------------------
-                                 Visibility(
-                                  visible: !isEstablishment,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left:10.0,top:10),
-                                    child: SizedBox(
-                                    height: 190,
-                                      child: Expanded(
-                                      child: ListView.builder(
-                                        cacheExtent: 9999,
-                                        scrollDirection: Axis.horizontal, 
-                                        itemCount: restaurantsList.length,
-                                        itemBuilder: (context, index) {
-                                          final restaurants = restaurantsList[index];
-                                          final restaurantnName = restaurants['name'];
-                                          final restaurantRating = restaurants['rating'];
-                                          final photoUrl = getPhotoUrl(restaurants['photoRef']);
-                                          final address = restaurants['address'];
-                                          final type = restaurants['type'];
-                                          
-                                            return GestureDetector(
-                                              onTap: ()=>{print("hello")},
-                                              child: Card(
-                                              elevation: 0,
-                                              color:const Color.fromARGB(255, 240, 238, 238),
-                                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                                              shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10.0),
-                                                    ),
-                                              child:Container(
-                                                width: 230,
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          width: 230,
-                                                          height: 120,
-                                                          
-                                                              decoration:  BoxDecoration(
-                                                                
-                                                                image: DecorationImage(
-                                                                  image: NetworkImage(photoUrl,),
-                                                                  fit: BoxFit.fill,
-                                                                  
-                                                            
-                                                                    ),
-                                                                
-                                                                ),
-                                                          child: Column(
-                                                            children: [
-                                                              Row(
-                                                                children: [
-                                                                  SizedBox(
-                                                                    height:25,
-                                                                    width:60,
-                                                                    child: Card(
-                                                                        elevation: 0,
-                                                                          color:const Color.fromARGB(200, 240, 238, 238),
-                                                                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                                          shape: RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.circular(5.0),
-                                                                                ),
-                                                                            child: FittedBox(
-                                                                                    fit: BoxFit.cover,
-                                                                                    child:Padding(
-                                                                                      padding: const EdgeInsets.all(10.0),
-                                                                                      child: Text('${type}',
-                                                                                        style: GoogleFonts.cabin(
-                                                                                          // ignore: prefer_const_constructors
-                                                                                          textStyle: TextStyle(
-                                                                                          color: Color.fromARGB(255, 95, 95, 95),
-                                                                                          fontSize: 12,
-                                                                                          fontWeight: FontWeight.bold,
-                                                                                                                                                    
-                                                                                          ) 
-                                                                                        )
-                                                                                                                                                      
-                                                                                      ),
-                                                                                    ), 
-                                                                              )
-                                                                        
-                                                                    ),
-                                                                  ),
-                                            
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.only(left:119,top:5),
-                                                                    child: SizedBox(
-                                                                        width:37,
-                                                                        height:37,
-                                                                        child: GestureDetector(
-                                                                          onTap: ()=>{print("hart")},
-                                                                          child: Card(
-                                                                            elevation: 0,
-                                                                                color:const Color.fromARGB(200, 240, 238, 238),
-                                                                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                                                shape: RoundedRectangleBorder(
-                                                                                        borderRadius: BorderRadius.circular(50.0),
-                                                                                      ),
-                                                                                child:Column(
-                                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                  children: [
-                                                                                    Row(
-                                                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                      children: [
-                                                                                        Image.asset("assets/images/heart.png",width:18,height:18),
-                                                                                      ],
-                                                                                    ),
-                                                                                  ],
-                                                                                ),  
-                                                                                                                              
-                                                                          ),
-                                                                        ),
-                                                                  
-                                                                    ),
-                                                                  ),
-                                            
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ), 
-                                                            
-                                                          
-                                                        ),
-                                                    
-                                                              
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      
-                                                      children: [
-                                                          SizedBox(
-                                                          width: 190,
-                                                          height:30,
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.only(left:6,top:5),
-                                                              child: Text(restaurantnName,
-                                                              
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: GoogleFonts.cabin(
-                                                                  // ignore: prefer_const_constructors
-                                                                  textStyle: TextStyle(
-                                                                  color: const Color.fromARGB(255, 27, 27, 27),
-                                                                  fontSize: 14,
-                                                                  fontWeight: FontWeight.bold,
-                                                                                                  
-                                                                  ) 
-                                                                )
-                                                                                                      
-                                                              ),
-                                                            ),
-                                                          ),
-                                            
-                                                        Image.asset("assets/images/star.png",width:14,height:14),
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(left:4),
-                                                          child: Text("$restaurantRating",
-                                                              style: GoogleFonts.cabin(
-                                                            // ignore: prefer_const_constructors
-                                                            textStyle: TextStyle(
-                                                            color: const Color.fromARGB(255, 27, 27, 27),
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.bold,
-                                                                                            
-                                                            ) 
-                                                          )
-                                                          
-                                                          ),
-                                                        ),  
-                                                      ],
-                                                    
-                                                    ),
-                                                    Row(
-                                                    
-                                                      children: [
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(left:4),
-                                                          child: Image.asset('assets/images/location.png',width:15,height:15),
-                                                        ),
-                                                        SizedBox(
-                                                          width:200,
-                                                          height:7,
-                                                          child: Text(address,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: GoogleFonts.cabin(
-                                                              // ignore: prefer_const_constructors
-                                                              textStyle: TextStyle(
-                                                              color: Color.fromARGB(255, 94, 94, 94),
-                                                              fontSize: 7,
-                                                              fontWeight: FontWeight.bold,
-                                                                                              
-                                                              ) 
-                                                            )
-                                                          
-                                                          
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )
-                                                  ],
-                                                              
-                                                              
-                                                ),
-                                              )
-                                                
-                                                
-                                              
-                                              ),
-                                            ); 
-                                        },
-                                      ),  
-                                  
-                                    ),
-                                      ),
-                                    ),
-                                ),
-                                //reviews-----------------------------------------------------------------
-                                //------------------------------------------------------------------------
-                                 Visibility(
-                                  visible: isNotEmptyReviews,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 13,top:14,bottom:9),
-                                    child: Row(
-                                      children: [
-                                        Text("Reviews",
-                                          style: GoogleFonts.cabin(
-                                                        textStyle:const TextStyle(
-                                                          color: Color.fromARGB(255, 0, 0, 0),
-                                                          fontSize: 16,
-                                                          fontWeight:FontWeight.bold
-                                                          
-                                                        ),
-                                                      ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                //reviewslist------------------------------------------------------
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        children: reviews.map<Widget>((review) => Padding(
-                                          padding: const EdgeInsets.only(bottom: 10.0),
-                                          child: Container(
-                                            width: 330,
-                                      
-                                            decoration: BoxDecoration(
-                                              color:const Color.fromARGB(255, 240, 238, 238),
-                                              borderRadius: BorderRadius.circular(13)
-                                            ),
-
-                                            child:Padding(
-                                              padding: const EdgeInsets.only(left:10,bottom:10),
+                                  height: 190,
+                                    child: Expanded(
+                                    child: ListView.builder(
+                                      cacheExtent: 9999,
+                                      scrollDirection: Axis.horizontal, 
+                                      itemCount: restaurantsList.length,
+                                      itemBuilder: (context, index) {
+                                        final restaurants = restaurantsList[index];
+                                        final restaurantnName = restaurants['name'];
+                                        final restaurantRating = restaurants['rating'];
+                                        final photoUrl = getPhotoUrl(restaurants['photoRef']);
+                                        final address = restaurants['address'];
+                                        final type = restaurants['type'];
+                                        
+                                          return GestureDetector(
+                                            onTap: ()=>{print("hello")},
+                                            child: Card(
+                                            elevation: 0,
+                                            color:const Color.fromARGB(255, 240, 238, 238),
+                                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                                            shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10.0),
+                                                  ),
+                                            child:Container(
+                                              width: 230,
                                               child: Column(
                                                 children: [
                                                   Row(
                                                     children: [
-                                                       Padding(
-                                                         padding: const EdgeInsets.only(top:13),
-                                                         child: Container(
-                                                          width:35,
-                                                          height:35,
-                                                           child: CircleAvatar(
-                                                            radius: 40,
-                                                            backgroundImage:NetworkImage(review['profile_photo_url']),
-                                                            
-                                                          ),
-                                                         ),
-                                                       ),
-                                                       Padding(
-                                                         padding: const EdgeInsets.only(left:7,top:10),
-                                                         child: Column(
-                                                           children: [
-                                                             Row(
-                                                               children: [
-                                                                //author name--------------------------------------
-                                                                 SizedBox(
-                                                                  width:200,
-                                                                   child: Text(review['author_name'],
-                                                                     style: GoogleFonts.cabin(
-                                                                      textStyle:const TextStyle(
-                                                                        color: Color.fromARGB(255, 0, 0, 0),
-                                                                        fontSize: 14,
-                                                                        fontWeight:FontWeight.bold
-                                                                        
-                                                                      ),
-                                                                    ),
-                                                                   ),
-                                                                 ),
+                                                      Container(
+                                                        width: 230,
+                                                        height: 120,
+                                                        
+                                                            decoration:  BoxDecoration(
+                                                              
+                                                              image: DecorationImage(
+                                                                image: NetworkImage(photoUrl,),
+                                                                fit: BoxFit.fill,
                                                                 
-                                                               ],
-                                                             ),
-                                                             
-                                                           ],
-                                                         ),
-                                                       )
-                                                       
+                                                          
+                                                                  ),
+                                                              
+                                                              ),
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  height:25,
+                                                                  width:60,
+                                                                  child: Card(
+                                                                      elevation: 0,
+                                                                        color:const Color.fromARGB(200, 240, 238, 238),
+                                                                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                                        shape: RoundedRectangleBorder(
+                                                                                borderRadius: BorderRadius.circular(5.0),
+                                                                              ),
+                                                                          child: FittedBox(
+                                                                                  fit: BoxFit.cover,
+                                                                                  child:Padding(
+                                                                                    padding: const EdgeInsets.all(10.0),
+                                                                                    child: Text('${type}',
+                                                                                      style: GoogleFonts.cabin(
+                                                                                        // ignore: prefer_const_constructors
+                                                                                        textStyle: TextStyle(
+                                                                                        color: Color.fromARGB(255, 95, 95, 95),
+                                                                                        fontSize: 12,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                                                                                  
+                                                                                        ) 
+                                                                                      )
+                                                                                                                                                    
+                                                                                    ),
+                                                                                  ), 
+                                                                            )
+                                                                      
+                                                                  ),
+                                                                ),
+                                          
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left:119,top:5),
+                                                                  child: SizedBox(
+                                                                      width:37,
+                                                                      height:37,
+                                                                      child: GestureDetector(
+                                                                        onTap: ()=>{print("hart")},
+                                                                        child: Card(
+                                                                          elevation: 0,
+                                                                              color:const Color.fromARGB(200, 240, 238, 238),
+                                                                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                                              shape: RoundedRectangleBorder(
+                                                                                      borderRadius: BorderRadius.circular(50.0),
+                                                                                    ),
+                                                                              child:Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                    children: [
+                                                                                      Image.asset("assets/images/heart.png",width:18,height:18),
+                                                                                    ],
+                                                                                  ),
+                                                                                ],
+                                                                              ),  
+                                                                                                                            
+                                                                        ),
+                                                                      ),
+                                                                
+                                                                  ),
+                                                                ),
+                                          
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ), 
+                                                          
+                                                        
+                                                      ),
+                                                  
+                                                            
                                                     ],
                                                   ),
-                                                  //Review description-------------------------------------
-                                                   Padding(
-                                                     padding: const EdgeInsets.only(left:13),
-                                                     child: SizedBox(
-                                                      width: 250,
-                                                      
-                                                      
-                                                      child: Text(review['text'],
-                                                          style: GoogleFonts.cabin(
-                                                            textStyle:const TextStyle(
-                                                              color: Color.fromARGB(255, 112, 112, 112),
-                                                              fontSize: 10,
-                                                              fontWeight:FontWeight.w400
-                                                              
+                                                  Row(
+                                                    
+                                                    children: [
+                                                        SizedBox(
+                                                        width: 190,
+                                                        height:30,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left:6,top:5),
+                                                            child: Text(restaurantnName,
+                                                            
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.cabin(
+                                                                // ignore: prefer_const_constructors
+                                                                textStyle: TextStyle(
+                                                                color: const Color.fromARGB(255, 27, 27, 27),
+                                                                fontSize: 14,
+                                                                fontWeight: FontWeight.bold,
+                                                                                                
+                                                                ) 
+                                                              )
+                                                                                                    
                                                             ),
                                                           ),
-                                                          ),
-                                                                                                     ),
-                                                   )
+                                                        ),
+                                          
+                                                      Image.asset("assets/images/star.png",width:14,height:14),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left:4),
+                                                        child: Text("$restaurantRating",
+                                                            style: GoogleFonts.cabin(
+                                                          // ignore: prefer_const_constructors
+                                                          textStyle: TextStyle(
+                                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.bold,
+                                                                                          
+                                                          ) 
+                                                        )
+                                                        
+                                                        ),
+                                                      ),  
+                                                    ],
+                                                  
+                                                  ),
+                                                  Row(
+                                                  
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left:4),
+                                                        child: Image.asset('assets/images/location.png',width:15,height:15),
+                                                      ),
+                                                      SizedBox(
+                                                        width:200,
+                                                        height:7,
+                                                        child: Text(address,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.cabin(
+                                                            // ignore: prefer_const_constructors
+                                                            textStyle: TextStyle(
+                                                            color: Color.fromARGB(255, 94, 94, 94),
+                                                            fontSize: 7,
+                                                            fontWeight: FontWeight.bold,
+                                                                                            
+                                                            ) 
+                                                          )
+                                                        
+                                                        
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
                                                 ],
+                                                            
+                                                            
                                               ),
                                             )
-                                           
-                                          ),
-                                        )).toList(),
-                                      ),
+                                              
+                                              
+                                            
+                                            ),
+                                          ); 
+                                      },
+                                    ),  
+                                
+                                  ),
                                     ),
-                                  ],
-                                )
-
-                                ],
+                                  ),
                               ),
+                              //reviews-----------------------------------------------------------------
+                              //------------------------------------------------------------------------
+                               Visibility(
+                                visible: isNotEmptyReviews,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 13,top:14,bottom:9),
+                                  child: Row(
+                                    children: [
+                                      Text("Reviews",
+                                        style: GoogleFonts.cabin(
+                                                      textStyle:const TextStyle(
+                                                        color: Color.fromARGB(255, 0, 0, 0),
+                                                        fontSize: 16,
+                                                        fontWeight:FontWeight.bold
+                                                        
+                                                      ),
+                                                    ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              //reviewslist------------------------------------------------------
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: reviews.map<Widget>((review) => Padding(
+                                        padding: const EdgeInsets.only(bottom: 10.0),
+                                        child: Container(
+                                          width: 330,
+                                    
+                                          decoration: BoxDecoration(
+                                            color:const Color.fromARGB(255, 240, 238, 238),
+                                            borderRadius: BorderRadius.circular(13)
+                                          ),
+                        
+                                          child:Padding(
+                                            padding: const EdgeInsets.only(left:10,bottom:10),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    //profile photo-----------------------------------
+                                                     Padding(
+                                                       padding: const EdgeInsets.only(top:13),
+                                                       child: Container(
+                                                        width:35,
+                                                        height:35,
+                                                         child: CircleAvatar(
+                                                          radius: 40,
+                                                          backgroundImage:NetworkImage(review['profile_photo_url']),
+                                                          
+                                                        ),
+                                                       ),
+                                                     ),
+                                                     Padding(
+                                                       padding: const EdgeInsets.only(left:7,top:10),
+                                                       child: Column(
+                                                         children: [
+                                                           Row(
+                                                             children: [
+                                                              //author name--------------------------------------
+                                                               SizedBox(
+                                                                width:200,
+                                                                 child: Text(review['author_name'],
+                                                                   style: GoogleFonts.cabin(
+                                                                    textStyle:const TextStyle(
+                                                                      color: Color.fromARGB(255, 0, 0, 0),
+                                                                      fontSize: 14,
+                                                                      fontWeight:FontWeight.bold
+                                                                      
+                                                                    ),
+                                                                  ),
+                                                                 ),
+                                                               ),
+                                                              
+                                                             ],
+                                                           ),
+                                                           
+                                                         ],
+                                                       ),
+                                                     )
+                                                     
+                                                  ],
+                                                ),
+                                                //Review description-------------------------------------
+                                                 Padding(
+                                                   padding: const EdgeInsets.only(left:13),
+                                                   child: SizedBox(
+                                                    width: 250,
+                                                    
+                                                    
+                                                    child: Text(review['text'],
+                                                        style: GoogleFonts.cabin(
+                                                          textStyle:const TextStyle(
+                                                            color: Color.fromARGB(255, 112, 112, 112),
+                                                            fontSize: 10,
+                                                            fontWeight:FontWeight.w400
+                                                            
+                                                          ),
+                                                        ),
+                                                        ),
+                                                                                                   ),
+                                                 )
+                                              ],
+                                            ),
+                                          )
+                                         
+                                        ),
+                                      )).toList(),
+                                    ),
+                                  ),
+                                ],
+                              )
+                        
+                              ],
                             ),
-                          
                           ),
-                          )
-                        ]
-                      ),
-                    )
+                        ),
+                      ],
+                    ),
                   ],
-                )
-              ],
-            
-            ),
+                ),
+              ),
+            )
+            ]
           ),
-          
-        );
+        ),
+      );
     
     }else{
 
