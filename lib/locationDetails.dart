@@ -1560,6 +1560,18 @@ class _locationDetailsState extends State<locationDetails> {
                                                                   ),
                                                                  ),
                                                                ),
+
+                                                               //review date-------------------------------------------------
+                                                               Text(review['relative_time_description'],
+                                                                  style: GoogleFonts.cabin(
+                                                                    textStyle:const TextStyle(
+                                                                      color: Color.fromARGB(255, 112, 112, 112),
+                                                                      fontSize: 9,
+                                                                      fontWeight:FontWeight.bold
+                                                                      
+                                                                    ),
+                                                                  ),
+                                                               )
                                                               
                                                              ],
                                                            ),
@@ -1587,7 +1599,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                           ),
                                                         ),
                                                         ),
-                                                                                                   ),
+                                                      ),
                                                  )
                                               ],
                                             ),
@@ -1598,7 +1610,33 @@ class _locationDetailsState extends State<locationDetails> {
                                     ),
                                   ),
                                 ],
-                              )
+                               ),
+                               Padding(
+                                 padding: const EdgeInsets.all(8.0),
+                                 child: TextButton(
+                                  onPressed: () {
+                                        print("jhiuhiuujj");
+                                    
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                    foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20), // Set the radius here
+                                      ),
+                                    
+                                  ),
+                                  child: Text('Add to trip',
+                                      style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          
+                                  
+                                      ),
+                                  
+                                  ),
+                                                             ),
+                               ),
                         
                               ],
                             ),
