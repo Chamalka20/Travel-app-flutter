@@ -33,8 +33,8 @@ class _locationDetailsState extends State<locationDetails> {
   late  final placeLogLat;
   late final LatLng placeLocation;
   late final placeOpenTimes;
-  late final reviews;
-  late bool isNotEmptyReviews;
+  List<dynamic> reviews = [];
+  late bool isNotEmptyReviews =false;
   late final double placeRating;
   late final bool isPlaceOpenNow;
   late final String PlaceAddress;
@@ -96,29 +96,34 @@ class _locationDetailsState extends State<locationDetails> {
             placeOpenTimes = [];
           }
 
-        //get reviews ---------------------------------------------------
-        bool isReviews;
-        if(results['reviews']==null){
-          isReviews = false;
-         
-        }else{
-          
-
-          reviews =results['reviews']??'';
-          isReviews = true;
-
-        }
-        isNotEmptyReviews=isReviews;
+        
 
         placeName = results['name']??"No name";
 
         //check place is establishment or not-------------------------
         late bool isEs;
+       
         for(int i=0;i<placeType.length;i++){
           
           if(placeType[i]=='establishment'){
 
             isEs = true;
+            //get reviews ---------------------------------------------------
+            bool isReviews;
+            final reiv;
+            if(results['reviews']==null){
+              isReviews = false;
+              reiv =[{'no reviews'}];
+            
+            }else{
+              
+
+              reiv =results['reviews']??[{}];
+              isReviews = true;
+
+            }
+            isNotEmptyReviews=isReviews;
+            reviews =reiv;
             
             break;
 
@@ -279,7 +284,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
@@ -1507,112 +1512,118 @@ class _locationDetailsState extends State<locationDetails> {
                                 ),
                               ),
                               //reviewslist------------------------------------------------------
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: reviews.map<Widget>((review) => Padding(
-                                        padding: const EdgeInsets.only(bottom: 10.0),
-                                        child: Container(
-                                          width: 330,
+                              
+                              Visibility(
+                                visible: reviews.isNotEmpty?true:false,
+                                child: Row(
+                                  children: [
                                     
-                                          decoration: BoxDecoration(
-                                            color:const Color.fromARGB(255, 240, 238, 238),
-                                            borderRadius: BorderRadius.circular(13)
-                                          ),
-                        
-                                          child:Padding(
-                                            padding: const EdgeInsets.only(left:10,bottom:10),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    //profile photo-----------------------------------
-                                                     Padding(
-                                                       padding: const EdgeInsets.only(top:13),
-                                                       child: Container(
-                                                        width:35,
-                                                        height:35,
-                                                         child: CircleAvatar(
-                                                          radius: 40,
-                                                          backgroundImage:NetworkImage(review['profile_photo_url']),
-                                                          
-                                                        ),
-                                                       ),
-                                                     ),
-                                                     Padding(
-                                                       padding: const EdgeInsets.only(left:7,top:10),
-                                                       child: Column(
-                                                         children: [
-                                                           Row(
-                                                             children: [
-                                                              //author name--------------------------------------
-                                                               SizedBox(
-                                                                width:200,
-                                                                 child: Text(review['author_name'],
-                                                                   style: GoogleFonts.cabin(
-                                                                    textStyle:const TextStyle(
-                                                                      color: Color.fromARGB(255, 0, 0, 0),
-                                                                      fontSize: 14,
-                                                                      fontWeight:FontWeight.bold
-                                                                      
-                                                                    ),
-                                                                  ),
-                                                                 ),
-                                                               ),
-
-                                                               //review date-------------------------------------------------
-                                                               Text(review['relative_time_description'],
-                                                                  style: GoogleFonts.cabin(
-                                                                    textStyle:const TextStyle(
-                                                                      color: Color.fromARGB(255, 112, 112, 112),
-                                                                      fontSize: 9,
-                                                                      fontWeight:FontWeight.bold
-                                                                      
-                                                                    ),
-                                                                  ),
-                                                               )
-                                                              
-                                                             ],
-                                                           ),
-                                                           
-                                                         ],
-                                                       ),
-                                                     )
-                                                     
-                                                  ],
-                                                ),
-                                                //Review description-------------------------------------
-                                                 Padding(
-                                                   padding: const EdgeInsets.only(left:13),
-                                                   child: SizedBox(
-                                                    width: 250,
-                                                    
-                                                    
-                                                    child: Text(review['text'],
-                                                        style: GoogleFonts.cabin(
-                                                          textStyle:const TextStyle(
-                                                            color: Color.fromARGB(255, 112, 112, 112),
-                                                            fontSize: 10,
-                                                            fontWeight:FontWeight.w400
+                                    Expanded(
+                                      child: Column(
+                                      
+                                        children: reviews.map<Widget>((review) => Padding(
+                                          padding: const EdgeInsets.only(bottom: 10.0),
+                                          child: Container(
+                                            width: 330,
+                                      
+                                            decoration: BoxDecoration(
+                                              color:const Color.fromARGB(255, 240, 238, 238),
+                                              borderRadius: BorderRadius.circular(13)
+                                            ),
+                                                      
+                                            child:Padding(
+                                              padding: const EdgeInsets.only(left:10,bottom:10),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      //profile photo-----------------------------------
+                                                       Padding(
+                                                         padding: const EdgeInsets.only(top:13),
+                                                         child: Container(
+                                                          width:35,
+                                                          height:35,
+                                                           child: CircleAvatar(
+                                                            radius: 40,
+                                                            backgroundImage:NetworkImage(review['profile_photo_url']),
                                                             
                                                           ),
+                                                         ),
+                                                       ),
+                                                       Padding(
+                                                         padding: const EdgeInsets.only(left:7,top:10),
+                                                         child: Column(
+                                                           children: [
+                                                             Row(
+                                                               children: [
+                                                                //author name--------------------------------------
+                                                                 SizedBox(
+                                                                  width:200,
+                                                                   child: Text(review['author_name'],
+                                                                     style: GoogleFonts.cabin(
+                                                                      textStyle:const TextStyle(
+                                                                        color: Color.fromARGB(255, 0, 0, 0),
+                                                                        fontSize: 14,
+                                                                        fontWeight:FontWeight.bold
+                                                                        
+                                                                      ),
+                                                                    ),
+                                                                   ),
+                                                                 ),
+                              
+                                                                 //review date-------------------------------------------------
+                                                                 Text(review['relative_time_description'],
+                                                                    style: GoogleFonts.cabin(
+                                                                      textStyle:const TextStyle(
+                                                                        color: Color.fromARGB(255, 112, 112, 112),
+                                                                        fontSize: 9,
+                                                                        fontWeight:FontWeight.bold
+                                                                        
+                                                                      ),
+                                                                    ),
+                                                                 )
+                                                                
+                                                               ],
+                                                             ),
+                                                             
+                                                           ],
+                                                         ),
+                                                       )
+                                                       
+                                                    ],
+                                                  ),
+                                                  //Review description-------------------------------------
+                                                   Padding(
+                                                     padding: const EdgeInsets.only(left:13),
+                                                     child: SizedBox(
+                                                      width: 250,
+                                                      
+                                                      
+                                                      child: Text(review['text'],
+                                                          style: GoogleFonts.cabin(
+                                                            textStyle:const TextStyle(
+                                                              color: Color.fromARGB(255, 112, 112, 112),
+                                                              fontSize: 10,
+                                                              fontWeight:FontWeight.w400
+                                                              
+                                                            ),
+                                                          ),
+                                                          ),
                                                         ),
-                                                        ),
-                                                      ),
-                                                 )
-                                              ],
-                                            ),
-                                          )
-                                         
-                                        ),
-                                      )).toList(),
+                                                   )
+                                                ],
+                                              ),
+                                            )
+                                           
+                                          ),
+                                        )).toList(),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                               ),
+                                  ],
+                                 ),
+                              ),
                                Padding(
-                                 padding: const EdgeInsets.all(8.0),
+                                 padding: const EdgeInsets.all(.0),
                                  child: TextButton(
                                   onPressed: () {
                                         print("jhiuhiuujj");
@@ -1626,7 +1637,7 @@ class _locationDetailsState extends State<locationDetails> {
                                       ),
                                     
                                   ),
-                                  child: Text('Add to trip',
+                                  child: Text(isEstablishment?'Add to trip':'Plan new trip',
                                       style: GoogleFonts.roboto(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
@@ -1635,7 +1646,7 @@ class _locationDetailsState extends State<locationDetails> {
                                       ),
                                   
                                   ),
-                                                             ),
+                                ),
                                ),
                         
                               ],
