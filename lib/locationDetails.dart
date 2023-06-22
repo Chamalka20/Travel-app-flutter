@@ -2,11 +2,10 @@ import 'dart:convert';
 
 import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,6 +33,8 @@ class _locationDetailsState extends State<locationDetails> {
   late  final placeLogLat;
   late final LatLng placeLocation;
   late final placeOpenTimes;
+  late final reviews;
+  late bool isNotEmptyReviews;
   late final double placeRating;
   late final bool isPlaceOpenNow;
   late final String PlaceAddress;
@@ -49,16 +50,20 @@ class _locationDetailsState extends State<locationDetails> {
   bool showFullText = false;
 
   late final currentCity;
-  late final distance;
-  late final duration;
+  late String distance = 'ndefined';
+  late String duration='Undefined';
   
   _locationDetailsState(this.placeId);
+
+  
   @override
   void initState(){
      super.initState();
     //get data list from api-------------------------------
   
    getPlaceDetails ();
+
+  
     
   }
 
@@ -90,6 +95,20 @@ class _locationDetailsState extends State<locationDetails> {
           } else {
             placeOpenTimes = [];
           }
+
+        //get reviews ---------------------------------------------------
+        bool isReviews;
+        if(results['reviews']==null){
+          isReviews = false;
+         
+        }else{
+          
+
+          reviews =results['reviews']??'';
+          isReviews = true;
+
+        }
+        isNotEmptyReviews=isReviews;
 
         placeName = results['name']??"No name";
 
@@ -260,7 +279,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
@@ -297,6 +316,8 @@ class _locationDetailsState extends State<locationDetails> {
         isPlaceOpenNow;
         aboutDetails;
         weatherIcon;
+        placeOpenTimes;
+        distance;
 
       });
 
@@ -338,7 +359,7 @@ class _locationDetailsState extends State<locationDetails> {
 
         if (legs != null && legs.isNotEmpty) {
           final firstLeg = legs[0];
-          distance = firstLeg['distance']['text'];
+          distance = firstLeg['distance']['text']??'undifind';
           duration = firstLeg['duration']['text'];
 
          
@@ -418,7 +439,7 @@ class _locationDetailsState extends State<locationDetails> {
           };
         }).toList();
 
-        print(restaurantsList);
+       
       } else {
         print('No Restaurants found');
       }
@@ -449,8 +470,27 @@ class _locationDetailsState extends State<locationDetails> {
           statusBarIconBrightness: Brightness.light, 
           ),
         elevation: 0,
-        backgroundColor: Color.fromARGB(0, 255, 255, 255),
+        backgroundColor: Color.fromARGB(0, 20, 12, 12),
 
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right:310,),
+            child: IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          color: const Color.fromARGB(255, 145, 144, 144),
+                          iconSize: 26,
+                          onPressed: () {
+                     
+                            setState(() {
+                            //isTextFieldClicked = false;
+                            });       
+                     
+                            // Handle back button press
+                          },
+                       ),
+          ),
+        ],
+        
       ),
         body:buildBody(),
       )
@@ -470,7 +510,7 @@ class _locationDetailsState extends State<locationDetails> {
                 Row(
                   children: [
                     Container(
-                      height:1200,
+                      height:1500,
                       color: Color.fromARGB(255, 255, 255, 255),
                       child: Stack(
                         children:[ Container(
@@ -487,13 +527,14 @@ class _locationDetailsState extends State<locationDetails> {
                           ),
                          
                         ),
+                        
                         Positioned(
                           
                           top:190,
                           
                           child: SizedBox(
                             width:360,
-                            height: 910,
+                            
                             child: Container(
                               
                               decoration: BoxDecoration(
@@ -917,7 +958,7 @@ class _locationDetailsState extends State<locationDetails> {
                                   padding: const EdgeInsets.only(left: 13,top:3),
                                   child: Row(
                                     children: [
-                                      Text("From ${currentCity}  ▪ ${distance}   ▪ ${duration}",
+                                      Text("From ${currentCity}  ▪ ${distance??""}   ▪ ${duration}",
                                         style: GoogleFonts.cabin(
                                                       textStyle:const TextStyle(
                                                         color: Color.fromARGB(255, 112, 112, 112),
@@ -1434,6 +1475,121 @@ class _locationDetailsState extends State<locationDetails> {
                                       ),
                                     ),
                                 ),
+                                //reviews-----------------------------------------------------------------
+                                //------------------------------------------------------------------------
+                                 Visibility(
+                                  visible: isNotEmptyReviews,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 13,top:14,bottom:9),
+                                    child: Row(
+                                      children: [
+                                        Text("Reviews",
+                                          style: GoogleFonts.cabin(
+                                                        textStyle:const TextStyle(
+                                                          color: Color.fromARGB(255, 0, 0, 0),
+                                                          fontSize: 16,
+                                                          fontWeight:FontWeight.bold
+                                                          
+                                                        ),
+                                                      ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                //reviewslist------------------------------------------------------
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: reviews.map<Widget>((review) => Padding(
+                                          padding: const EdgeInsets.only(bottom: 10.0),
+                                          child: Container(
+                                            width: 330,
+                                      
+                                            decoration: BoxDecoration(
+                                              color:const Color.fromARGB(255, 240, 238, 238),
+                                              borderRadius: BorderRadius.circular(13)
+                                            ),
+
+                                            child:Padding(
+                                              padding: const EdgeInsets.only(left:10,bottom:10),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                       Padding(
+                                                         padding: const EdgeInsets.only(top:13),
+                                                         child: Container(
+                                                          width:35,
+                                                          height:35,
+                                                           child: CircleAvatar(
+                                                            radius: 40,
+                                                            backgroundImage:NetworkImage(review['profile_photo_url']),
+                                                            
+                                                          ),
+                                                         ),
+                                                       ),
+                                                       Padding(
+                                                         padding: const EdgeInsets.only(left:7,top:10),
+                                                         child: Column(
+                                                           children: [
+                                                             Row(
+                                                               children: [
+                                                                //author name--------------------------------------
+                                                                 SizedBox(
+                                                                  width:200,
+                                                                   child: Text(review['author_name'],
+                                                                     style: GoogleFonts.cabin(
+                                                                      textStyle:const TextStyle(
+                                                                        color: Color.fromARGB(255, 0, 0, 0),
+                                                                        fontSize: 14,
+                                                                        fontWeight:FontWeight.bold
+                                                                        
+                                                                      ),
+                                                                    ),
+                                                                   ),
+                                                                 ),
+                                                                
+                                                               ],
+                                                             ),
+                                                             
+                                                           ],
+                                                         ),
+                                                       )
+                                                       
+                                                    ],
+                                                  ),
+                                                  //Review description-------------------------------------
+                                                   Padding(
+                                                     padding: const EdgeInsets.only(left:13),
+                                                     child: SizedBox(
+                                                      width: 250,
+                                                      
+                                                      
+                                                      child: Text(review['text'],
+                                                          style: GoogleFonts.cabin(
+                                                            textStyle:const TextStyle(
+                                                              color: Color.fromARGB(255, 112, 112, 112),
+                                                              fontSize: 10,
+                                                              fontWeight:FontWeight.w400
+                                                              
+                                                            ),
+                                                          ),
+                                                          ),
+                                                                                                     ),
+                                                   )
+                                                ],
+                                              ),
+                                            )
+                                           
+                                          ),
+                                        )).toList(),
+                                      ),
+                                    ),
+                                  ],
+                                )
+
                                 ],
                               ),
                             ),
