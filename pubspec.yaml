@@ -118,7 +118,7 @@ flutter:
     - assets/images/MostlyCloudyNightV2.png
     - assets/images/MostlyClearNight.png
     - assets/images/N210LightRainShowersV2.png
-
+    - assets/images/add.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

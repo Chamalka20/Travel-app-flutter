@@ -284,7 +284,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
@@ -398,6 +398,7 @@ class _locationDetailsState extends State<locationDetails> {
         
           return {
             'name': result['name'],
+            'id': result['place_id'],
             'photoRef': photoRef,
             'rating': result['rating'] != null ? result['rating'].toDouble() : 0.0,
             'address': result['formatted_address'],
@@ -437,6 +438,7 @@ class _locationDetailsState extends State<locationDetails> {
         
           return {
             'name': result['name'],
+            'id': result['place_id'],
             'photoRef': photoRef,
             'rating': result['rating'] != null ? result['rating'].toDouble() : 0.0,
             'address': result['formatted_address'],
@@ -1053,7 +1055,12 @@ class _locationDetailsState extends State<locationDetails> {
                                         final type = attraction['type'];
                                         
                                           return GestureDetector(
-                                            onTap: ()=>{print("hello")},
+                                            onTap: ()=>{
+                                              //dierect place details page again---------------------
+                                              Navigator.of(context).pushReplacement(customPageRoutes(
+                
+                                              child: locationDetails(placeId:attraction['id'])))
+                                            },
                                             child: Card(
                                             elevation: 0,
                                             color:const Color.fromARGB(255, 240, 238, 238),
@@ -1292,7 +1299,12 @@ class _locationDetailsState extends State<locationDetails> {
                                         final type = restaurants['type'];
                                         
                                           return GestureDetector(
-                                            onTap: ()=>{print("hello")},
+                                            onTap: ()=>{
+                                              //dierect place details page again---------------------
+                                              Navigator.of(context).pushReplacement(customPageRoutes(
+                
+                                              child: locationDetails(placeId:restaurants['id'])))
+                                            },
                                             child: Card(
                                             elevation: 0,
                                             color:const Color.fromARGB(255, 240, 238, 238),
@@ -1623,15 +1635,137 @@ class _locationDetailsState extends State<locationDetails> {
                                  ),
                               ),
                                Padding(
-                                 padding: const EdgeInsets.all(.0),
+                                 padding: const EdgeInsets.all(8.0),
                                  child: TextButton(
                                   onPressed: () {
-                                        print("jhiuhiuujj");
+                                    isEstablishment?
+                                    showModalBottomSheet(
+                                      context: context,
+                                      shape: const RoundedRectangleBorder(
+                                         borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20),
+                                            ),
+                                        ), 
+                                      builder: (BuildContext context) { 
+
+                                        return
+                                         SizedBox(
+                                          height:200,
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left:12,top:12),
+                                                child: Row(
+                                                  children: [
+                                                    Text("Select trip and day",
+                                                      style: GoogleFonts.cabin(
+                                                            textStyle:const TextStyle(
+                                                              color: Color.fromARGB(255, 0, 0, 0),
+                                                              fontSize: 16,
+                                                              fontWeight:FontWeight.bold
+                                                              
+                                                            ),
+                                                          ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left:12,top:6),
+                                                child: Row(
+                                                  children: [
+                                                    Text("Choose your best option to go to this place",
+                                                      style: GoogleFonts.cabin(
+                                                            textStyle:const TextStyle(
+                                                              color: Color.fromARGB(255, 112, 112, 112),
+                                                              fontSize: 10,
+                                                              fontWeight:FontWeight.w400
+                                                              
+                                                            ),
+                                                          ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              //trip list------------------------------------------------
+                                              Padding(
+                                                padding: const EdgeInsets.only(left:10,top:7),
+                                                child: Row(
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Card(
+                                                              elevation: 0,
+                                                              color:Color.fromARGB(255, 124, 124, 124),
+                                                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                              shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(10.0),
+                                                                    ),
+                                                              child: Container(
+                                                                width:145,
+                                                                height:110,
+                                                                child:Column(
+                                                                   mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        Image.asset('assets/images/add.png',width:30,height:30)
+                                                                      ],
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.only(top:6),
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          Text("Creat new trip",
+                                                                            style: GoogleFonts.cabin(
+                                                                              textStyle:const TextStyle(
+                                                                                color: Color.fromARGB(255, 255, 255, 255),
+                                                                                fontSize: 12,
+                                                                                fontWeight:FontWeight.w500
+                                                                                
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                                
+                                                              ),      
+                                                            ),
+                                                            //created trip list------------------------------------------------------
+
+                                                          ],
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          
+                                         );
+
+                                       }, 
+                                      
+                                    
+                                    ):
+                                    //derect trip plan page---------------------------------
+                                   print("trip plan");
                                     
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                                    foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                    foregroundColor:Color.fromRGBO(255, 255, 255, 1),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20), // Set the radius here
                                       ),
