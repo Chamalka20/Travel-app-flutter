@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelapp/createNewTrip.dart';
+import 'package:travelapp/search.dart';
 
 import 'customPageRoutes.dart';
 import 'navigationPage.dart';
@@ -228,7 +230,10 @@ class _locationDetailsState extends State<locationDetails> {
 
             }else if(isDayTime==false && getPhrase=="Rain"){
               weatherIcon = '';
+            }else if(isDayTime==true && getPhrase=="A shower"){
+              weatherIcon = 'assets/images/Light-rain.png';
 
+              
             }else if(isDayTime==true && getPhrase=="Light rain"){
               weatherIcon = 'assets/images/Light-rain.png';
 
@@ -284,7 +289,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 
@@ -464,8 +469,8 @@ class _locationDetailsState extends State<locationDetails> {
     return WillPopScope(
       onWillPop: () async {
          Navigator.of(context).pushReplacement(customPageRoutes(
-                    
-        child:const navigationPage(isBackButtonClick:true)));  
+                
+        child:const Scaffold(body: search())));
       return false;
       }, 
       child: Scaffold(
@@ -479,24 +484,6 @@ class _locationDetailsState extends State<locationDetails> {
         elevation: 0,
         backgroundColor: Color.fromARGB(0, 20, 12, 12),
 
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right:310,),
-            child: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          color: const Color.fromARGB(255, 145, 144, 144),
-                          iconSize: 26,
-                          onPressed: () {
-                     
-                            setState(() {
-                            //isTextFieldClicked = false;
-                            });       
-                     
-                            // Handle back button press
-                          },
-                       ),
-          ),
-        ],
         
       ),
         body:buildBody(),
@@ -974,7 +961,7 @@ class _locationDetailsState extends State<locationDetails> {
                                 padding: const EdgeInsets.only(left: 13,top:3),
                                 child: Row(
                                   children: [
-                                    Text("From ${currentCity}  ▪ ${distance??""}   ▪ ${duration}",
+                                    Text("From ${currentCity}  ▪ ${distance}   ▪ ${duration}",
                                       style: GoogleFonts.cabin(
                                                     textStyle:const TextStyle(
                                                       color: Color.fromARGB(255, 112, 112, 112),
@@ -1703,42 +1690,51 @@ class _locationDetailsState extends State<locationDetails> {
                                                               shape: RoundedRectangleBorder(
                                                                       borderRadius: BorderRadius.circular(10.0),
                                                                     ),
-                                                              child: Container(
-                                                                width:145,
-                                                                height:110,
-                                                                child:Column(
-                                                                   mainAxisAlignment: MainAxisAlignment.center,
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                                      children: [
-                                                                        Image.asset('assets/images/add.png',width:30,height:30)
-                                                                      ],
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.only(top:6),
-                                                                      child: Row(
+                                                                child: GestureDetector(
+                                                                    onTap: ()=>{
+                                                                      //dierect place details page again---------------------
+                                                                       Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl:'')),
+                                                                      ),
+                                                                    },
+                                                                    child: Container(
+                                                                      width:145,
+                                                                      height:110,
+                                                                      child:Column(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                                         children: [
-                                                                          Text("Creat new trip",
-                                                                            style: GoogleFonts.cabin(
-                                                                              textStyle:const TextStyle(
-                                                                                color: Color.fromARGB(255, 255, 255, 255),
-                                                                                fontSize: 12,
-                                                                                fontWeight:FontWeight.w500
-                                                                                
-                                                                              ),
+                                                                          Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                            children: [
+                                                                              Image.asset('assets/images/add.png',width:30,height:30)
+                                                                            ],
+                                                                          ),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.only(top:6),
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                                              children: [
+                                                                                Text("Creat new trip",
+                                                                                  style: GoogleFonts.cabin(
+                                                                                    textStyle:const TextStyle(
+                                                                                      color: Color.fromARGB(255, 255, 255, 255),
+                                                                                      fontSize: 12,
+                                                                                      fontWeight:FontWeight.w500
+                                                                                      
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                              ],
                                                                             ),
-                                                                          )
+                                                                          ),
                                                                         ],
-                                                                      ),
+                                                                      )
+                                                                      
                                                                     ),
-                                                                  ],
-                                                                )
-                                                                
                                                               ),      
                                                             ),
                                                             //created trip list------------------------------------------------------
@@ -1760,7 +1756,10 @@ class _locationDetailsState extends State<locationDetails> {
                                     
                                     ):
                                     //derect trip plan page---------------------------------
-                                   print("trip plan");
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>  createNewTrip(placeName:placeName,placePhotoUrl:placePhoto)),
+                                    );
                                     
                                   },
                                   style: ElevatedButton.styleFrom(
