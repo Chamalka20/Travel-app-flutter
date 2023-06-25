@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 
@@ -43,7 +44,22 @@ class _createNewTripState extends State<createNewTrip> {
     
   }
 
-  
+  //get background image with phone gallary---------------------------------------
+   Future<void> getBackGroundImagewithPhone (ImageSource media)async{
+    
+    final ImagePicker picker = ImagePicker();
+
+    var  response = await picker.pickImage(source: media);
+
+    
+
+    XFile? files = response;
+
+    print(files!.path);
+
+
+   }
+
 
   Future<void> getBackGroundImage ()async{
     
@@ -140,52 +156,94 @@ class _createNewTripState extends State<createNewTrip> {
                                   ),
                               
                               ),
-                              child: Column(
-                        
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top:40),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text("Informations Trip",
-                                          style: GoogleFonts.cabin(
-                                              // ignore: prefer_const_constructors
-                                              textStyle: TextStyle(
-                                              color: Color.fromARGB(255, 255, 255, 255),
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                                                              
-                                              ) 
-                                            )
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top:130,left:13),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width:310,
-                                          child: Text(tripName.isNotEmpty?tripName:"My Trip",
-                                            overflow: TextOverflow.ellipsis,
-                                             style: GoogleFonts.cabin(
-                                                  // ignore: prefer_const_constructors
-                                                  textStyle: TextStyle(
-                                                  color: Color(0xFFEEE6E6),
-                                                  fontSize: 33,
-                                                  fontWeight: FontWeight.bold,
-                                                                                  
-                                                  ) 
-                                                )
+                              child: Container(
+                                width:360,
+                                child: Column(
+                                                      
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top:40),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left:130),
+                                                child: SizedBox(
+                                                  width:150,
+                                                  child: Text("Informations Trip",
+                                                    style: GoogleFonts.cabin(
+                                                        // ignore: prefer_const_constructors
+                                                        textStyle: TextStyle(
+                                                        color: Color.fromARGB(255, 255, 255, 255),
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                                                        
+                                                        ) 
+                                                      )
+                                                  ),
+                                                ),
+                                              ),
+                                              //uplode image from phone gallery------------------------------------------
+                                              Padding(
+                                                padding: const EdgeInsets.only(),
+                                                child: Row(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left:20),
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          getBackGroundImagewithPhone (ImageSource.gallery);
+                                                        },
+                                                        child: Container(
+                                                          width:35,
+                                                          height:35,
+                                                          decoration: BoxDecoration(
+                                                            color: Color.fromARGB(100, 255, 255, 255),
+                                                            borderRadius: BorderRadius.circular(45)
+                                                          ),
+                                                          child:const Icon(
+                                                            Icons.camera_alt_outlined,
+                                                            color: Color.fromARGB(255, 153, 152, 152),
+                                                            
+                                                            ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        )
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  )
-                                ],
+                                    
+                                    Padding(
+                                      padding: const EdgeInsets.only(top:120,left:13),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width:310,
+                                            child: Text(tripName.isNotEmpty?tripName:"My Trip",
+                                              overflow: TextOverflow.ellipsis,
+                                               style: GoogleFonts.cabin(
+                                                    // ignore: prefer_const_constructors
+                                                    textStyle: TextStyle(
+                                                    color: Color(0xFFEEE6E6),
+                                                    fontSize: 33,
+                                                    fontWeight: FontWeight.bold,
+                                                                                    
+                                                    ) 
+                                                  )
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                     
@@ -372,6 +430,88 @@ class _createNewTripState extends State<createNewTrip> {
                                  ),
                               ],
                             ),
+                            //enter trip description------------------------------------------
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                 Padding(
+                                   padding: const EdgeInsets.only(top:20),
+                                   child: Container(
+                                    width:300,
+                                    height:70,
+                                     child: TextField(
+                                      maxLines: 10,
+                                      onTap: () {
+                                        setState(() {
+                                         
+                                        });
+                                      },
+                                      //get keyboard input value-------------
+                                      onChanged: (value) {
+                                        
+                                        
+                                   
+                                      },
+                                      
+                                      decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor:  Color.fromARGB(255, 240, 238, 238),
+                                      hintText: 'Description',
+                                      hintStyle: GoogleFonts.cabin(
+                                                    // ignore: prefer_const_constructors
+                                                    textStyle: TextStyle(
+                                                    color: Color.fromARGB(255, 145, 144, 144),
+                                                    fontSize: 17,
+                                                    fontWeight:FontWeight.w400,
+                                                    
+                                                    ) 
+                                                  ),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(12.0),
+                                        
+                                        ),
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                                      ),
+                                                         
+                                                         
+                                      ),
+                                   ),
+                                 ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: SizedBox(
+                                  width: 270,
+                                  height: 45,
+                                  child: TextButton(
+                                    onPressed: () {
+                                          print("jhiuhiuujj");
+                                      
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                      foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20), 
+                                        ),
+                                      
+                                    ),
+                                    child: Text('Next',
+                                        style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            
+                                    
+                                        ),
+                                    
+                                    ),
+                                  ),
+                                ),
+                            ),
+
                           ],
                         )
                       ],

@@ -242,7 +242,7 @@ class _MyWidgetState extends State<letsStart> {
                                   backgroundColor: Color.fromARGB(255, 255, 255, 255),
                                   foregroundColor:Color.fromARGB(255, 0, 0, 0),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20), // Set the radius here
+                                      borderRadius: BorderRadius.circular(20), 
                                     ),
                                   
                                 ),

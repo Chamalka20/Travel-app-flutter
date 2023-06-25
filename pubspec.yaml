@@ -48,6 +48,8 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   google_maps_flutter: ^2.0.10
   intl: ^0.17.0
+  image_picker: ^0.8.9
+
 
 dev_dependencies:
   flutter_test:
@@ -120,6 +122,7 @@ flutter:
     - assets/images/MostlyClearNight.png
     - assets/images/N210LightRainShowersV2.png
     - assets/images/add.png
+    - assets/images/camera.png
 
 
 
