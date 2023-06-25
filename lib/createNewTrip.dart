@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:travelapp/tripDetailsPlan.dart';
 
 
 class createNewTrip extends StatefulWidget {
@@ -311,70 +312,67 @@ class _createNewTripState extends State<createNewTrip> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                 Padding(
-                                   padding: const EdgeInsets.only(top:20),
-                                   child: Container(
-                                    width:300,
-                                    height:60,
-                                     child: TextField(
-                                      controller: dateinput,
-                                      readOnly: true,
-                                      onTap: () async {
+                                 Container(
+                                  width:300,
+                                  height:60,
+                                   child: TextField(
+                                    controller: dateinput,
+                                    readOnly: true,
+                                    onTap: () async {
                   
-                                         DateTimeRange? pickedDate = await showDateRangePicker(
-                                            context: context,
-                                            currentDate: DateTime.now(),
-                                            firstDate: DateTime(2000),
-                                            lastDate: DateTime(2101)
-                                        );
+                                       DateTimeRange? pickedDate = await showDateRangePicker(
+                                          context: context,
+                                          currentDate: DateTime.now(),
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime(2101)
+                                      );
                   
                   
-                                        if(pickedDate != null ){
-                                          print(pickedDate);  
-                                          String formattedDate1 = DateFormat('yyyy/MM/dd').format(pickedDate.start);
-                                          String formattedDate2 = DateFormat('yyyy/MM/dd').format(pickedDate.end); 
-                                          print(pickedDate.duration.inDays); 
-                                          
-                  
-                                          setState(() {
-                                            dateinput.text = '${formattedDate1} - ${formattedDate2}';                      //set output date to TextField value. 
-                                          });
-                                        }else{
-                                            print("Date is not selected");
-                                        }
-                                          
-                                      },
-                                      //get keyboard input value-------------
-                                      onChanged: (value) {
-                                          
+                                      if(pickedDate != null ){
+                                        print(pickedDate);  
+                                        String formattedDate1 = DateFormat('yyyy/MM/dd').format(pickedDate.start);
+                                        String formattedDate2 = DateFormat('yyyy/MM/dd').format(pickedDate.end); 
+                                        print(pickedDate.duration.inDays); 
                                         
-                                   
-                                      },
-                                      decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor:  Color.fromARGB(255, 240, 238, 238),
-                                      hintText: 'Days',
-                                      prefixIcon: Icon(Icons.calendar_month),
-                                      hintStyle: GoogleFonts.cabin(
-                                                    // ignore: prefer_const_constructors
-                                                    textStyle: TextStyle(
-                                                    color: Color.fromARGB(255, 145, 144, 144),
-                                                    fontSize: 17,
-                                                    fontWeight:FontWeight.w400,
-                                                    
-                                                    ) 
-                                                  ),
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.circular(19.0),
+                  
+                                        setState(() {
+                                          dateinput.text = '${formattedDate1} - ${formattedDate2}';                      //set output date to TextField value. 
+                                        });
+                                      }else{
+                                          print("Date is not selected");
+                                      }
                                         
-                                        ),
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                                    },
+                                    //get keyboard input value-------------
+                                    onChanged: (value) {
+                                        
+                                      
+                                 
+                                    },
+                                    decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor:  Color.fromARGB(255, 240, 238, 238),
+                                    hintText: 'Days',
+                                    prefixIcon: Icon(Icons.calendar_month),
+                                    hintStyle: GoogleFonts.cabin(
+                                                  // ignore: prefer_const_constructors
+                                                  textStyle: TextStyle(
+                                                  color: Color.fromARGB(255, 145, 144, 144),
+                                                  fontSize: 17,
+                                                  fontWeight:FontWeight.w400,
+                                                  
+                                                  ) 
+                                                ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(19.0),
+                                      
                                       ),
-                                                         
-                                                         
-                                      ),
-                                   ),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                                    ),
+                                                       
+                                                       
+                                    ),
                                  ),
                               ],
                             ),
@@ -383,101 +381,142 @@ class _createNewTripState extends State<createNewTrip> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                 Padding(
-                                   padding: const EdgeInsets.only(top:20),
-                                   child: Container(
-                                    width:300,
-                                    height:60,
-                                     child: TextField(
+                                 Container(
+                                  width:300,
+                                  height:60,
+                                   child: TextField(
+                                    
+                                    onTap: () {
+                                      setState(() {
+                                       
+                                      });
+                                    },
+                                    //get keyboard input value-------------
+                                    onChanged: (value) {
                                       
-                                      onTap: () {
-                                        setState(() {
-                                         
-                                        });
-                                      },
-                                      //get keyboard input value-------------
-                                      onChanged: (value) {
-                                        
-                                        
-                                   
-                                      },
                                       
-                                      decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor:  Color.fromARGB(255, 240, 238, 238),
-                                      hintText: 'Trip budget',
-                                      prefixIcon: Icon(Icons.money_sharp),
-                                      hintStyle: GoogleFonts.cabin(
-                                                    // ignore: prefer_const_constructors
-                                                    textStyle: TextStyle(
-                                                    color: Color.fromARGB(255, 145, 144, 144),
-                                                    fontSize: 17,
-                                                    fontWeight:FontWeight.w400,
-                                                    
-                                                    ) 
-                                                  ),
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.circular(19.0),
-                                        
-                                        ),
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                                 
+                                    },
+                                    
+                                    decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor:  Color.fromARGB(255, 240, 238, 238),
+                                    hintText: 'Trip budget',
+                                    prefixIcon: Icon(Icons.money_sharp),
+                                    hintStyle: GoogleFonts.cabin(
+                                                  // ignore: prefer_const_constructors
+                                                  textStyle: TextStyle(
+                                                  color: Color.fromARGB(255, 145, 144, 144),
+                                                  fontSize: 17,
+                                                  fontWeight:FontWeight.w400,
+                                                  
+                                                  ) 
+                                                ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(19.0),
+                                      
                                       ),
-                                                         
-                                                         
-                                      ),
-                                   ),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                                    ),
+                                                       
+                                                       
+                                    ),
                                  ),
                               ],
                             ),
-                            //enter trip description------------------------------------------
+                            //enter trip location------------------------------------------
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                 Padding(
-                                   padding: const EdgeInsets.only(top:20),
-                                   child: Container(
-                                    width:300,
-                                    height:70,
-                                     child: TextField(
-                                      maxLines: 10,
-                                      onTap: () {
-                                        setState(() {
-                                         
-                                        });
-                                      },
-                                      //get keyboard input value-------------
-                                      onChanged: (value) {
-                                        
-                                        
-                                   
-                                      },
+                                 Container(
+                                  width:300,
+                                  height:70,
+                                   child: TextField(
+                                    onTap: () {
+                                      setState(() {
+                                       
+                                      });
+                                    },
+                                    //get keyboard input value-------------
+                                    onChanged: (value) {
                                       
-                                      decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor:  Color.fromARGB(255, 240, 238, 238),
-                                      hintText: 'Description',
-                                      hintStyle: GoogleFonts.cabin(
-                                                    // ignore: prefer_const_constructors
-                                                    textStyle: TextStyle(
-                                                    color: Color.fromARGB(255, 145, 144, 144),
-                                                    fontSize: 17,
-                                                    fontWeight:FontWeight.w400,
-                                                    
-                                                    ) 
-                                                  ),
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.circular(12.0),
-                                        
-                                        ),
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                                      
+                                 
+                                    },
+                                    
+                                    decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor:  Color.fromARGB(255, 240, 238, 238),
+                                    hintText: 'Enter location',
+                                    hintStyle: GoogleFonts.cabin(
+                                                  // ignore: prefer_const_constructors
+                                                  textStyle: TextStyle(
+                                                  color: Color.fromARGB(255, 145, 144, 144),
+                                                  fontSize: 17,
+                                                  fontWeight:FontWeight.w400,
+                                                  
+                                                  ) 
+                                                ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      
                                       ),
-                                                         
-                                                         
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                                    ),
+                                                       
+                                                       
+                                    ),
+                                 ),
+                              ],
+                            ),
+                             //enter trip description------------------------------------------
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                 Container(
+                                  width:300,
+                                  height:70,
+                                   child: TextField(
+                                    maxLines: 10,
+                                    onTap: () {
+                                      setState(() {
+                                       
+                                      });
+                                    },
+                                    //get keyboard input value-------------
+                                    onChanged: (value) {
+                                      
+                                      
+                                 
+                                    },
+                                    
+                                    decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor:  Color.fromARGB(255, 240, 238, 238),
+                                    hintText: 'Description',
+                                    hintStyle: GoogleFonts.cabin(
+                                                  // ignore: prefer_const_constructors
+                                                  textStyle: TextStyle(
+                                                  color: Color.fromARGB(255, 145, 144, 144),
+                                                  fontSize: 17,
+                                                  fontWeight:FontWeight.w400,
+                                                  
+                                                  ) 
+                                                ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      
                                       ),
-                                   ),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                                    ),
+                                                       
+                                                       
+                                    ),
                                  ),
                               ],
                             ),
@@ -488,7 +527,11 @@ class _createNewTripState extends State<createNewTrip> {
                                   height: 45,
                                   child: TextButton(
                                     onPressed: () {
-                                          print("jhiuhiuujj");
+                                          
+                                      Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan()),
+                                    );
                                       
                                     },
                                     style: ElevatedButton.styleFrom(
