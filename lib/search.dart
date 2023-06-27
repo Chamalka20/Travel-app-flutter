@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -27,54 +29,113 @@ class _searchState extends State<search> {
   
  Future<void> fetchSearchResults(String input) async {
 
+    
     keyboardInput = input;
-    const String apikey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
-    const String apiUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
-    final String url = '$apiUrl?query=$keyboardInput&key=$apikey';
+    
+    try{
+     final databaseReference = FirebaseDatabase.instance.ref('city-List');
+    final dataSnapshot = await databaseReference.once();
 
-    final response = await http.get(Uri.parse(url));
+    final data = dataSnapshot.snapshot.value as List<dynamic>;
 
-    if (response.statusCode == 200) {
-       print("Request successful status:${response.statusCode}"); 
-      final data = jsonDecode(response.body);
+    final searchCity=data.map((element) { 
 
-      if (data['status'] == 'OK') {
-       
-        final results = data['results'] as List<dynamic>;
+      final city = element['city'];
 
-          
-
-           setState(() {
-           searchResults = results.map((result) {
-               final photos = result['photos'] as List<dynamic>?;
-
-              String firstPhotoReference = '';
-
-              if (photos != null && photos.isNotEmpty) {
-                final firstPhoto = photos[0] as Map<String, dynamic>;
-                firstPhotoReference = firstPhoto['photo_reference'] ?? '';
-              }
-            
-              return {
-              'name': result['name'] ?? '',
-              'address': result['formatted_address'],
-              'photo_reference': firstPhotoReference.isNotEmpty?firstPhotoReference:'',
-              'place_id':result['place_id'],
-                  
-              };
-            }).toList();
-           });
-      
-      }else{
-        print("no Data"); 
-
+      if (city != null && city.toLowerCase().contains(keyboardInput.toLowerCase())) {
+        if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
+          return {
+            'name': city,
+            'photo_reference': element['imageUrls'][0],
+          };
+        } else {
+          return {
+            'name': city,
+            'photo_reference': 'https://via.placeholder.com/150',
+          };
+        }
       }
-    }else{
 
-      print("Failed to retrieve dataset items status:${response.statusCode}");
+      return null;
+    }).where((element) => element != null).toList();
+     print(searchCity);
 
+  //   for (var element in data) {
+      
+      
+
+  //    if ( element['city'] is String) {
+  //     if ( element['city'].toLowerCase().contains(keyboardInput.toLowerCase())) {
+        
+
+  //       setState(() {
+
+  //         if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
+
+  //             searchResults = [
+  //             {
+  //               'name': element['city'] ?? '',
+  //               'photo_reference': element['imageUrls'][0]??'',
+  //             }
+             
+  //             ];
+
+  //         }else{
+
+  //           searchResults = [
+  //            {
+  //               'name': element['city'] ?? '',
+  //               'photo_reference': 'https://via.placeholder.com/150',
+  //             }
+
+  //           ];
+  //         }
+
+           
+  //         });
+  //     }
+  //   } else if ( element['city'] is List<dynamic>) {
+  //     print('true');
+  //     final searchCity =  element['city']
+  //         .where((word) => word.toString().toLowerCase().contains(keyboardInput.toLowerCase()))
+  //         .toList();
+
+  //          setState(() {
+  //          searchResults = searchCity.map((element) {
+
+  //           if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
+
+  //              return {
+  //             'name': element['city'],
+  //             'photo_reference': element['imageUrls'],
+                  
+  //             };
+
+  //           }else{
+
+  //             return {
+  //             'name': element['city'],
+  //             'photo_reference': 'https://via.placeholder.com/150',
+              
+                  
+  //             };
+  //           }
+
+  //           }).toList();
+  //          });
+
+  //     print(searchCity);
+  //   }
+  // }
+      
+    }catch (e) {
+
+    print('Error: $e');
 
     }
+
+
+   
   }
 
  String getPhotoUrl(String photoReference) {
@@ -248,7 +309,7 @@ class _searchState extends State<search> {
                     final address = searchRe['address'];
                     final photoReference = searchRe['photo_reference'];
                     final  id = searchRe['place_id'];
-                    final photoUrl = getPhotoUrl(photoReference);
+                   
                     
             
                     return Column(
@@ -287,7 +348,7 @@ class _searchState extends State<search> {
                                             height:37,
                                             child: CircleAvatar(
                                               radius: 40,
-                                              backgroundImage:NetworkImage(photoUrl),
+                                              backgroundImage:NetworkImage(photoReference),
                                               
                                             ),
                                           ),
@@ -322,26 +383,7 @@ class _searchState extends State<search> {
                                                     ],
                                                   ),
                                                 ),
-                                                Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width:255,
-                                                      child: Text(address,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: GoogleFonts.cabin(
-                                                          // ignore: prefer_const_constructors
-                                                          textStyle: TextStyle(
-                                                          color: Color.fromARGB(255, 138, 138, 138),
-                                                          fontSize: 10,
-                                                          fontWeight: FontWeight.w700,
-                                                                                                  
-                                                          ) 
-                                                        )
-                                                      ),
-                                                    )
-                                                  ],
-                                                        
-                                                )
+                                                
                                               ],
                                             ),
                                           ),

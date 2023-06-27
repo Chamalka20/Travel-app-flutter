@@ -289,7 +289,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
 

@@ -1,3 +1,6 @@
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Home.dart';
@@ -14,6 +17,8 @@ Future<bool> checkLoggedIn() async {
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp();
+  
   bool isLoggedIn = await checkLoggedIn();
   String initialRoute = isLoggedIn ? '/home' : '/login';
 

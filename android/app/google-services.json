@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "801398445076",
+    "firebase_url": "https://flutter-travel-app-3f538-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "flutter-travel-app-3f538",
+    "storage_bucket": "flutter-travel-app-3f538.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801398445076:android:df86416ab466a3da0dc301",
+        "android_client_info": {
+          "package_name": "com.example.travelapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "801398445076-alg8tde7luo6vimem0gvmd8tthb4i829.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7e8IvH1HSYcRVgy7fHq9VQyT_LKr8K6k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801398445076-alg8tde7luo6vimem0gvmd8tthb4i829.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
