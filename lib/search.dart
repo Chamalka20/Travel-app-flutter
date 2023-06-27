@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -24,134 +25,62 @@ class _searchState extends State<search> {
   bool  isTextFieldClicked= false;
   String keyboardInput='';
   var searchResults=[];
+  Timer? _debounce;
 
   
   
  Future<void> fetchSearchResults(String input) async {
 
-    
     keyboardInput = input;
-    
-    try{
-     final databaseReference = FirebaseDatabase.instance.ref('city-List');
-    final dataSnapshot = await databaseReference.once();
 
-    final data = dataSnapshot.snapshot.value as List<dynamic>;
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
 
-    final searchCity=data.map((element) { 
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
 
-      final city = element['city'];
+      try{
+        final databaseReference = FirebaseDatabase.instance.ref('city-List');
+        final dataSnapshot = await databaseReference.once();
 
-      if (city != null && city.toLowerCase().contains(keyboardInput.toLowerCase())) {
-        if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
-          return {
-            'name': city,
-            'photo_reference': element['imageUrls'][0],
-          };
-        } else {
-          return {
-            'name': city,
-            'photo_reference': 'https://via.placeholder.com/150',
-          };
-        }
-      }
+        final data = dataSnapshot.snapshot.value as List<dynamic>;
 
-      return null;
-    }).where((element) => element != null).toList();
-     print(searchCity);
+        setState(() {
+            searchResults=data.map((element) { 
 
-  //   for (var element in data) {
-      
-      
+              final city = element['city'];
 
-  //    if ( element['city'] is String) {
-  //     if ( element['city'].toLowerCase().contains(keyboardInput.toLowerCase())) {
-        
+              if (city != null && city.toLowerCase().contains(keyboardInput.toLowerCase())) {
+                if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
+                  return {
+                    'name': city,
+                    'photo_reference': element['imageUrls'][0],
+                  };
+                } else {
+                  return {
+                    'name': city,
+                    'photo_reference': 'https://via.placeholder.com/150',
+                  };
+                }
+              }
 
-  //       setState(() {
+              return null;
+            }).where((element) => element != null).toList();
 
-  //         if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
-
-  //             searchResults = [
-  //             {
-  //               'name': element['city'] ?? '',
-  //               'photo_reference': element['imageUrls'][0]??'',
-  //             }
-             
-  //             ];
-
-  //         }else{
-
-  //           searchResults = [
-  //            {
-  //               'name': element['city'] ?? '',
-  //               'photo_reference': 'https://via.placeholder.com/150',
-  //             }
-
-  //           ];
-  //         }
-
-           
-  //         });
-  //     }
-  //   } else if ( element['city'] is List<dynamic>) {
-  //     print('true');
-  //     final searchCity =  element['city']
-  //         .where((word) => word.toString().toLowerCase().contains(keyboardInput.toLowerCase()))
-  //         .toList();
-
-  //          setState(() {
-  //          searchResults = searchCity.map((element) {
-
-  //           if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
-
-  //              return {
-  //             'name': element['city'],
-  //             'photo_reference': element['imageUrls'],
-                  
-  //             };
-
-  //           }else{
-
-  //             return {
-  //             'name': element['city'],
-  //             'photo_reference': 'https://via.placeholder.com/150',
-              
-                  
-  //             };
-  //           }
-
-  //           }).toList();
-  //          });
-
-  //     print(searchCity);
-  //   }
-  // }
+          });
+     
       
     }catch (e) {
 
     print('Error: $e');
 
     }
+        
+    });
+    
+    
 
-
-   
   }
 
- String getPhotoUrl(String photoReference) {
-    if (photoReference =='') {
-      // Return a placeholder image URL if no photo reference is available
-      return 'https://via.placeholder.com/150';
-    }
-
-    const apiKey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
-    final maxWidth = 300;
-    final apiUrl =
-        'https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&photoreference=$photoReference&key=$apiKey';
-
-    return apiUrl;
-  }
-  
+ 
   
 
   @override
@@ -306,9 +235,9 @@ class _searchState extends State<search> {
                   itemBuilder: (context, index) {
                     final searchRe = searchResults[index];
                     final name = searchRe['name'];
-                    final address = searchRe['address'];
                     final photoReference = searchRe['photo_reference'];
-                    final  id = searchRe['place_id'];
+                    final  latLog = searchRe['location'];
+                    final type = searchRe['searchString'];
                    
                     
             
@@ -319,7 +248,7 @@ class _searchState extends State<search> {
                           onTap: () {
                              Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                            child: locationDetails(placeId:id)));
+                            child: locationDetails(placeName:name,placelatLog:latLog,placePhoto: photoReference,placeType: type,)));
                            
                           },
                           child: Row(

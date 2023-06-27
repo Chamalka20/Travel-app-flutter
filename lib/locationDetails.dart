@@ -16,22 +16,26 @@ import 'customPageRoutes.dart';
 import 'navigationPage.dart';
 
 class locationDetails extends StatefulWidget {
-  final String placeId;
+  final String placeName;
+  final String placelatLog;
+  final String placePhoto;
+  final String placeType;
   
-
- const locationDetails({required this.placeId, Key? key}) : super(key: key);
+ const locationDetails({required this.placeName,required this.placelatLog,required this.placePhoto,required this.placeType, Key? key}) : super(key: key);
 
 
   @override
-  State<locationDetails> createState() => _locationDetailsState(placeId);
+  State<locationDetails> createState() => _locationDetailsState(placeName,placelatLog,placePhoto,placeType);
 }
 
 class _locationDetailsState extends State<locationDetails> {
-  final String placeId;
-  late final String placePhoto;
-  late final String placeName;
 
-  late final  placeType;
+  final String placelatLog;
+  final String placePhoto;
+  final String placeName;
+  final String placeType;
+  
+
   late  final placeLogLat;
   late final LatLng placeLocation;
   late final placeOpenTimes;
@@ -55,7 +59,7 @@ class _locationDetailsState extends State<locationDetails> {
   late String distance = 'ndefined';
   late String duration='Undefined';
   
-  _locationDetailsState(this.placeId);
+  _locationDetailsState(this.placelatLog,this.placePhoto,this.placeName,this.placeType);
 
   
   @override
@@ -65,121 +69,26 @@ class _locationDetailsState extends State<locationDetails> {
   
    getPlaceDetails ();
 
-  
+    
     
   }
 
    Future <void> getPlaceDetails ()async {
-    const String apikey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
-    const String apiUrl = 'https://maps.googleapis.com/maps/api/place/details/json';
-    final String url = '$apiUrl?place_id=$placeId&key=$apikey';
+    
+     //check place is establishment or not-------------------------
+    late bool isEs;
+    if(placeType=='locality'){
 
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      print("succses ${response.statusCode}");
-
-      final data = jsonDecode(response.body);
-      final results = data['result']??'';
-
-       if (results != null) {
-        placeType = results['types']??'';
-        palceNumber=results['formatted_phone_number']??'No phone number found';
-
-        //set place location-----------------------
-        placeLogLat =results['geometry']['location']!;
-        print(placeLogLat);
-        placeLocation = LatLng(placeLogLat!['lat'], placeLogLat!['lng']);
-        //---------------------------------------------------------------------------
-
-         if (results.containsKey('opening_hours') && results['opening_hours'] != null) {
-            placeOpenTimes = results['opening_hours']['weekday_text'] ?? '';
-          } else {
-            placeOpenTimes = [];
-          }
-
-        
-
-        placeName = results['name']??"No name";
-
-        //check place is establishment or not-------------------------
-        late bool isEs;
-       
-        for(int i=0;i<placeType.length;i++){
-          
-          if(placeType[i]=='establishment'){
-
-            isEs = true;
-            //get reviews ---------------------------------------------------
-            bool isReviews;
-            final reiv;
-            if(results['reviews']==null){
-              isReviews = false;
-              reiv =[{'no reviews'}];
-            
-            }else{
-              
-
-              reiv =results['reviews']??[{}];
-              isReviews = true;
-
-            }
-            isNotEmptyReviews=isReviews;
-            reviews =reiv;
-            
-            break;
-
-
-
-          }else{
-            getAttractionPlaces();
-            getRestaurants();
-            findWeather ();
-            isEs = false;
-          }
-
-        }
-        isEstablishment =isEs;
-        //--------------------------------------------------------------------
-      
-          
-         
-
-          PlacePhotoReference=results['photos'][0]['photo_reference'];
-          placePhoto=getPhotoUrl(PlacePhotoReference);
-          
-          placeRating = results['rating'] ?? 0.0;
-          PlaceAddress = results['formatted_address'];
-
-          if (results.containsKey('opening_hours') && results['open_now'] != null) {
-           isPlaceOpenNow =  results['opening_hours']['open_now'] ??false ;
-          } else {
-            isPlaceOpenNow = false;
-          }
-
-          
-          
-         
-        calculateDistance ();
-       
-        getAboutData ();
-        print( placeName);
-        print( placeOpenTimes);
-        
-
-       }else{
-
-         print("Error: place data  value is null");
-       }
-
-      
-       
+      isEs = false;
 
     }else{
-      print(" not succses ${response.statusCode}");
+      isEs = true;
 
     }
 
+     isEstablishment =isEs;
+    
+            
 
    }
 
@@ -268,30 +177,15 @@ class _locationDetailsState extends State<locationDetails> {
 
         }
       }  
-  //get place photo ---------------------------------------------------------------
-   String getPhotoUrl(String photoReference) {
-    if (photoReference =='') {
-      // Return a placeholder image URL if no photo reference is available
-      return 'https://via.placeholder.com/150';
-    }
-
-    const apiKey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
-    final maxWidth = 1000;
-    final maxHeight = 1250;
-    final apiUrl =
-        'https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&maxheight=$maxHeight&photoreference=$photoReference&key=$apiKey';
-
-    return apiUrl;
-  }
-
   
+
 
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
     const apiKey = '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';
 
-    String message = 'give details about ${placeName} and place address is ${PlaceAddress} in Srilanka';
+    String message = 'give details about ${placeName} and place address is ${placeName} in Srilanka';
 
     final requestBody = jsonEncode({
       'model': 'gpt-3.5-turbo',
@@ -1037,7 +931,6 @@ class _locationDetailsState extends State<locationDetails> {
                                         final attraction = attractionList[index];
                                         final attractionName = attraction['name'];
                                         final attractionRating = attraction['rating'];
-                                        final photoUrl = getPhotoUrl(attraction['photoRef']);
                                         final address = attraction['address'];
                                         final type = attraction['type'];
                                         
@@ -1046,7 +939,7 @@ class _locationDetailsState extends State<locationDetails> {
                                               //dierect place details page again---------------------
                                               Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                                              child: locationDetails(placeId:attraction['id'])))
+                                              child: locationDetails(placeName:attraction['id'],placelatLog: '',placePhoto: '',placeType: '',)))
                                             },
                                             child: Card(
                                             elevation: 0,
@@ -1068,7 +961,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                             decoration:  BoxDecoration(
                                                               
                                                               image: DecorationImage(
-                                                                image: NetworkImage(photoUrl,),
+                                                                image: NetworkImage(',m'),
                                                                 fit: BoxFit.fill,
                                                                 
                                                           
@@ -1281,7 +1174,6 @@ class _locationDetailsState extends State<locationDetails> {
                                         final restaurants = restaurantsList[index];
                                         final restaurantnName = restaurants['name'];
                                         final restaurantRating = restaurants['rating'];
-                                        final photoUrl = getPhotoUrl(restaurants['photoRef']);
                                         final address = restaurants['address'];
                                         final type = restaurants['type'];
                                         
@@ -1290,7 +1182,7 @@ class _locationDetailsState extends State<locationDetails> {
                                               //dierect place details page again---------------------
                                               Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                                              child: locationDetails(placeId:restaurants['id'])))
+                                              child: locationDetails(placeName:restaurants['id'],placelatLog: '',placePhoto: '',placeType:'' ,)))
                                             },
                                             child: Card(
                                             elevation: 0,
@@ -1312,7 +1204,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                             decoration:  BoxDecoration(
                                                               
                                                               image: DecorationImage(
-                                                                image: NetworkImage(photoUrl,),
+                                                                image: NetworkImage(''),
                                                                 fit: BoxFit.fill,
                                                                 
                                                           
