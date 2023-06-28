@@ -53,6 +53,9 @@ class _searchState extends State<search> {
                   return {
                     'name': city,
                     'photo_reference': element['imageUrls'][0],
+                    'placeId': element['placeId'],
+                    
+
                   };
                 } else {
                   return {
@@ -236,8 +239,7 @@ class _searchState extends State<search> {
                     final searchRe = searchResults[index];
                     final name = searchRe['name'];
                     final photoReference = searchRe['photo_reference'];
-                    final  latLog = searchRe['location'];
-                    final type = searchRe['searchString'];
+                    final  placeId = searchRe['placeId'];
                    
                     
             
@@ -246,9 +248,10 @@ class _searchState extends State<search> {
                         //set bottom border-----------------------------
                         GestureDetector(
                           onTap: () {
+                           
                              Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                            child: locationDetails(placeName:name,placelatLog:latLog,placePhoto: photoReference,placeType: type,)));
+                            child: locationDetails(placeId:placeId,searchTypeCity:true)));
                            
                           },
                           child: Row(
