@@ -5,11 +5,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_maps/maps.dart';
 import 'package:travelapp/createNewTrip.dart';
 import 'package:travelapp/search.dart';
 
@@ -42,7 +42,6 @@ class _locationDetailsState extends State<locationDetails> {
 
   var searchResults =[];
   
-  late final LatLng placeLocation;
   late final placeOpenTimes =[];
   List<dynamic> reviews = [];
   late bool isNotEmptyReviews =false;
@@ -135,6 +134,7 @@ class _locationDetailsState extends State<locationDetails> {
     }
 
      isEstablishment =isEs;
+     getAttractionPlaces();
      getAboutData ();
      calculateDistance ();
     
@@ -146,7 +146,7 @@ class _locationDetailsState extends State<locationDetails> {
 
   
 
-      final databaseReference = FirebaseDatabase.instance.ref('city-List');
+      final databaseReference = FirebaseDatabase.instance.ref('places');
       final dataSnapshot = await databaseReference.once();
 
       final data = dataSnapshot.snapshot.value as List<dynamic>;
@@ -290,7 +290,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${searchResults[0]['name']} and place address is ${searchResults[0]['name']} in Srilanka';
 
@@ -386,83 +386,86 @@ class _locationDetailsState extends State<locationDetails> {
 
   }
   
-  late List<Map<String, dynamic>>  attractionList= [];
+  late List attractionList= [];
 
   Future <void> getAttractionPlaces()async{
 
-    const String apikey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
-    const String apiUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
-    final url ='$apiUrl?query=attractions in $placeName&key=$apikey';
+    final databaseReference = FirebaseDatabase.instance.ref('places');
+    final dataSnapshot = await databaseReference.once();
 
-    final response = await http.get(Uri.parse(url));
+    final data = dataSnapshot.snapshot.value as List<dynamic>;
 
-    if (response.statusCode == 200) {
-    final result = json.decode(response.body);
-    final data = result['results'] as List<dynamic>;
+    attractionList=data.map((element) { 
 
-      if (data != null && data.isNotEmpty) {
-        print(' attractions found');
+              final attractionCity = element['city'];
 
-        attractionList = data.map((result) {
-          final photoRef = result['photos'] != null ? result['photos'][0]['photo_reference'] : '';
-        
-          return {
-            'name': result['name'],
-            'id': result['place_id'],
-            'photoRef': photoRef,
-            'rating': result['rating'] != null ? result['rating'].toDouble() : 0.0,
-            'address': result['formatted_address'],
-            'type':"attractions",
-          };
-        }).toList();
+              if (attractionCity == searchResults[0]['name'] ) {
+                if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
+                  return {
+                    'name':element['title'],
+                    'id': element['placeId'],
+                    'photoRef': element['imageUrls'][0],
+                    'rating': 3.6, //!= null ? result['rating'].toDouble() : 0.0,
+                    'address':element['address'],
+                    'type':element['categoryName'],
+                  };
+                } else {
+                  return {
+                    'name': '',
+                    'photo_reference': 'https://via.placeholder.com/150',
+                  };
+                }
+              }
 
-        
-      } else {
-        print('No attractions found');
-      }
-    } else {
-      print('Failed to get attractions');
-    }
+              return null;
+            }).where((element) => element != null).toList();
+
+      setState(() {
+        attractionList;
+
+      });
+
+    print("attractions:${attractionList.length}");
 
 
+   
 
   }
   late List<Map<String, dynamic>>  restaurantsList= [];
   Future <void> getRestaurants()async{
 
-    const String apikey = 'AIzaSyBEs5_48WfU27WnR6IagbX1W4QAnU7KTpo';
-    const String apiUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
-    final url ='$apiUrl?query=Restaurants and hotels in $placeName&key=$apikey';
+   final databaseReference = FirebaseDatabase.instance.ref('places');
+  final dataSnapshot = await databaseReference.once();
 
-    final response = await http.get(Uri.parse(url));
+      final data = dataSnapshot.snapshot.value as List<dynamic>;
 
-    if (response.statusCode == 200) {
-    final result = json.decode(response.body);
-    final data = result['results'] as List<dynamic>;
+    // if (response.statusCode == 200) {
+    // final result = json.decode(response.body);
+    // final data = result['results'] as List<dynamic>;
 
-      if (data != null && data.isNotEmpty) {
-        print(' Restaurants found');
+    //   if (data != null && data.isNotEmpty) {
+    //     print(' Restaurants found');
 
-        restaurantsList = data.map((result) {
-          final photoRef = result['photos'] != null ? result['photos'][0]['photo_reference'] : '';
+    //     restaurantsList = data.map((result) {
+    //       final photoRef = result['photos'] != null ? result['photos'][0]['photo_reference'] : '';
         
-          return {
-            'name': result['name'],
-            'id': result['place_id'],
-            'photoRef': photoRef,
-            'rating': result['rating'] != null ? result['rating'].toDouble() : 0.0,
-            'address': result['formatted_address'],
-            'type':"Restaurants",
-          };
-        }).toList();
+    //       return {
+    //         'name': result['name'],
+    //         'id': result['place_id'],
+    //         'photoRef': photoRef,
+    //         'rating': result['rating'] != null ? result['rating'].toDouble() : 0.0,
+    //         'address': result['formatted_address'],
+    //         'type':"Restaurants",
+    //       };
+    //     }).toList();
 
        
-      } else {
-        print('No Restaurants found');
-      }
-    } else {
-      print('Failed to get Restaurants');
-    }
+    //   } else {
+    //     print('No Restaurants found');
+    //   }
+    // } else {
+    //   print('Failed to get Restaurants');
+    // }
 
 
 
@@ -687,7 +690,7 @@ class _locationDetailsState extends State<locationDetails> {
                                         Padding(
                                           padding: const EdgeInsets.only(left:10,top:4),
                                           child: SizedBox(
-                                            width:300,
+                                            width:70,
                                             height:25,
                                                          
                                                           child: Card(
@@ -973,33 +976,37 @@ class _locationDetailsState extends State<locationDetails> {
                                   ],
                                 ),
                               ),
-                              // Padding(
-                              //   padding: const EdgeInsets.only(top:9),
-                              //   child: SizedBox(
-                              //     width:355,
-                              //     height:185,
-                              //     child: GoogleMap(
-                              //       initialCameraPosition: CameraPosition(
-                              //         target: placeLocation,
-                              //         zoom: 15,
-                              //       ),
-                              //       markers:{
-                              //         Marker(
-                              //           markerId: MarkerId('kjhuuu'),
-                              //           position: placeLocation,
-                              //           infoWindow: InfoWindow(
-                              //             title: placeName,
-                              //             snippet: PlaceAddress,
-                              //           ),
-                                        
-                              //           )
-                                
-                              //       },
-                                    
-                              //     ),
-                              //   ),
-                              // ),
+                              Padding(
+                                padding: const EdgeInsets.only(top:9),
+                                child: SizedBox(
+                                  width:355,
+                                  height:185,
+                                  child: SfMaps(
+                                    layers: [
+                                      MapTileLayer(
+                                        initialFocalLatLng: MapLatLng(
+                                            searchResults[0]['location']['lat'],searchResults[0]['location']['lng']),
+                                        initialZoomLevel: 12,
+                                        initialMarkersCount: 1,
+                                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                        markerBuilder: (BuildContext context, int index) {
+                                          return MapMarker(
+                                            latitude: searchResults[0]['location']['lat'],
+                                            longitude: searchResults[0]['location']['lng'],
+                                            size: const Size(50, 50),
+                                            child: const Icon(
+                                              Icons.location_on,
+                                              color: Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                ),
+                              ),
                               //Attractions in this place-------------------------------------------------------
+                             
                               Visibility(
                                 visible: !isEstablishment,
                                 child: Padding(
@@ -1021,227 +1028,235 @@ class _locationDetailsState extends State<locationDetails> {
                                 ),
                               ),
                               //list------------------------------------------------------
-                              // Visibility(
-                              //   visible: !isEstablishment,
-                              //   child: Padding(
-                              //     padding: const EdgeInsets.only(left:10.0,top:10),
-                              //     child: SizedBox(
-                              //     height: 190,
-                              //       child: Expanded(
-                              //       child: ListView.builder(
-                              //         cacheExtent: 9999,
-                              //         scrollDirection: Axis.horizontal, 
-                              //         itemCount: attractionList.length,
-                              //         itemBuilder: (context, index) {
-                              //           final attraction = attractionList[index];
-                              //           final attractionName = attraction['name'];
-                              //           final attractionRating = attraction['rating'];
-                              //           final address = attraction['address'];
-                              //           final type = attraction['type'];
+                              attractionList.isNotEmpty?
+                              Visibility(
+                                visible: !isEstablishment,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:10.0,top:10),
+                                  child: SizedBox(
+                                  height: 190,
+                                    child: Expanded(
+                                    child: ListView.builder(
+                                      cacheExtent: 9999,
+                                      scrollDirection: Axis.horizontal, 
+                                      itemCount: attractionList.length,
+                                      itemBuilder: (context, index) {
+                                        final attraction = attractionList[index];
+                                        final attractionName = attraction['name'];
+                                        final attractionImgUrl = attraction['photoRef'];
+                                        final attractionRating = attraction['rating'];
+                                        final address = attraction['address'];
+                                        final type = attraction['type'];
                                         
-                              //             return GestureDetector(
-                              //               onTap: ()=>{
-                              //                 //dierect place details page again---------------------
-                              //                 Navigator.of(context).pushReplacement(customPageRoutes(
+                                          return GestureDetector(
+                                            onTap: ()=>{
+                                              //dierect place details page again---------------------
+                                              // Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                              //                 child: locationDetails(placeId:'')))
-                              //               },
-                              //               child: Card(
-                              //               elevation: 0,
-                              //               color:const Color.fromARGB(255, 240, 238, 238),
-                              //               clipBehavior: Clip.antiAliasWithSaveLayer,
-                              //               shape: RoundedRectangleBorder(
-                              //                       borderRadius: BorderRadius.circular(10.0),
-                              //                     ),
-                              //               child:Container(
-                              //                 width: 230,
-                              //                 child: Column(
-                              //                   children: [
-                              //                     Row(
-                              //                       children: [
-                              //                         Container(
-                              //                           width: 230,
-                              //                           height: 120,
+                                              // child: locationDetails(placeId:'')))
+                                            },
+                                            child: Card(
+                                            elevation: 0,
+                                            color:const Color.fromARGB(255, 240, 238, 238),
+                                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                                            shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10.0),
+                                                  ),
+                                            child:Container(
+                                              width: 230,
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 230,
+                                                        height: 120,
                                                         
-                              //                               decoration:  BoxDecoration(
+                                                            decoration:  BoxDecoration(
                                                               
-                              //                                 image: DecorationImage(
-                              //                                   image: NetworkImage('g'),
-                              //                                   fit: BoxFit.fill,
+                                                              image: DecorationImage(
+                                                                image: NetworkImage(attractionImgUrl),
+                                                                fit: BoxFit.fill,
                                                                 
                                                           
-                              //                                     ),
+                                                                  ),
                                                               
-                              //                                 ),
-                              //                           child: Column(
-                              //                             children: [
-                              //                               Row(
-                              //                                 children: [
-                              //                                   SizedBox(
-                              //                                     height:25,
-                              //                                     width:60,
-                              //                                     child: Card(
-                              //                                         elevation: 0,
-                              //                                           color:const Color.fromARGB(200, 240, 238, 238),
-                              //                                           clipBehavior: Clip.antiAliasWithSaveLayer,
-                              //                                           shape: RoundedRectangleBorder(
-                              //                                                   borderRadius: BorderRadius.circular(5.0),
-                              //                                                 ),
-                              //                                             child: FittedBox(
-                              //                                                     fit: BoxFit.cover,
-                              //                                                     child:Padding(
-                              //                                                       padding: const EdgeInsets.all(10.0),
-                              //                                                       child: Text('${type}',
-                              //                                                         style: GoogleFonts.cabin(
-                              //                                                           // ignore: prefer_const_constructors
-                              //                                                           textStyle: TextStyle(
-                              //                                                           color: Color.fromARGB(255, 95, 95, 95),
-                              //                                                           fontSize: 12,
-                              //                                                           fontWeight: FontWeight.bold,
+                                                              ),
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  height:25,
+                                                                  width:60,
+                                                                  child: Card(
+                                                                      elevation: 0,
+                                                                        color:const Color.fromARGB(200, 240, 238, 238),
+                                                                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                                        shape: RoundedRectangleBorder(
+                                                                                borderRadius: BorderRadius.circular(5.0),
+                                                                              ),
+                                                                          child: FittedBox(
+                                                                                  fit: BoxFit.cover,
+                                                                                  child:Padding(
+                                                                                    padding: const EdgeInsets.all(10.0),
+                                                                                    child: Text('${type}',
+                                                                                      style: GoogleFonts.cabin(
+                                                                                        // ignore: prefer_const_constructors
+                                                                                        textStyle: TextStyle(
+                                                                                        color: Color.fromARGB(255, 95, 95, 95),
+                                                                                        fontSize: 12,
+                                                                                        fontWeight: FontWeight.bold,
                                                                                                                                                   
-                              //                                                           ) 
-                              //                                                         )
+                                                                                        ) 
+                                                                                      )
                                                                                                                                                     
-                              //                                                       ),
-                              //                                                     ), 
-                              //                                               )
+                                                                                    ),
+                                                                                  ), 
+                                                                            )
                                                                       
-                              //                                     ),
-                              //                                   ),
+                                                                  ),
+                                                                ),
                                           
-                              //                                   Padding(
-                              //                                     padding: const EdgeInsets.only(left:119,top:5),
-                              //                                     child: SizedBox(
-                              //                                         width:37,
-                              //                                         height:37,
-                              //                                         child: GestureDetector(
-                              //                                           onTap: ()=>{print("hart")},
-                              //                                           child: Card(
-                              //                                             elevation: 0,
-                              //                                                 color:const Color.fromARGB(200, 240, 238, 238),
-                              //                                                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                              //                                                 shape: RoundedRectangleBorder(
-                              //                                                         borderRadius: BorderRadius.circular(50.0),
-                              //                                                       ),
-                              //                                                 child:Column(
-                              //                                                   mainAxisAlignment: MainAxisAlignment.center,
-                              //                                                   crossAxisAlignment: CrossAxisAlignment.center,
-                              //                                                   children: [
-                              //                                                     Row(
-                              //                                                       mainAxisAlignment: MainAxisAlignment.center,
-                              //                                                       crossAxisAlignment: CrossAxisAlignment.center,
-                              //                                                       children: [
-                              //                                                         Image.asset("assets/images/heart.png",width:18,height:18),
-                              //                                                       ],
-                              //                                                     ),
-                              //                                                   ],
-                              //                                                 ),  
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left:119,top:5),
+                                                                  child: SizedBox(
+                                                                      width:37,
+                                                                      height:37,
+                                                                      child: GestureDetector(
+                                                                        onTap: ()=>{print("hart")},
+                                                                        child: Card(
+                                                                          elevation: 0,
+                                                                              color:const Color.fromARGB(200, 240, 238, 238),
+                                                                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                                              shape: RoundedRectangleBorder(
+                                                                                      borderRadius: BorderRadius.circular(50.0),
+                                                                                    ),
+                                                                              child:Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                    children: [
+                                                                                      Image.asset("assets/images/heart.png",width:18,height:18),
+                                                                                    ],
+                                                                                  ),
+                                                                                ],
+                                                                              ),  
                                                                                                                             
-                              //                                           ),
-                              //                                         ),
+                                                                        ),
+                                                                      ),
                                                                 
-                              //                                     ),
-                              //                                   ),
+                                                                  ),
+                                                                ),
                                           
-                              //                                 ],
-                              //                               ),
-                              //                             ],
-                              //                           ), 
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ), 
                                                           
                                                         
-                              //                         ),
+                                                      ),
                                                   
                                                             
-                              //                       ],
-                              //                     ),
-                              //                     Row(
+                                                    ],
+                                                  ),
+                                                  Row(
                                                     
-                              //                       children: [
-                              //                           SizedBox(
-                              //                           width: 190,
-                              //                           height:30,
-                              //                             child: Padding(
-                              //                               padding: const EdgeInsets.only(left:6,top:5),
-                              //                               child: Text(attractionName,
+                                                    children: [
+                                                        SizedBox(
+                                                        width: 190,
+                                                        height:30,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left:6,top:5),
+                                                            child: Text(attractionName,
                                                             
-                              //                               overflow: TextOverflow.ellipsis,
-                              //                               style: GoogleFonts.cabin(
-                              //                                   // ignore: prefer_const_constructors
-                              //                                   textStyle: TextStyle(
-                              //                                   color: const Color.fromARGB(255, 27, 27, 27),
-                              //                                   fontSize: 14,
-                              //                                   fontWeight: FontWeight.bold,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.cabin(
+                                                                // ignore: prefer_const_constructors
+                                                                textStyle: TextStyle(
+                                                                color: const Color.fromARGB(255, 27, 27, 27),
+                                                                fontSize: 14,
+                                                                fontWeight: FontWeight.bold,
                                                                                                 
-                              //                                   ) 
-                              //                                 )
+                                                                ) 
+                                                              )
                                                                                                     
-                              //                               ),
-                              //                             ),
-                              //                           ),
+                                                            ),
+                                                          ),
+                                                        ),
                                           
-                              //                         Image.asset("assets/images/star.png",width:14,height:14),
-                              //                         Padding(
-                              //                           padding: const EdgeInsets.only(left:4),
-                              //                           child: Text("$attractionRating",
-                              //                               style: GoogleFonts.cabin(
-                              //                             // ignore: prefer_const_constructors
-                              //                             textStyle: TextStyle(
-                              //                             color: const Color.fromARGB(255, 27, 27, 27),
-                              //                             fontSize: 12,
-                              //                             fontWeight: FontWeight.bold,
+                                                      Image.asset("assets/images/star.png",width:14,height:14),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left:4),
+                                                        child: Text("$attractionRating",
+                                                            style: GoogleFonts.cabin(
+                                                          // ignore: prefer_const_constructors
+                                                          textStyle: TextStyle(
+                                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.bold,
                                                                                           
-                              //                             ) 
-                              //                           )
+                                                          ) 
+                                                        )
                                                         
-                              //                           ),
-                              //                         ),  
-                              //                       ],
+                                                        ),
+                                                      ),  
+                                                    ],
                                                   
-                              //                     ),
-                              //                     Row(
+                                                  ),
+                                                  Row(
                                                   
-                              //                       children: [
-                              //                         Padding(
-                              //                           padding: const EdgeInsets.only(left:4),
-                              //                           child: Image.asset('assets/images/location.png',width:15,height:15),
-                              //                         ),
-                              //                         SizedBox(
-                              //                           width:200,
-                              //                           height:7,
-                              //                           child: Text(address,
-                              //                               overflow: TextOverflow.ellipsis,
-                              //                               style: GoogleFonts.cabin(
-                              //                               // ignore: prefer_const_constructors
-                              //                               textStyle: TextStyle(
-                              //                               color: Color.fromARGB(255, 94, 94, 94),
-                              //                               fontSize: 7,
-                              //                               fontWeight: FontWeight.bold,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left:4),
+                                                        child: Image.asset('assets/images/location.png',width:15,height:15),
+                                                      ),
+                                                      SizedBox(
+                                                        width:200,
+                                                        height:7,
+                                                        child: Text(address,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.cabin(
+                                                            // ignore: prefer_const_constructors
+                                                            textStyle: TextStyle(
+                                                            color: Color.fromARGB(255, 94, 94, 94),
+                                                            fontSize: 7,
+                                                            fontWeight: FontWeight.bold,
                                                                                             
-                              //                               ) 
-                              //                             )
+                                                            ) 
+                                                          )
                                                         
                                                         
-                              //                           ),
-                              //                         )
-                              //                       ],
-                              //                     )
-                              //                   ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
                                                             
                                                             
-                              //                 ),
-                              //               )
+                                              ),
+                                            )
                                               
                                               
                                             
-                              //               ),
-                              //             ); 
-                              //         },
-                              //       ),  
+                                            ),
+                                          ); 
+                                      },
+                                    ),  
                                 
-                              //     ),
-                              //       ),
-                              //     ),
-                              // ),
+                                  ),
+                                    ),
+                                  ),
+                              ):
+                              Container(
+                                width:360,
+                                height:130,
+                                child: const Center(child: CircularProgressIndicator())
+                                
+                                ),
                               // //show resturents----------------------------------------------
                               // Visibility(
                               //   visible: !isEstablishment,
