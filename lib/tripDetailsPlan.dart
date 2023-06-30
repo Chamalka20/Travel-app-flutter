@@ -247,7 +247,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                             onTap: () {
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,)));
+                                                MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'attracrion',)));
                                               
                                             },
                                             child: Column(
@@ -294,7 +294,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,)));
+                                                MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'resturant',)));
                                               
                                             },
                                             child: Padding(

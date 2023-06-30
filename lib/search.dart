@@ -16,21 +16,23 @@ import 'locationDetails.dart';
 class search extends StatefulWidget {
 
   final isTextFieldClicked;
+  final searchType;
 
-  const search({required this.isTextFieldClicked, Key? key}) : super(key: key);
+  const search({required this.isTextFieldClicked,required this.searchType, Key? key}) : super(key: key);
 
   @override
-  State<search> createState() => _searchState(isTextFieldClicked);
+  State<search> createState() => _searchState(isTextFieldClicked,searchType);
 }
 
  class _searchState extends State<search> {
 
   var isTextFieldClicked;
+  var searchType;
   String keyboardInput='';
   var searchResults=[];
   Timer? _debounce;
   
-  _searchState( this.isTextFieldClicked);
+  _searchState( this.isTextFieldClicked,this.searchType);
 
 
    @override
