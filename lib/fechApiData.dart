@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
 
 class fechApiData {
@@ -89,6 +90,35 @@ class fechApiData {
     throw Exception('Failed to retrieve dataset items status:${datasetItemsResponse.statusCode}');
   }
 }
+
+ static getCityDetails ()async {
+
+   
+
+      final databaseReference = FirebaseDatabase.instance.ref('city-List');
+      final dataSnapshot = await databaseReference.once();
+
+      final data =  dataSnapshot.snapshot.value as List<dynamic>;
+      
+      final  datago =data;
+      
+      return datago;      
+
+   }
+
+ static getattractionDetails ()async {
+
+  
+
+      final databaseReference = FirebaseDatabase.instance.ref('places');
+      final dataSnapshot = await databaseReference.once();
+
+      final data = dataSnapshot.snapshot.value as List<dynamic>;
+
+      
+      return data;      
+
+   }  
 
   
 }

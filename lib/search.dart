@@ -251,7 +251,7 @@ class _searchState extends State<search> {
                            
                              Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                            child: locationDetails(placeId:placeId,searchTypeCity:true)));
+                            child: locationDetails(placeId:placeId,searchType:'city')));
                            
                           },
                           child: Row(

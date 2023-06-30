@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 import 'package:travelapp/createNewTrip.dart';
 import 'package:travelapp/search.dart';
+import 'package:travelapp/fechApiData.dart';
 
 import 'customPageRoutes.dart';
 import 'navigationPage.dart';
@@ -19,20 +20,22 @@ import 'navigationPage.dart';
 class locationDetails extends StatefulWidget {
   
   final placeId;
-  final searchTypeCity;
+  final searchType;
   
   
- const locationDetails({required this.placeId,required this.searchTypeCity, Key? key}) : super(key: key);
+ const locationDetails({required this.placeId,required this.searchType, Key? key}) : super(key: key);
 
 
   @override
-  State<locationDetails> createState() => _locationDetailsState(placeId,searchTypeCity);
+  State<locationDetails> createState() => _locationDetailsState(placeId,searchType);
 }
 
 class _locationDetailsState extends State<locationDetails> {
 
   final placeId;
-  final searchTypeCity;
+  final searchType;
+
+  late List<dynamic>  data ;
 
   late final double placelat;
   late final double placelng;
@@ -42,20 +45,20 @@ class _locationDetailsState extends State<locationDetails> {
 
   var searchResults =[];
   
-  late final placeOpenTimes =[];
+  var placeOpenTimes =[] ;
   List<dynamic> reviews = [];
   late bool isNotEmptyReviews =false;
-  late final double placeRating =0.0;
+  var placeRating =0.0;
   late final bool isPlaceOpenNow;
-  late final String PlaceAddress;
+  var PlaceAddress ='';
   late final String PlacePhotoReference;
   late final isEstablishment ;
-  late final String palceNumber;
+  var palceNumber ='';
   late  String aboutDetails ='';
   late final bool isDataLoading;
-  late final setgetPhrase;
-  late final double temperature;
-  late final String weatherIcon;
+  var setgetPhrase ='';
+  var temperature =0.0;
+  var weatherIcon ='';
 
   bool showFullText = false;
 
@@ -63,47 +66,96 @@ class _locationDetailsState extends State<locationDetails> {
   late String distance = 'ndefined';
   late String duration='Undefined';
   
-  _locationDetailsState(this.placeId,this.searchTypeCity);
+  _locationDetailsState(this.placeId,this.searchType);
 
   
   @override
-  void initState(){
+  void initState () {
      super.initState();
-    //get data list from api-------------------------------
 
-    if(searchTypeCity ==true){
-
-      getCityDetails ();
-
-    }else{
-      getPlaceDetails ();
-    }
-  
-   
-
+  WidgetsBinding.instance.addPostFrameCallback((_){
+    _asyncMethod();
+  });
+    
     
   }
 
-  Future <void> getCityDetails ()async {
+  _asyncMethod() async {
+
+    //get data list from database-------------------------------
+
+    if(searchType =='city'){
+  
+       data = await fechApiData.getCityDetails();
+      
+      getplaceDetails ();
+
+    }else if(searchType =='attraction'){
+      data = await fechApiData.getattractionDetails();
+
+      getplaceDetails ();
+    }
+  
+    
+
+
+  }
+
+   void getplaceDetails () {
 
   
-
-      final databaseReference = FirebaseDatabase.instance.ref('city-List');
-      final dataSnapshot = await databaseReference.once();
-
-      final data = dataSnapshot.snapshot.value as List<dynamic>;
-
       searchResults=data.map((element) { 
 
               final Id = element['placeId'];
 
               if (Id != null && Id==placeId) {
                 if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
+
+                  if(element['openingHours']!=null && element['openingHours'].isNotEmpty){
+
+                    var times=element['openingHours'];
+                    placeOpenTimes = times;
+                  }
+
+                  if(element['address']!=null && element['address'].isNotEmpty){
+
+                    PlaceAddress=element['address'];
+                    
+                  }
+
+                  if(element['phone']!=null && element['phone'].isNotEmpty){
+
+                    palceNumber=element['phone'];
+                    
+                  }else{
+
+                    palceNumber ="No numbers found";
+                  }
+
+                  if(element['totalScore']!=null ){
+
+                      placeRating =  element['totalScore']+0.0;
+                      
+                  }
+
+                  if(element['reviews']!=null && element['reviews'].isNotEmpty){
+
+                      reviews = element['reviews'];
+                  }
+
+                  if(element['openingHours']!=null && element['openingHours'].isNotEmpty){
+
+                     placeOpenTimes  = element['openingHours'];
+                  }
+
                   return {
+                    'id':element['placeId'],
                     'name': element['title'],
                     'photo_reference': element['imageUrls'][0],
                     'type':element['searchString'],
                     'location':element['location'],
+                    'address':element['address'],
+
                     
 
                   };
@@ -115,7 +167,7 @@ class _locationDetailsState extends State<locationDetails> {
                 }
               }
 
-              return null;
+              
             }).where((element) => element != null).toList();
 
           
@@ -127,6 +179,7 @@ class _locationDetailsState extends State<locationDetails> {
       isEs = false;
 
       findWeather ();
+      getAttractionPlaces();
 
     }else{
       isEs = true;
@@ -134,7 +187,7 @@ class _locationDetailsState extends State<locationDetails> {
     }
 
      isEstablishment =isEs;
-     getAttractionPlaces();
+     
      getAboutData ();
      calculateDistance ();
     
@@ -142,62 +195,7 @@ class _locationDetailsState extends State<locationDetails> {
 
    }
 
-    Future <void> getPlaceDetails ()async {
-
-  
-
-      final databaseReference = FirebaseDatabase.instance.ref('places');
-      final dataSnapshot = await databaseReference.once();
-
-      final data = dataSnapshot.snapshot.value as List<dynamic>;
-
-      searchResults=data.map((element) { 
-
-              final Id = element['placeId'];
-
-              if (Id != null && Id==placeId) {
-                if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
-                  return {
-                    'name': element['title'],
-                    'photo_reference': element['imageUrls'][0],
-                    'type':element['searchString'],
-                    'location':element['location'],
-                    
-
-                  };
-                } else {
-                  return {
-                    'name': 'city',
-                    'photo_reference': 'https://via.placeholder.com/150',
-                  };
-                }
-              }
-
-              return null;
-            }).where((element) => element != null).toList();
-
-          
-    
-     //check place is establishment or not-------------------------
-    late bool isEs;
-    if(searchResults[0]['type']=='locality'){
-
-      isEs = false;
-
-      findWeather ();
-
-    }else{
-      isEs = true;
-
-    }
-
-     isEstablishment =isEs;
-     getAboutData ();
-     calculateDistance ();
-    
-            
-
-   }
+   
 
     Future<void> findWeather ()async {
         const String apikey = '44uxmYtWX39vfBU6EgSPDrJI8TSJi4tViH6a2uojU9U';
@@ -213,7 +211,7 @@ class _locationDetailsState extends State<locationDetails> {
           List<dynamic> results = responseData['results'];
 
   
-          if(results !=null &&  results.isNotEmpty){
+          if(results.isNotEmpty){
             String getPhrase = results[0]['phrase']??'';
             setgetPhrase = getPhrase;
             bool isDayTime = results[0]['isDayTime']??false;
@@ -290,7 +288,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${searchResults[0]['name']} and place address is ${searchResults[0]['name']} in Srilanka';
 
@@ -325,8 +323,10 @@ class _locationDetailsState extends State<locationDetails> {
         
         aboutDetails;
         isPlaceOpenNow= false;
-        palceNumber ="no numbers found";
-        PlaceAddress ="no Address found";
+        palceNumber;
+        reviews;
+        placeRating;
+        
 
       });
 
@@ -417,7 +417,7 @@ class _locationDetailsState extends State<locationDetails> {
                 }
               }
 
-              return null;
+              
             }).where((element) => element != null).toList();
 
       setState(() {
@@ -569,7 +569,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                         fontWeight: FontWeight.bold,
                                                 
                                                         ) 
-                                                        )
+                                                        ),
                                           ),
                                         ),
                                       ),
@@ -776,15 +776,32 @@ class _locationDetailsState extends State<locationDetails> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: placeOpenTimes.map<Widget>((time) => Padding(
                                               padding: const EdgeInsets.only(bottom: 4.0),
-                                              child: Text(
-                                                time,
-                                                style: GoogleFonts.cabin(
-                                                  textStyle:const TextStyle(
-                                                    color: const Color.fromARGB(255, 27, 27, 27),
-                                                    fontSize: 8,
-                                                    fontWeight: FontWeight.bold,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    time['day'],
+                                                    style: GoogleFonts.cabin(
+                                                      textStyle:const TextStyle(
+                                                        color: const Color.fromARGB(255, 27, 27, 27),
+                                                        fontSize: 8,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(left:12),
+                                                    child: Text(
+                                                      time['hours'],
+                                                      style: GoogleFonts.cabin(
+                                                        textStyle:const TextStyle(
+                                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                                          fontSize: 8,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             )).toList(),
                                           ),
@@ -1042,6 +1059,7 @@ class _locationDetailsState extends State<locationDetails> {
                                       itemCount: attractionList.length,
                                       itemBuilder: (context, index) {
                                         final attraction = attractionList[index];
+                                        final placeId = attraction['id'];
                                         final attractionName = attraction['name'];
                                         final attractionImgUrl = attraction['photoRef'];
                                         final attractionRating = attraction['rating'];
@@ -1050,10 +1068,12 @@ class _locationDetailsState extends State<locationDetails> {
                                         
                                           return GestureDetector(
                                             onTap: ()=>{
-                                              //dierect place details page again---------------------
-                                              // Navigator.of(context).pushReplacement(customPageRoutes(
-                
-                                              // child: locationDetails(placeId:'')))
+                                              //dierect place details page again-------------------
+
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) =>  locationDetails(placeId:placeId,searchType: 'attraction',)),
+                                              ),
                                             },
                                             child: Card(
                                             elevation: 0,
@@ -1251,12 +1271,15 @@ class _locationDetailsState extends State<locationDetails> {
                                     ),
                                   ),
                               ):
-                              Container(
-                                width:360,
-                                height:130,
-                                child: const Center(child: CircularProgressIndicator())
-                                
-                                ),
+                              Visibility(
+                                visible: !isEstablishment,
+                                child: Container(
+                                  width:360,
+                                  height:130,
+                                  child: const Center(child: CircularProgressIndicator())
+                                  
+                                  ),
+                              ),
                               // //show resturents----------------------------------------------
                               // Visibility(
                               //   visible: !isEstablishment,
@@ -1503,7 +1526,7 @@ class _locationDetailsState extends State<locationDetails> {
                               //reviews-----------------------------------------------------------------
                               //------------------------------------------------------------------------
                                Visibility(
-                                visible: isNotEmptyReviews,
+                                visible: reviews.isNotEmpty?true:false,
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 13,top:14,bottom:9),
                                   child: Row(
@@ -1554,9 +1577,11 @@ class _locationDetailsState extends State<locationDetails> {
                                                          child: Container(
                                                           width:35,
                                                           height:35,
+                                                          
                                                            child: CircleAvatar(
                                                             radius: 40,
-                                                            backgroundImage:NetworkImage(review['profile_photo_url']),
+                                                            
+                                                            backgroundImage:NetworkImage(review['reviewerPhotoUrl']),
                                                             
                                                           ),
                                                          ),
@@ -1570,7 +1595,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                 //author name--------------------------------------
                                                                  SizedBox(
                                                                   width:200,
-                                                                   child: Text(review['author_name'],
+                                                                   child: Text(review['name'],
                                                                      style: GoogleFonts.cabin(
                                                                       textStyle:const TextStyle(
                                                                         color: Color.fromARGB(255, 0, 0, 0),
@@ -1583,7 +1608,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                  ),
                               
                                                                  //review date-------------------------------------------------
-                                                                 Text(review['relative_time_description'],
+                                                                 Text(review['publishAt'],
                                                                     style: GoogleFonts.cabin(
                                                                       textStyle:const TextStyle(
                                                                         color: Color.fromARGB(255, 112, 112, 112),
@@ -1770,7 +1795,7 @@ class _locationDetailsState extends State<locationDetails> {
                                     //derect trip plan page---------------------------------
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) =>  createNewTrip(placeName:placeName,placePhotoUrl:placePhoto)),
+                                      MaterialPageRoute(builder: (context) =>  createNewTrip(placeName:searchResults[0]['name'],placePhotoUrl:searchResults[0]['photo_reference'])),
                                     );
                                     
                                   },
