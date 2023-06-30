@@ -111,7 +111,7 @@ class _locationDetailsState extends State<locationDetails> {
               if (Id != null && Id==placeId) {
                 if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
 
-                  if(element['openingHours']!=null && element['openingHours'].isNotEmpty){
+                  if(element['openingHours']!=null && element['openingHours'].length !=0 ){
 
                     var times=element['openingHours'];
                     placeOpenTimes = times;
@@ -288,7 +288,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${searchResults[0]['name']} and place address is ${searchResults[0]['name']} in Srilanka';
 
@@ -476,7 +476,9 @@ class _locationDetailsState extends State<locationDetails> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-         Navigator.of(context).pop();
+         Navigator.of(context).pushReplacement(customPageRoutes(
+                
+        child: const search(isTextFieldClicked:false,searchType: 'city',)));
       return false;
       }, 
       child: Scaffold(

@@ -247,7 +247,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                             onTap: () {
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'attracrion',)));
+                                                MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'attraction',)));
                                               
                                             },
                                             child: Column(

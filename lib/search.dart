@@ -42,12 +42,12 @@ class search extends StatefulWidget {
   void initState() {
     super.initState();
     
-    _asyncMethod();
+    
     setState(() {
 
       isTextFieldClicked;
      });
-    
+    _asyncMethod();
      
   }
 
@@ -63,6 +63,7 @@ class search extends StatefulWidget {
 
     }else if(searchType =='attraction'){
       data = await fechApiData.getattractionDetails();
+      
 
     }else if(searchType =='restaurant'){
       data = await fechApiData.getResturantDetails();
@@ -87,7 +88,7 @@ class search extends StatefulWidget {
         setState(() {
             searchResults=data.map((element) { 
 
-              final city = element['city'];
+              final city =searchType=='city'? element['city']:element['title'];
 
               if (city != null && city.toLowerCase().contains(keyboardInput.toLowerCase())) {
                 if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
@@ -281,7 +282,7 @@ class search extends StatefulWidget {
                     final name = searchRe['name'];
                     final photoReference = searchRe['photo_reference'];
                     final  placeId = searchRe['placeId'];
-                   
+                    
                     
             
                     return Column(
@@ -289,10 +290,22 @@ class search extends StatefulWidget {
                         //set bottom border-----------------------------
                         GestureDetector(
                           onTap: () {
-                           
-                             Navigator.of(context).pushReplacement(customPageRoutes(
+
+                            if(searchType == 'city'){
+
+                              Navigator.of(context).pushReplacement(customPageRoutes(
                 
                             child: locationDetails(placeId:placeId,searchType:'city')));
+
+                            }else if(searchType == 'attraction'){
+                              Navigator.of(context).pushReplacement(customPageRoutes(
+                
+                            child: locationDetails(placeId:placeId,searchType:'attraction')));
+
+
+                            }
+                           
+                             
                            
                           },
                           child: Row(
