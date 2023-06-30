@@ -118,7 +118,21 @@ class fechApiData {
       
       return data;      
 
-   }  
+   }
+
+  static getResturantDetails ()async {
+
+  
+
+      final databaseReference = FirebaseDatabase.instance.ref('restaurants');
+      final dataSnapshot = await databaseReference.once();
+
+      final data = dataSnapshot.snapshot.value as List<dynamic>;
+
+      
+      return data;      
+
+   }   
 
   
 }

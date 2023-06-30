@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:travelapp/fechApiData.dart';
 
 import 'Home.dart';
 import 'customPageRoutes.dart';
@@ -31,6 +32,8 @@ class search extends StatefulWidget {
   String keyboardInput='';
   var searchResults=[];
   Timer? _debounce;
+
+  late List<dynamic>  data ;
   
   _searchState( this.isTextFieldClicked,this.searchType);
 
@@ -39,7 +42,7 @@ class search extends StatefulWidget {
   void initState() {
     super.initState();
     
-    
+    _asyncMethod();
     setState(() {
 
       isTextFieldClicked;
@@ -47,6 +50,28 @@ class search extends StatefulWidget {
     
      
   }
+
+ _asyncMethod() async {
+
+    //get data list from database-------------------------------
+
+    if(searchType =='city'){
+  
+       data = await fechApiData.getCityDetails();
+      
+      
+
+    }else if(searchType =='attraction'){
+      data = await fechApiData.getattractionDetails();
+
+    }else if(searchType =='restaurant'){
+      data = await fechApiData.getResturantDetails();
+
+    }
+  
+
+
+  } 
   
   
  Future<void> fetchSearchResults(String input) async {
@@ -58,11 +83,7 @@ class search extends StatefulWidget {
     _debounce = Timer(const Duration(milliseconds: 500), () async {
 
       try{
-        final databaseReference = FirebaseDatabase.instance.ref('city-List');
-        final dataSnapshot = await databaseReference.once();
-
-        final data = dataSnapshot.snapshot.value as List<dynamic>;
-
+        
         setState(() {
             searchResults=data.map((element) { 
 

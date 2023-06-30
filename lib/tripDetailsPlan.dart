@@ -294,7 +294,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'resturant',)));
+                                                MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'restaurant',)));
                                               
                                             },
                                             child: Padding(
