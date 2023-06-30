@@ -14,19 +14,37 @@ import 'customPageRoutes.dart';
 import 'locationDetails.dart';
 
 class search extends StatefulWidget {
-  const search({super.key,});
+
+  final isTextFieldClicked;
+
+  const search({required this.isTextFieldClicked, Key? key}) : super(key: key);
 
   @override
-  State<search> createState() => _searchState();
+  State<search> createState() => _searchState(isTextFieldClicked);
 }
 
-class _searchState extends State<search> {
+ class _searchState extends State<search> {
 
-  bool  isTextFieldClicked= false;
+  var isTextFieldClicked;
   String keyboardInput='';
   var searchResults=[];
   Timer? _debounce;
+  
+  _searchState( this.isTextFieldClicked);
 
+
+   @override
+  void initState() {
+    super.initState();
+    
+    
+    setState(() {
+
+      isTextFieldClicked;
+     });
+    
+     
+  }
   
   
  Future<void> fetchSearchResults(String input) async {
@@ -89,8 +107,8 @@ class _searchState extends State<search> {
   @override
   Widget build(BuildContext context) {
     return 
-       SafeArea(
-        child:Column(
+       Scaffold(
+        body:Column(
           children: [
             Visibility(
               visible: !isTextFieldClicked,
@@ -116,7 +134,7 @@ class _searchState extends State<search> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top:9),
+              padding: const EdgeInsets.only(top:35),
               child: Row(
             
                 children: [

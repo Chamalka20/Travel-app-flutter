@@ -41,7 +41,7 @@ class _navigationPageState extends State<navigationPage> {
 
       _pages = [
       home(isBackButtonClick: isBackButtonClick),
-      const search(),
+      const search(isTextFieldClicked: false,),
       // PlanPage(),
       // FavoritePage(),
       // AccountPage(),
@@ -58,7 +58,7 @@ class _navigationPageState extends State<navigationPage> {
     var keyboardVisibilityController = KeyboardVisibilityController();
     _pages = [
       home(isBackButtonClick: isBackButtonClick),
-      const search(),
+      const search(isTextFieldClicked: false,),
       // PlanPage(),
       // FavoritePage(),
       // AccountPage(),
