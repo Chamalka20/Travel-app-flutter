@@ -18,24 +18,27 @@ class search extends StatefulWidget {
 
   final isTextFieldClicked;
   final searchType;
+  final isSelectPlaces;
 
-  const search({required this.isTextFieldClicked,required this.searchType, Key? key}) : super(key: key);
+  const search({required this.isTextFieldClicked,required this.searchType,required this.isSelectPlaces, Key? key}) : super(key: key);
 
   @override
-  State<search> createState() => _searchState(isTextFieldClicked,searchType);
+  State<search> createState() => _searchState(isTextFieldClicked,searchType,isSelectPlaces);
 }
 
  class _searchState extends State<search> {
 
   var isTextFieldClicked;
   var searchType;
+  var isSelectPlaces;
   String keyboardInput='';
   var searchResults=[];
   Timer? _debounce;
-
+  List selectedIds =[];
+  bool isOnLongPress = false;
   late List<dynamic>  data ;
   
-  _searchState( this.isTextFieldClicked,this.searchType);
+  _searchState( this.isTextFieldClicked,this.searchType,this.isSelectPlaces);
 
 
    @override
@@ -194,6 +197,7 @@ class search extends StatefulWidget {
                             setState(() {
                               isTextFieldClicked = true;
                               searchResults = [];
+                              isOnLongPress = false;
                             });
                           },
                           //get keyboard input value-------------
@@ -275,120 +279,201 @@ class search extends StatefulWidget {
             Visibility(
               visible: isTextFieldClicked,
               child: Expanded(
-                child:ListView.builder(
-                  itemCount: searchResults.length,
-                  itemBuilder: (context, index) {
-                    final searchRe = searchResults[index];
-                    final name = searchRe['name'];
-                    final photoReference = searchRe['photo_reference'];
-                    final  placeId = searchRe['placeId'];
-                    
-                    
-            
-                    return Column(
-                      children: [
-                        //set bottom border-----------------------------
-                        GestureDetector(
-                          onTap: () {
-
-                            if(searchType == 'city'){
-
-                              Navigator.of(context).pushReplacement(customPageRoutes(
-                
-                            child: locationDetails(placeId:placeId,searchType:'city')));
-
-                            }else if(searchType == 'attraction'){
-                              Navigator.of(context).pushReplacement(customPageRoutes(
-                
-                            child: locationDetails(placeId:placeId,searchType:'attraction')));
-
-
-                            }
-                           
-                             
-                           
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left:6),
-                                child: Container(
-                                  width: 340,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Color.fromARGB(255, 226, 226, 226).withOpacity(0.5), 
-                                        width: 1, 
-                                      ),
-                                    ),
-                                  ),//------------------------
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 9),
-                                          child: Container(
-                                            width:37,
-                                            height:37,
-                                            child: CircleAvatar(
-                                              radius: 40,
-                                              backgroundImage:NetworkImage(photoReference),
-                                              
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left:6),
-                                          child: Container(
-                                            width:265,
-                                            child: Column(
-                                              
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.only(bottom:4),
-                                                  child: Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width:255,
-                                                        child: Text(name,
-                                                           overflow: TextOverflow.ellipsis,
-                                                          style: GoogleFonts.cabin(
-                                                            // ignore: prefer_const_constructors
-                                                            textStyle: TextStyle(
-                                                            color: const Color.fromARGB(255, 27, 27, 27),
-                                                            fontSize: 14,
-                                                            fontWeight: FontWeight.w700,
-                                                                                                    
-                                                            ) 
-                                                          )
-                                                        ),
-                                                      ),
-                                                      
-                                                    ],
-                                                  ),
-                                                ),
-                                                
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ), 
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                child:Stack(
+                  children:[ 
+                    ListView.builder(
+                      itemCount: searchResults.length,
+                      itemBuilder: (context, index) {
+                        final searchRe = searchResults[index];
+                        final name = searchRe['name'];
+                        final photoReference = searchRe['photo_reference'];
+                        final  placeId = searchRe['placeId'];
+                        
                         
                               
-                      ],
+                        return Column(
+                          children: [
+                            //set bottom border-----------------------------
+                            GestureDetector(
+                              onLongPress: () {
+                  
+                                // visible only places select------------------- 
+                                if(isSelectPlaces ==true){
+                  
+                                  setState(() {
+                                  isOnLongPress = true;
+                                });
+                  
+                                }
+                                
+                                
+                              },
+                              onTap: () {
+                  
+                                if(isOnLongPress!= true){
+                  
+                                  if(searchType == 'city'){
+                  
+                                  Navigator.of(context).pushReplacement(customPageRoutes(
+                    
+                                  child: locationDetails(placeId:placeId,searchType:'city')));
+                  
+                                }else if(searchType == 'attraction'){
+                                  Navigator.of(context).pushReplacement(customPageRoutes(
+                    
+                                  child: locationDetails(placeId:placeId,searchType:'attraction')));
+                  
+                  
+                                }
+                  
+                                }
+                  
+                                
                               
-                    );
-            
-                  }
+                                
+                              
+                              },
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left:6),
+                                    child: Container(
+                                      width: 340,
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color: Color.fromARGB(255, 226, 226, 226).withOpacity(0.5), 
+                                            width: 1, 
+                                          ),
+                                        ),
+                                      ),//------------------------
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 9),
+                                              child: Container(
+                                                width:37,
+                                                height:37,
+                                                child: CircleAvatar(
+                                                  radius: 40,
+                                                  backgroundImage:NetworkImage(photoReference),
+                                                  
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left:6),
+                                              child: Column(
+                                                
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(bottom:4),
+                                                    child: Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width:245,
+                                                          child: Text(name,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.cabin(
+                                                              // ignore: prefer_const_constructors
+                                                              textStyle: TextStyle(
+                                                              color: const Color.fromARGB(255, 27, 27, 27),
+                                                              fontSize: 14,
+                                                              fontWeight: FontWeight.w700,
+                                                                                                      
+                                                              ) 
+                                                            )
+                                                          ),
+                                                        ),
+                                                        
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  
+                                                ],
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: isOnLongPress,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                            
+                                                    if(selectedIds.contains(placeId)){
+                                                    selectedIds.remove(placeId);
+                                            
+                                                    }else{
+                                                      selectedIds.add(placeId);
+                                            
+                                                    }
+                                                    
+                                                  });
+                                            
+                                                      print(selectedIds);
+                                                },
+                                                child: SizedBox(
+                                                  height: 25,
+                                                  width: 25,
+                                                  child:selectedIds.contains(placeId)?Image.asset("assets/images/correct.png") :Image.asset("assets/images/dry-clean.png")
+                                                  
+                                                  ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ), 
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                            
+                                  
+                          ],
+                                  
+                        );
+                              
+                      }
+                    ),
+                    Visibility(
+                      visible: isOnLongPress,
+                      child: Positioned(
+                        top:565,
+                        left:95,
+                        child: SizedBox(
+                                width: 155,
+                                height: 45,
+                                child: TextButton(
+                                  onPressed: () {
+                                        print("jhiuhiuujj");
+                                    
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                    foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20), 
+                                      ),
+                                    
+                                  ),
+                                  child: Text('Add to trip',
+                                      style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          
+                                  
+                                      ),
+                                  
+                                  ),
+                                ),
+                              ),
+                        
+                      ),
+                    )
+                  ]
                 )
                 
                 

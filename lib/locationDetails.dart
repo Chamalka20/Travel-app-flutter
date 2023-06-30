@@ -288,7 +288,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${searchResults[0]['name']} and place address is ${searchResults[0]['name']} in Srilanka';
 
@@ -478,7 +478,7 @@ class _locationDetailsState extends State<locationDetails> {
       onWillPop: () async {
          Navigator.of(context).pushReplacement(customPageRoutes(
                 
-        child: const search(isTextFieldClicked:false,searchType: 'city',)));
+        child: const search(isTextFieldClicked:false,searchType: 'city',isSelectPlaces: false,)));
       return false;
       }, 
       child: Scaffold(
