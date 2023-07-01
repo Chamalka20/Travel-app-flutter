@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
@@ -15,6 +17,43 @@ class signup extends StatefulWidget {
 }
 
 class _signupState extends State<signup> {
+
+  final emailController = TextEditingController();
+  final nameController =TextEditingController();
+  final passwordController =TextEditingController();
+
+  bool isEmailEmpty =false;
+  bool isNameEmpty =false;
+  bool isPasswordEmpty =false;
+
+@override
+  void dispose(){
+    super.dispose();
+    emailController.dispose();
+    nameController.dispose();
+    passwordController.dispose();
+
+  }
+
+  Future <void> addUserData ()async{
+
+    await FirebaseFirestore.instance.collection('users').add({
+      
+      'name':nameController.text.trim(),
+      'email':emailController.text.trim(),
+      'password':passwordController.text.trim(),
+
+    }).then((value) async {
+      //get and store auto genareted doc id----------------------------
+      print('docid:${value.id}');
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('userDbId', value.id);
+
+    });
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -139,19 +178,22 @@ class _signupState extends State<signup> {
                                             padding: const EdgeInsets.only(left:20.0,top:15),
                                             child: Container(
                                               width: 250,
-                                              height: 40,
-                                              child: const TextField(
-                                                      obscureText: true,
+                                              height: isEmailEmpty? 60:40,
+                                              child: TextField(
+                                                      
                                                       decoration: InputDecoration(
                                                         filled: true,
                                                         fillColor: Color.fromARGB(255, 255, 255, 255),
                                                         hintText: 'Email',
-                                                        border: OutlineInputBorder(
+                                                        errorText:isEmailEmpty  ? "Value Can't Be Empty" : null,
+                                                        border: const OutlineInputBorder(
                                                           borderSide: BorderSide.none,
                                                         
                                                         ),
                                                         contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                                                       ),
+                                                      controller: emailController,
+                                                      
                                                     ),
                                             ),
                                           ),
@@ -166,14 +208,15 @@ class _signupState extends State<signup> {
                                             padding: const EdgeInsets.only(left:20.0,top:15),
                                             child: Container(
                                               width: 250,
-                                              height: 40,
-                                              child: const TextField(
-                                                      obscureText: true,
-                                                      decoration: InputDecoration(
+                                              height: isNameEmpty? 60:40,
+                                              child:  TextField(
+                                                      controller: nameController,
+                                                      decoration:  InputDecoration(
                                                         filled: true,
                                                         fillColor: Color.fromARGB(255, 255, 255, 255),
                                                         hintText: 'Name',
-                                                        border: OutlineInputBorder(
+                                                        errorText:isNameEmpty  ? "Value Can't Be Empty" : null,
+                                                        border:const OutlineInputBorder(
                                                           borderSide: BorderSide.none,
                                                         
                                                         ),
@@ -193,14 +236,16 @@ class _signupState extends State<signup> {
                                             padding: const EdgeInsets.only(left:20.0,top:15),
                                             child: Container(
                                               width: 250,
-                                              height: 40,
-                                              child: const TextField(
+                                              height: isPasswordEmpty? 60:40,
+                                              child: TextField(
+                                                      controller: passwordController,
                                                       obscureText: true,
                                                       decoration: InputDecoration(
                                                         filled: true,
                                                         fillColor: Color.fromARGB(255, 255, 255, 255),
                                                         hintText: 'Password',
-                                                        border: OutlineInputBorder(
+                                                        errorText:isPasswordEmpty  ? "Value Can't Be Empty" : null,
+                                                        border:const OutlineInputBorder(
                                                           borderSide: BorderSide.none,
                                                         
                                                         ),
@@ -269,12 +314,23 @@ class _signupState extends State<signup> {
                                               child: SizedBox(
                                                   width: 250,
                                                   height: 40,
-                                                  child: TextButton(
-                                                    onPressed: () {
+                                                  child: ElevatedButton(
+                                                    onPressed: ()async {
+
+                                                      setState(() {
+                                                        emailController.text.isEmpty ? isEmailEmpty = true : isEmailEmpty = false;
+                                                        nameController.text.isEmpty ? isNameEmpty = true : isNameEmpty = false;
+                                                        passwordController.text.isEmpty ? isPasswordEmpty = true : isPasswordEmpty = false;
+                                                      });
+                                                      if(emailController.text.isNotEmpty&&nameController.text.isNotEmpty&&passwordController.text.isNotEmpty){
+                                                        await addUserData ();
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(builder: (context) => const letsStart()),
                                                             );
+                                                        
+                                                      } 
+                                                     
                                                       
                                                     },
                                                     style: ButtonStyle(

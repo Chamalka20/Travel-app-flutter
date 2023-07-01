@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/fechApiData.dart';
+import 'package:travelapp/tripDetailsPlan.dart';
 
 import 'Home.dart';
 import 'customPageRoutes.dart';
@@ -34,9 +37,13 @@ class search extends StatefulWidget {
   String keyboardInput='';
   var searchResults=[];
   Timer? _debounce;
-  List selectedIds =[];
+  List selectedIds =[{
+      'day':"" ,
+      'places':[],
+    }];
   bool isOnLongPress = false;
   late List<dynamic>  data ;
+  
   
   _searchState( this.isTextFieldClicked,this.searchType,this.isSelectPlaces);
 
@@ -140,7 +147,7 @@ class search extends StatefulWidget {
             Visibility(
               visible: !isTextFieldClicked,
               child: Padding(
-                padding: const EdgeInsets.only(left:13.0,top:20.0,bottom:6.0),
+                padding: const EdgeInsets.only(left:13.0,top:40.0,bottom:6.0),
                 child: Row(
                   children: [
                     Text("Search",
@@ -161,7 +168,7 @@ class search extends StatefulWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top:35),
+              padding:isTextFieldClicked? const EdgeInsets.only(top:40):const EdgeInsets.only(top:25),
               child: Row(
             
                 children: [
@@ -402,11 +409,11 @@ class search extends StatefulWidget {
                                                 onTap: () {
                                                   setState(() {
                                             
-                                                    if(selectedIds.contains(placeId)){
-                                                    selectedIds.remove(placeId);
+                                                    if(selectedIds[0]['places'].contains(placeId)){
+                                                    selectedIds[0]['places'].remove(placeId);
                                             
                                                     }else{
-                                                      selectedIds.add(placeId);
+                                                      selectedIds[0]['places'].add(placeId);
                                             
                                                     }
                                                     
@@ -417,7 +424,7 @@ class search extends StatefulWidget {
                                                 child: SizedBox(
                                                   height: 25,
                                                   width: 25,
-                                                  child:selectedIds.contains(placeId)?Image.asset("assets/images/correct.png") :Image.asset("assets/images/dry-clean.png")
+                                                  child:selectedIds[0]['places'].contains(placeId)?Image.asset("assets/images/correct.png") :Image.asset("assets/images/dry-clean.png")
                                                   
                                                   ),
                                               ),
@@ -443,33 +450,48 @@ class search extends StatefulWidget {
                       child: Positioned(
                         top:565,
                         left:95,
-                        child: SizedBox(
-                                width: 155,
-                                height: 45,
-                                child: TextButton(
-                                  onPressed: () {
-                                        print("jhiuhiuujj");
-                                    
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                                    foregroundColor:Color.fromARGB(255, 255, 255, 255),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20), 
-                                      ),
-                                    
-                                  ),
-                                  child: Text('Add to trip',
-                                      style: GoogleFonts.roboto(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                        width: 155,
+                                        height: 45,
+                                        child: TextButton(
+                                          onPressed:() async{
+                                            //temporally store trip places---------------------------
+                                            final prefs = await SharedPreferences.getInstance();
+                                            final data = json.encode(selectedIds);
+                                            prefs.setString('TripPlaceIds',data );
+
+                                             Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan()));
+                                            
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                            foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20), 
+                                              ),
+                                            
+                                          ),
+                                          child: Text('Add to trip',
+                                              style: GoogleFonts.roboto(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15,
+                                                  
                                           
-                                  
+                                              ),
+                                          
+                                          ),
+                                        ),
                                       ),
-                                  
-                                  ),
-                                ),
-                              ),
+                              ],
+                            ),
+                          ],
+                        ),
                         
                       ),
                     )

@@ -27,6 +27,7 @@ class _homeState extends State<home> {
   bool isBackButtonClick;
   String nextPageToken ='';
   
+  
   _homeState(this.isBackButtonClick);
 
   @override
@@ -34,6 +35,12 @@ class _homeState extends State<home> {
      super.initState();
     //get data list from api-------------------------------
      getData();
+     setMainName();
+  }
+
+  Future <void> setMainName()async{
+
+    
   }
 
 //set categorie list-----------------------------

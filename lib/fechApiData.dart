@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class fechApiData {
 
@@ -10,8 +12,8 @@ class fechApiData {
   var newApiUrl = '$apiUrl$apiKey'; 
   dynamic runId;
   dynamic keyValue;
+  
 
- 
 
    final response = await http.post(
     Uri.parse(newApiUrl),
@@ -132,8 +134,25 @@ class fechApiData {
       
       return data;      
 
-   }   
+   } 
 
+    static getUserData()async{
+      
+    var userId ;
+
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+
+      //final data=FirebaseFirestore.instance
+      //.collection('users')
+      
+      
+      
+
+        //return data;
+    }
+    
+      
   
 }
 
