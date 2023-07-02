@@ -155,7 +155,7 @@ class _signupState extends State<signup> {
                     Row(
                       children: [
                           Container(
-                          margin: const EdgeInsets.only(left: 50.0,top:80.0,bottom:20.0 ),
+                          margin:showError? const EdgeInsets.only(left: 50.0,top:50.0,bottom:20.0 ):const EdgeInsets.only(left: 50.0,top:80.0,bottom:20.0 ),
                             child: Text("Sign up",
                               style: GoogleFonts.lato(
                                   // ignore: prefer_const_constructors
