@@ -116,6 +116,7 @@ class _signupState extends State<signup> {
                       ],
 
                     ),
+                    //show error-----------------------------------
                     Visibility(
                       visible: showError,
                       child: Row(

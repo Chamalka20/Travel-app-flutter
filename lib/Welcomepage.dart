@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -22,6 +23,21 @@ class welcomePage extends StatefulWidget {
 }
 
 class _welcomePageState extends State<welcomePage> {
+
+  final emailController = TextEditingController();
+  bool isEmailEmpty =false;
+  List curruntEmails=[];
+  bool showError = false;
+  var userId ='';
+
+  @override
+  void dispose(){
+    super.dispose();
+    emailController.dispose();
+    
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return  WillPopScope(
@@ -82,11 +98,47 @@ class _welcomePageState extends State<welcomePage> {
                       child:Center(
                           // ignore: sort_child_properties_last
                           child:Container(
-                              margin: const EdgeInsets.only(top: 110.0),
+                              margin:showError?const EdgeInsets.only(top: 75.0) :const EdgeInsets.only(top: 110.0),
                               child:Column(
                                   // ignore: prefer_const_literals_to_create_immutables
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Visibility(
+                                          visible: showError,
+                                          child: Row(
+                                            children: [
+                                                Container(
+                                                width:250,
+                                                height:30,
+                                                decoration: BoxDecoration(
+                                                    color: Color.fromARGB(255, 255, 255, 255),
+                                                    borderRadius: BorderRadius.circular(17)
+                                                  ),
+                                                margin: const EdgeInsets.only(left: 50.0,bottom:12 ),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Text("This email address is not valid!",
+                                                        style: GoogleFonts.lato(
+                                                            // ignore: prefer_const_constructors
+                                                            textStyle: TextStyle(
+                                                            color: Color.fromARGB(255, 255, 0, 0),
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w500,
+                                                
+                                                            ) 
+                                                          )
+                                                      
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )  
+                                        
+                                            ],
+                                        
+                                          ),
+                                        ),
                                     
                                     Row(
                                           children: [
@@ -172,19 +224,26 @@ class _welcomePageState extends State<welcomePage> {
                                                                   padding: const EdgeInsets.only(left: 12.0,top: 12.0),
                                                                   child: Container(
                                                                     width: 250,
-                                                                    height: 40,
+                                                                    height:isEmailEmpty? 60:40,
                                                                     
-                                                                    child: const TextField(
-                                                                      decoration: InputDecoration(
+                                                                    child:TextField(
+                                                                      onTap: () {
+                                                                        setState(() {
+                                                                            showError = false;
+                                                                        });
+                                                                      },
+                                                                      decoration:  InputDecoration(
                                                                         filled: true,
                                                                         fillColor: Color.fromARGB(255, 255, 255, 255),
                                                                         hintText: 'Email',
-                                                                        border: OutlineInputBorder(
+                                                                        errorText:isEmailEmpty  ? "Value Can't Be Empty" : null,
+                                                                        border: const OutlineInputBorder(
                                                                           borderSide: BorderSide.none,
                                                                         
                                                                         ),
                                                                         contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                                                                       ),
+                                                                      controller: emailController,
                                                                     ),
                                                                   ),
                                                                 ),
@@ -201,10 +260,57 @@ class _welcomePageState extends State<welcomePage> {
                                                                         width: 250,
                                                                         height: 40,
                                                                         child: TextButton(
-                                                                          onPressed: () {
-                                                                              Navigator.of(context).pushReplacement(customPageRoutes(
+                                                                          onPressed: () async{
+
+                                                                            if(emailController.text.isNotEmpty){
+                                                                              
+                                                                              await FirebaseFirestore.instance
+                                                                              .collection('users')
+                                                                              .get()
+                                                                              .then((QuerySnapshot querySnapshot) {
+                                                                                  querySnapshot.docs.forEach((doc) {
+
+                                                                                    curruntEmails.add(doc['email']) ;
+
+                                                                                    if(doc['email']==emailController.text){
+                                                                                    
+                                                                                      userId = doc.id;
+                                                                                    
+                                                                                    }
+                                                                                  });
+                                                                                  
+                                                                              });
+                                                                              print(userId);
+                                                                              //check database has user type email-----------------------------
+                                                                              if(curruntEmails.contains(emailController.text)){
+                                                                                showError = false;
+
+                                                                                final prefs = await SharedPreferences.getInstance();
+                                                                                prefs.setString('userDbId', userId);
+                                                                                
+                                                                                Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                                                                              child:const login()));
+                                                                                child:const login()));
+                                                                              }else{
+                                                                                print('email not verfied');
+
+                                                                                setState(() {
+                                                                                  showError = true;
+                                                                                });
+                                                                                
+
+                                                                              }
+
+                                                                              
+
+                                                                            }else{
+                                                                              setState(() {
+                                                                                
+                                                                                isEmailEmpty=true;
+                                                                              });
+
+                                                                            }
+                                                                              
                                                                           
                                                                           },
                                                                           style: ButtonStyle(
