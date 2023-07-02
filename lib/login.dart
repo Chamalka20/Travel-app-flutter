@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
+import 'package:travelapp/fechApiData.dart';
+
+import 'navigationPage.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -11,6 +14,32 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
+
+  var  data ={};
+  final passwordController = TextEditingController();
+   bool showError = false;
+
+  void initState() {
+    super.initState();
+   getUserData(); 
+     
+  }
+@override
+  void dispose(){
+    super.dispose();
+    passwordController.dispose();
+    
+
+  }
+
+  Future <void> getUserData()async{
+    data = await fechApiData.getUserData();
+
+    setState(() {
+      data ;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -24,7 +53,7 @@ class _loginState extends State<login> {
       },
      child:Scaffold(
         body: SafeArea(
-          child:SingleChildScrollView(
+          child:data!=null? SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
             child: Container(
               height: 700.0, 
@@ -112,9 +141,9 @@ class _loginState extends State<login> {
                                               child: Container(
                                                 width: 45,
                                                 height: 45,
-                                                child: const CircleAvatar(
+                                                child:  CircleAvatar(
                                                   radius: 40,
-                                                  backgroundImage:AssetImage("assets/images/youtube logo.png"),
+                                                  backgroundImage:data['proPicUrl'].isNotEmpty? NetworkImage(data['proPicUrl']):NetworkImage("https://via.placeholder.com/150"),
                                                   
                                                 ),
                                               ),
@@ -128,26 +157,29 @@ class _loginState extends State<login> {
                                                  children: [
                                                    Padding(
                                                      padding: const EdgeInsets.only(left:10,top:25),
-                                                     child: Text("Nimal Jayakodi",
-                                                        style: GoogleFonts.poppins(
-                                                            textStyle: const TextStyle(
-                                                              color: Color.fromARGB(255, 255, 255, 255),
-                                                              fontSize: 18,
-                                                                                 
-                                                              ), 
-                                                   
-                                                   
+                                                     child: SizedBox(
+                                                      width:100,
+                                                       child: Text("${data['name']}",
+                                                          style: GoogleFonts.poppins(
+                                                              textStyle: const TextStyle(
+                                                                color: Color.fromARGB(255, 255, 255, 255),
+                                                                fontSize: 18,
+                                                                                   
+                                                                ), 
+                                                                                                        
+                                                                                                        
+                                                          ),
+                                                                                               
                                                         ),
-                                                                                             
-                                                      ),
+                                                     ),
                                                    ),
                                                  ],
                                                ),
                                                Row(
                                                   children: [
                                                        Padding(
-                                                         padding: const EdgeInsets.only(left:10),
-                                                         child: Text("nimal1234@gmail.com",
+                                                         padding: const EdgeInsets.only(left:6),
+                                                         child: Text("${data['email']}",
                                                           style: GoogleFonts.poppins(
                                                               textStyle: const TextStyle(
                                                                 color: Color.fromARGB(255, 255, 255, 255),
@@ -178,14 +210,21 @@ class _loginState extends State<login> {
                                                padding: const EdgeInsets.only(left:25,top:24),
                                                child: Container(
                                                 width: 250,
-                                                height: 40,
-                                                 child: const TextField(
+                                                height: showError? 60:40,
+                                                 child: TextField(
+                                                  onTap: () {
+                                                    setState(() {
+                                                          showError = false;
+                                                        });
+                                                  },
                                                     obscureText: true,
-                                                    decoration: InputDecoration(
+                                                    controller: passwordController,
+                                                    decoration:  InputDecoration(
                                                       filled: true,
                                                       fillColor: Color.fromARGB(255, 255, 255, 255),
                                                       hintText: 'Password',
-                                                      border: OutlineInputBorder(
+                                                      errorText:showError  ? "Invalid password" : null,
+                                                      border: const OutlineInputBorder(
                                                         borderSide: BorderSide.none,
                                                       
                                                       ),
@@ -209,7 +248,20 @@ class _loginState extends State<login> {
                                                   height: 40, 
                                                  child: TextButton(
                                                     onPressed: () {
-                                                       
+                                                       //check password validation---------------------------------------
+                                                       if(data['password']==passwordController.text){
+                                                       showError = false;
+                                                        Navigator.of(context).pushReplacement(customPageRoutes(
+                
+                                                        child: navigationPage(isBackButtonClick:false)));
+                                                       }else{
+
+                                                        setState(() {
+                                                          showError = true;
+                                                        });
+
+                                                    
+                                                       }
                                                       
                                                     },
                                                     style: ButtonStyle(
@@ -266,6 +318,9 @@ class _loginState extends State<login> {
                 ),
             ),
 
+          ):
+          const Center(
+            child: CircularProgressIndicator(),
           )
         ),
 

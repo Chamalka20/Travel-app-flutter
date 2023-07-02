@@ -46,6 +46,7 @@ class _signupState extends State<signup> {
       'name':nameController.text.trim(),
       'email':emailController.text.trim(),
       'password':passwordController.text.trim(),
+      'proPicUrl':'',
 
     }).then((value) async {
       //get and store auto genareted doc id----------------------------

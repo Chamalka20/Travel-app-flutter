@@ -143,13 +143,13 @@ class fechApiData {
       final prefs = await SharedPreferences.getInstance();
       userId = prefs.getString('userDbId');
 
-      //final data=FirebaseFirestore.instance
-      //.collection('users')
+      final data=await FirebaseFirestore.instance
+      .collection('users').doc(userId).get().then((doc) => doc.data());
       
       
       
 
-        //return data;
+        return data;
     }
     
       
