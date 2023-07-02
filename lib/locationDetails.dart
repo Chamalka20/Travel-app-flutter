@@ -288,7 +288,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${searchResults[0]['name']} and place address is ${searchResults[0]['name']} in Srilanka';
 
@@ -317,7 +317,7 @@ class _locationDetailsState extends State<locationDetails> {
         final jsonResponse = json.decode(response.body);
       final generatedText = jsonResponse['choices'][0]['message']['content'] as String?;
       
-      aboutDetails = generatedText ?? "";
+      aboutDetails =generatedText ?? "";
 
       setState(() {
         
@@ -334,11 +334,24 @@ class _locationDetailsState extends State<locationDetails> {
       print("succses");
      
     } else {
+
+
      
       print(" not succses ${response.statusCode}");
+      aboutDetails = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';//generatedText ?? "";
+      setState(() {
+        
+        aboutDetails;
+        isPlaceOpenNow= false;
+        palceNumber;
+        reviews;
+        placeRating;
+        
+
+      });
       
     }
-
+    
   }
 
   //----------------------------------------------------------------

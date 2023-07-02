@@ -25,6 +25,10 @@ class _signupState extends State<signup> {
   bool isEmailEmpty =false;
   bool isNameEmpty =false;
   bool isPasswordEmpty =false;
+  bool showError = false;
+
+  bool isSameEmail =false;
+  List curruntEmails=[];
 
 @override
   void dispose(){
@@ -111,6 +115,42 @@ class _signupState extends State<signup> {
                        ),
                       ],
 
+                    ),
+                    Visibility(
+                      visible: showError,
+                      child: Row(
+                        children: [
+                            Container(
+                            width:250,
+                            height:30,
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                borderRadius: BorderRadius.circular(17)
+                              ),
+                            margin: const EdgeInsets.only(left: 50.0,bottom:1 ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("This email address is already used!",
+                                    style: GoogleFonts.lato(
+                                        // ignore: prefer_const_constructors
+                                        textStyle: TextStyle(
+                                        color: Color.fromARGB(255, 255, 0, 0),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                            
+                                        ) 
+                                      )
+                                  
+                                  ),
+                                ],
+                              ),
+                            )  
+                    
+                        ],
+                    
+                      ),
                     ),
                     Row(
                       children: [
@@ -317,17 +357,46 @@ class _signupState extends State<signup> {
                                                   child: ElevatedButton(
                                                     onPressed: ()async {
 
+                                                      bool isEmail =false;
+                                                      
+                                                        
                                                       setState(() {
                                                         emailController.text.isEmpty ? isEmailEmpty = true : isEmailEmpty = false;
                                                         nameController.text.isEmpty ? isNameEmpty = true : isNameEmpty = false;
                                                         passwordController.text.isEmpty ? isPasswordEmpty = true : isPasswordEmpty = false;
+
+                                                       
+
                                                       });
                                                       if(emailController.text.isNotEmpty&&nameController.text.isNotEmpty&&passwordController.text.isNotEmpty){
-                                                        await addUserData ();
+                                                         FirebaseFirestore.instance
+                                                          .collection('users')
+                                                          .get()
+                                                          .then((QuerySnapshot querySnapshot) {
+                                                              querySnapshot.docs.forEach((doc) {
+                                                                
+                                                                 curruntEmails.add(doc['email']) ;
+                                                                
+                                                                
+                                                              });
+                                                              
+                                                          });
+
+                                                       
+                                                        //check email is already add database--------------------
+                                                        if(curruntEmails.contains(emailController.text)) {
+                                                          print('email is same!');
+                                                          showError = true;
+                                                        }else{
+                                                          showError = false;
+                                                          await addUserData ();
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(builder: (context) => const letsStart()),
                                                             );
+
+                                                        }
+                                                        
                                                         
                                                       } 
                                                      

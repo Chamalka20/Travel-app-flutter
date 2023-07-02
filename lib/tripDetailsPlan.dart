@@ -10,6 +10,7 @@ import 'package:travelapp/search.dart';
 import 'package:travelapp/fechApiData.dart';
 
 import 'customPageRoutes.dart';
+import 'navigationPage.dart';
 
 class tripDetailsPlan extends StatefulWidget {
   const tripDetailsPlan({super.key});
@@ -90,7 +91,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                         onPressed: () {
                           Navigator.of(context).pushReplacement(customPageRoutes(
                     
-                          child: home(isBackButtonClick:true))); 
+                          child: navigationPage(isBackButtonClick:true)));  
                         },
                         child: Text('No'),
                       ),
