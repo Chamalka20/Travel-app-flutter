@@ -152,7 +152,45 @@ class fechApiData {
         return data;
     }
     
+    static readUsersEmails()async{
+
+      List data =[];
+      await FirebaseFirestore.instance
+        .collection('users')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+            querySnapshot.docs.forEach((doc) {
+              
+                data.add(doc['email']) ;
+              
+              
+            });
+            
+        });
+      return data; 
+    }
+    
+    static addUser(String? name,String email,String password,String? photoUrl)async{
+
+      var userId ;
+
+      await FirebaseFirestore.instance.collection('users').add({
       
+            'name':name,
+            'email':email,
+            'password':password,
+            'proPicUrl':photoUrl,
+
+          }).then((value) async {
+            //get and store auto genareted doc id----------------------------
+            print('docid:${value.id}');
+            final prefs = await SharedPreferences.getInstance();
+            prefs.setString('userDbId', value.id);
+            userId = value.id;
+          });
+    return userId;
+
+    }
   
 }
 

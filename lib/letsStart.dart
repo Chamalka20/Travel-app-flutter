@@ -190,6 +190,10 @@ class _MyWidgetState extends State<letsStart> {
                                   if(cityName != null){
 
                                   print('Current city: $cityName');
+
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  await prefs.setBool('isLoggedIn', true);
+
                                   Navigator.of(context).pushReplacement(customPageRoutes(
                 
                                     child: navigationPage(isBackButtonClick:false)));

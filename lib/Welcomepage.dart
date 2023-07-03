@@ -3,11 +3,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelapp/fechApiData.dart';
 import 'package:travelapp/signup.dart';
 import 'Google_signin.dart';
 import 'Home.dart';
@@ -287,7 +285,7 @@ class _welcomePageState extends State<welcomePage> {
 
                                                                                 final prefs = await SharedPreferences.getInstance();
                                                                                 prefs.setString('userDbId', userId);
-                                                                                
+
                                                                                 Navigator.of(context).pushReplacement(customPageRoutes(
                 
                                                                                 child:const login()));
@@ -557,6 +555,7 @@ class _welcomePageState extends State<welcomePage> {
 
    Future signIn() async{
         final user = await GoogleSigninApi.login();
+        curruntEmails = await fechApiData.readUsersEmails();
 
         if (user == null){
 
@@ -566,15 +565,53 @@ class _welcomePageState extends State<welcomePage> {
 
 
         }else{
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setBool('isLoggedIn', true);
 
-          // ignore: use_build_context_synchronously
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            
-            builder:(context)=> letsStart()));
-         
-        
+          if(curruntEmails.contains(user.email)){
+
+            await FirebaseFirestore.instance
+            .collection('users')
+            .get()
+            .then((QuerySnapshot querySnapshot) {
+                querySnapshot.docs.forEach((doc) {
+
+                  curruntEmails.add(doc['email']) ;
+
+                  if(doc['email']==emailController.text){
+                  
+                    userId = doc.id;
+                  
+                  }
+                });
+                
+            });
+            final prefs = await SharedPreferences.getInstance();
+            prefs.setString('userDbId', userId);
+            print(userId);
+            Navigator.of(context).pushReplacement(customPageRoutes(
+
+            child:const home(isBackButtonClick: false,)));
+
+
+          }else{
+
+            final userId = await fechApiData.addUser(user.displayName, user.email, '', user.photoUrl);
+
+            if(userId!=null){
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                
+                builder:(context)=> letsStart()));
+          
+
+            }else{
+              print('save not succses');
+            }
+
+
+
+          }
+          
+           
 
         }
 

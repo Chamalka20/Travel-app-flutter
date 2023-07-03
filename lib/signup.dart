@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelapp/fechApiData.dart';
 
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
@@ -29,6 +30,7 @@ class _signupState extends State<signup> {
 
   bool isSameEmail =false;
   List curruntEmails=[];
+  var userId ;
 
 @override
   void dispose(){
@@ -41,21 +43,9 @@ class _signupState extends State<signup> {
 
   Future <void> addUserData ()async{
 
-    await FirebaseFirestore.instance.collection('users').add({
-      
-      'name':nameController.text.trim(),
-      'email':emailController.text.trim(),
-      'password':passwordController.text.trim(),
-      'proPicUrl':'',
+   userId = await fechApiData.addUser(nameController.text.trim(), emailController.text.trim(), passwordController.text.trim(), '');
 
-    }).then((value) async {
-      //get and store auto genareted doc id----------------------------
-      print('docid:${value.id}');
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('userDbId', value.id);
-
-    });
-
+    
   }
 
 
@@ -222,7 +212,11 @@ class _signupState extends State<signup> {
                                               width: 250,
                                               height: isEmailEmpty? 60:40,
                                               child: TextField(
-                                                      
+                                                      onTap: () {
+                                                        setState(() {
+                                                          showError = false;
+                                                        });
+                                                      },
                                                       decoration: InputDecoration(
                                                         filled: true,
                                                         fillColor: Color.fromARGB(255, 255, 255, 255),
@@ -360,7 +354,7 @@ class _signupState extends State<signup> {
                                                     onPressed: ()async {
 
                                                       bool isEmail =false;
-                                                      
+                                                       curruntEmails = await fechApiData.readUsersEmails();
                                                         
                                                       setState(() {
                                                         emailController.text.isEmpty ? isEmailEmpty = true : isEmailEmpty = false;
@@ -371,19 +365,7 @@ class _signupState extends State<signup> {
 
                                                       });
                                                       if(emailController.text.isNotEmpty&&nameController.text.isNotEmpty&&passwordController.text.isNotEmpty){
-                                                         FirebaseFirestore.instance
-                                                          .collection('users')
-                                                          .get()
-                                                          .then((QuerySnapshot querySnapshot) {
-                                                              querySnapshot.docs.forEach((doc) {
-                                                                
-                                                                 curruntEmails.add(doc['email']) ;
-                                                                
-                                                                
-                                                              });
-                                                              
-                                                          });
-
+                                                        
                                                        
                                                         //check email is already add database--------------------
                                                         if(curruntEmails.contains(emailController.text)) {
@@ -392,10 +374,18 @@ class _signupState extends State<signup> {
                                                         }else{
                                                           showError = false;
                                                           await addUserData ();
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(builder: (context) => const letsStart()),
-                                                            );
+
+                                                          if(userId!=null){
+                                                            // ignore: use_build_context_synchronously
+                                                            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                              
+                                                              builder:(context)=> letsStart()));
+                                                        
+
+                                                          }else{
+                                                            print('save not succses');
+                                                          }
+                                                          
 
                                                         }
                                                         

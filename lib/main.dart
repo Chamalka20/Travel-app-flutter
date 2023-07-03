@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,17 @@ Future<bool> checkLoggedIn() async {
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  Platform.isAndroid?
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyD7e8IvH1HSYcRVgy7fHq9VQyT_LKr8K6k",
+      appId: "1:801398445076:android:df86416ab466a3da0dc301",
+      messagingSenderId: "801398445076",
+      projectId: "flutter-travel-app-3f538",
+    ),
+  )
+
+  :await Firebase.initializeApp();
   
   bool isLoggedIn = await checkLoggedIn();
   String initialRoute = isLoggedIn ? '/home' : '/login';
