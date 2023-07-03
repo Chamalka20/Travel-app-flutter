@@ -29,8 +29,12 @@ class _createNewTripState extends State<createNewTrip> {
   late final defultBacPhotoUrl;
   late final String planTrips = '5';
   late  String tripName ='';
-  TextEditingController dateinput = TextEditingController(); 
 
+  TextEditingController dateinput = TextEditingController(); 
+  final TripNameController = TextEditingController();
+  final TripBudgetController = TextEditingController();
+  final TripLocationController = TextEditingController();
+  final TripDescriptionController = TextEditingController();
 
   _createNewTripState(this.placeName,this.backGroundPlacePhotoUrl);
 
@@ -44,6 +48,24 @@ class _createNewTripState extends State<createNewTrip> {
 
     
   }
+
+  @override
+  void dispose(){
+    super.dispose();
+    TripNameController.dispose();
+    TripBudgetController.dispose();
+    TripLocationController.dispose();
+    TripDescriptionController.dispose();
+  }
+  
+
+  Future<void> createTrip ()async{
+
+
+
+  }
+
+
 
   //get background image with phone gallary---------------------------------------
    Future<void> getBackGroundImagewithPhone (ImageSource media)async{
