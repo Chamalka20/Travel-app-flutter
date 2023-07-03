@@ -31,7 +31,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   var currentIndex = 0 ;
   var  tripPlaces;
   var addPlaces =[];
-  late List<dynamic>  data ;
+  late List<dynamic>  selectedData ;
   
   _tripDetailsPlanState(this.isSelectPlaces);
 
@@ -40,6 +40,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   void initState() {
     super.initState();
 
+    
    if(isSelectPlaces == true) {
     listSelectedPlaces (); 
 
@@ -48,8 +49,6 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
     setTripDetails();
 
    }
-
-   
      
   }
 
@@ -57,6 +56,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString('trip');
+    currentIndex = prefs.getInt('selectDay')!;
     final trip = jsonDecode(data!);
 
     
@@ -82,14 +82,32 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     final prefs = await SharedPreferences.getInstance();
     final tripPlace = prefs.getString('TripPlaceIds');
-    
+    final data = prefs.getString('trip');
+    currentIndex = prefs.getInt('selectDay')!;
+    final trip = jsonDecode(data!);
+
+    for(var i=1;i<=trip['tripDays'];i++){
+
+      listTiles.add(i);
+
+      if(i==trip['tripDays']){
+
+        listTiles.add('addDay');
+      }
+    }
+    print(listTiles);
+
+    setState(() {
+      listTiles;
+    });
+
 
     final decodeData = jsonDecode(tripPlace!);
 
-    data = await fechApiData.getattractionDetails();
+    selectedData = await fechApiData.getattractionDetails();
 
 
-    addPlaces=data.map((element) { 
+    addPlaces=selectedData.map((element) { 
 
       if(decodeData[0]['places'].contains(element['placeId'])){
 
@@ -130,7 +148,10 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                         child: Text('Yes'),
                       ),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async{
+                          final prefs = await SharedPreferences.getInstance();
+                          prefs.setString('trip','' );
+
                           Navigator.of(context).pushReplacement(customPageRoutes(
                     
                           child: navigationPage(isBackButtonClick:true)));  
@@ -223,8 +244,9 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
    
                                                 day =listTiles[index];
                                                 currentIndex = index;
-   
+                                                
                                               }),
+                                              print("${currentIndex+1}"),
    
                                             },
                                             child: Card(
@@ -366,7 +388,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                           children: [
                                             // get atrractions---------------------------------------------
                                             GestureDetector(
-                                              onTap: () {
+                                              onTap: () async{
+
+                                                final prefs = await SharedPreferences.getInstance();
+                                                prefs.setInt('selectDay',currentIndex );
+
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'attraction',isSelectPlaces: true,)));

@@ -78,6 +78,7 @@ class _createNewTripState extends State<createNewTrip> {
     final prefs = await SharedPreferences.getInstance();
     final data = json.encode(trip);
     prefs.setString('trip',data );
+    prefs.setInt('selectDay',0 );
 
 
   }
