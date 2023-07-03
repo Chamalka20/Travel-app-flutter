@@ -13,34 +13,76 @@ import 'customPageRoutes.dart';
 import 'navigationPage.dart';
 
 class tripDetailsPlan extends StatefulWidget {
-  const tripDetailsPlan({super.key});
+
+ bool isSelectPlaces;
+
+ tripDetailsPlan({required this.isSelectPlaces, Key? key}) : super(key: key);
 
   @override
-  State<tripDetailsPlan> createState() => _tripDetailsPlanState();
+  State<tripDetailsPlan> createState() => _tripDetailsPlanState(isSelectPlaces);
 }
 
 class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
+  bool isSelectPlaces;
   
-  List listTiles = [1, 2, 3, 4,5,6,'addDay'];
+  List listTiles = [];
   var day = 1;
   var currentIndex = 0 ;
   var  tripPlaces;
   var addPlaces =[];
   late List<dynamic>  data ;
+  
+  _tripDetailsPlanState(this.isSelectPlaces);
+
 
    @override
   void initState() {
     super.initState();
 
-   listSelectedPlaces (); 
+   if(isSelectPlaces == true) {
+    listSelectedPlaces (); 
+
+   }else{
+
+    setTripDetails();
+
+   }
+
+   
      
   }
+
+   Future <void> setTripDetails()async{
+
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('trip');
+    final trip = jsonDecode(data!);
+
+    
+    for(var i=1;i<=trip['tripDays'];i++){
+
+      listTiles.add(i);
+
+      if(i==trip['tripDays']){
+
+        listTiles.add('addDay');
+      }
+    }
+    print(listTiles);
+
+    setState(() {
+      listTiles;
+    });
+
+   }
+
 
   Future <void> listSelectedPlaces ()async{
 
     final prefs = await SharedPreferences.getInstance();
     final tripPlace = prefs.getString('TripPlaceIds');
+    
 
     final decodeData = jsonDecode(tripPlace!);
 

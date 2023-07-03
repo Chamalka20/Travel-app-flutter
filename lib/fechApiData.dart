@@ -208,6 +208,18 @@ class fechApiData {
 
     }
 
+    static creatTrip(String? tripName,int? days,int? tripBudget, String tripLocation, String description)async{
+
+      // await FirebaseFirestore.instance
+      // .collection('users').doc(userId).update({
+
+      //   'location':city,
+    
+      // });
+
+
+    }
+
   
 }
 

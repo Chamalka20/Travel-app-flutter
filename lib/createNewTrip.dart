@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/tripDetailsPlan.dart';
 
 
@@ -29,6 +30,7 @@ class _createNewTripState extends State<createNewTrip> {
   late final defultBacPhotoUrl;
   late final String planTrips = '5';
   late  String tripName ='';
+  var daysDuration;
 
   TextEditingController dateinput = TextEditingController(); 
   final TripNameController = TextEditingController();
@@ -57,10 +59,25 @@ class _createNewTripState extends State<createNewTrip> {
     TripLocationController.dispose();
     TripDescriptionController.dispose();
   }
-  
+
 
   Future<void> createTrip ()async{
 
+    final trip ={
+      'tripName':TripNameController.text,
+      'tripDays':daysDuration??0,
+      'tripudget':TripBudgetController.text,
+      'tripLocation':TripLocationController.text,
+      'tripDescription':TripDescriptionController.text,
+
+    };
+
+    print(trip);
+
+  //temporaly store trip data -------------------------
+    final prefs = await SharedPreferences.getInstance();
+    final data = json.encode(trip);
+    prefs.setString('trip',data );
 
 
   }
@@ -290,7 +307,7 @@ class _createNewTripState extends State<createNewTrip> {
                                     width:300,
                                     height:60,
                                      child: TextField(
-                                      
+                                      controller: TripNameController,
                                       onTap: () {
                                         setState(() {
                                          
@@ -355,7 +372,7 @@ class _createNewTripState extends State<createNewTrip> {
                                         String formattedDate1 = DateFormat('yyyy/MM/dd').format(pickedDate.start);
                                         String formattedDate2 = DateFormat('yyyy/MM/dd').format(pickedDate.end); 
                                         print(pickedDate.duration.inDays); 
-                                        
+                                        daysDuration =pickedDate.duration.inDays;
                   
                                         setState(() {
                                           dateinput.text = '${formattedDate1} - ${formattedDate2}';                      //set output date to TextField value. 
@@ -407,7 +424,7 @@ class _createNewTripState extends State<createNewTrip> {
                                   width:300,
                                   height:60,
                                    child: TextField(
-                                    
+                                    controller: TripBudgetController,
                                     onTap: () {
                                       setState(() {
                                        
@@ -456,6 +473,7 @@ class _createNewTripState extends State<createNewTrip> {
                                   width:300,
                                   height:70,
                                    child: TextField(
+                                    controller: TripLocationController,
                                     onTap: () {
                                       setState(() {
                                        
@@ -503,6 +521,7 @@ class _createNewTripState extends State<createNewTrip> {
                                   width:300,
                                   height:70,
                                    child: TextField(
+                                    controller: TripDescriptionController,
                                     maxLines: 10,
                                     onTap: () {
                                       setState(() {
@@ -549,10 +568,10 @@ class _createNewTripState extends State<createNewTrip> {
                                   height: 45,
                                   child: TextButton(
                                     onPressed: () {
-                                          
+                                      createTrip ();
                                       Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan()),
+                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,)),
                                     );
                                       
                                     },

@@ -466,7 +466,7 @@ class search extends StatefulWidget {
 
                                              Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan()));
+                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,)));
                                             
                                           },
                                           style: ElevatedButton.styleFrom(
