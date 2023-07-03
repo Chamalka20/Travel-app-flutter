@@ -9,6 +9,9 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'Home.dart';
 import 'customPageRoutes.dart';
+import 'myAccount.dart';
+import 'myFavorite.dart';
+import 'myTrips.dart';
 
 class navigationPage extends StatefulWidget {
 
@@ -41,9 +44,9 @@ class _navigationPageState extends State<navigationPage> {
       _pages = [
       home(isBackButtonClick: isBackButtonClick),
       const search(isTextFieldClicked: false,searchType:'city',isSelectPlaces: false,),
-      // PlanPage(),
-      // FavoritePage(),
-      // AccountPage(),
+       mytrips(),
+       myFavorite(),
+       const myAccount(),
     ] ;
 
     });

@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart' ;
 import 'package:location/location.dart' ;
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelapp/fechApiData.dart';
 
 import 'Home.dart';
 import 'Welcomepage.dart';
@@ -193,6 +194,8 @@ class _MyWidgetState extends State<letsStart> {
 
                                   SharedPreferences prefs = await SharedPreferences.getInstance();
                                   await prefs.setBool('isLoggedIn', true);
+                                  //add location to the database-----------------------------
+                                  await fechApiData.setUserLocation(cityName);
 
                                   Navigator.of(context).pushReplacement(customPageRoutes(
                 

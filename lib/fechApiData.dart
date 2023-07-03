@@ -142,6 +142,7 @@ class fechApiData {
 
       final prefs = await SharedPreferences.getInstance();
       userId = prefs.getString('userDbId');
+      print('userid:${userId}');
 
       final data=await FirebaseFirestore.instance
       .collection('users').doc(userId).get().then((doc) => doc.data());
@@ -191,6 +192,22 @@ class fechApiData {
     return userId;
 
     }
+
+    static setUserLocation(String? city)async{
+      var userId ;
+
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+             
+      await FirebaseFirestore.instance
+      .collection('users').doc(userId).update({
+
+        'location':city,
+    
+      });
+
+    }
+
   
 }
 

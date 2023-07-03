@@ -143,7 +143,7 @@ class _loginState extends State<login> {
                                                 height: 45,
                                                 child:  CircleAvatar(
                                                   radius: 40,
-                                                  backgroundImage:data['proPicUrl'].isNotEmpty? NetworkImage(data['proPicUrl']):NetworkImage("https://via.placeholder.com/150"),
+                                                  backgroundImage:data['proPicUrl']!=null? NetworkImage(data['proPicUrl']):NetworkImage("https://via.placeholder.com/150"),
                                                   
                                                 ),
                                               ),

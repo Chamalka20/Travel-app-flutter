@@ -12,6 +12,7 @@ import 'Home.dart';
 import 'customPageRoutes.dart';
 import 'letsStart.dart';
 import 'login.dart';
+import 'navigationPage.dart';
 
 class welcomePage extends StatefulWidget {
   const welcomePage({super.key});
@@ -567,16 +568,14 @@ class _welcomePageState extends State<welcomePage> {
         }else{
 
           if(curruntEmails.contains(user.email)){
-
+            
             await FirebaseFirestore.instance
             .collection('users')
             .get()
             .then((QuerySnapshot querySnapshot) {
                 querySnapshot.docs.forEach((doc) {
 
-                  curruntEmails.add(doc['email']) ;
-
-                  if(doc['email']==emailController.text){
+                  if(doc['email']==user.email){
                   
                     userId = doc.id;
                   
@@ -586,10 +585,12 @@ class _welcomePageState extends State<welcomePage> {
             });
             final prefs = await SharedPreferences.getInstance();
             prefs.setString('userDbId', userId);
-            print(userId);
+            await prefs.setBool('isLoggedIn', true);
+
+            print('userid:${userId}');
             Navigator.of(context).pushReplacement(customPageRoutes(
 
-            child:const home(isBackButtonClick: false,)));
+            child:const navigationPage(isBackButtonClick: false,)));
 
 
           }else{
@@ -597,6 +598,11 @@ class _welcomePageState extends State<welcomePage> {
             final userId = await fechApiData.addUser(user.displayName, user.email, '', user.photoUrl);
 
             if(userId!=null){
+
+              final prefs = await SharedPreferences.getInstance();
+              prefs.setString('userDbId', userId);
+              await prefs.setBool('isLoggedIn', true);
+              
               // ignore: use_build_context_synchronously
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                 
