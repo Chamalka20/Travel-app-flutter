@@ -26,7 +26,7 @@ class _homeState extends State<home> {
   late List<Map<String, dynamic>> myLocationList = [];
   bool isBackButtonClick;
   String nextPageToken ='';
-  
+  var  userdata ={};
   
   _homeState(this.isBackButtonClick);
 
@@ -35,12 +35,15 @@ class _homeState extends State<home> {
      super.initState();
     //get data list from api-------------------------------
      getData();
-     setMainName();
+     getUserData();
   }
 
-  Future <void> setMainName()async{
+  Future <void> getUserData()async{
+    userdata = await fechApiData.getUserData();
 
-    
+    setState(() {
+      userdata ;
+    });
   }
 
 //set categorie list-----------------------------
@@ -190,42 +193,27 @@ final payload3 = {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left:13.0,top:20.0,bottom:15.0),
+                padding: const EdgeInsets.only(left:13.0,top:30.0,bottom:15.0),
                 child: Row(
                   
                   children: [
                     
-                    Text("Hi Nimal",
-                      style: GoogleFonts.nunito(
-                                  // ignore: prefer_const_constructors
-                                  textStyle: TextStyle(
-                                  color: const Color.fromARGB(255, 27, 27, 27),
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                          
-                                  ) 
-                                )
-                    
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left:105,top:3),
-                      child: Container(child: Image.asset("assets/images/location.png",width:25,height:25)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top:9.0),
-                      child: Text("Sri lanka",
+                    SizedBox(
+                      width:250,
+                      child: Text("Hi ${userdata['name']}",
                         style: GoogleFonts.nunito(
                                     // ignore: prefer_const_constructors
                                     textStyle: TextStyle(
-                                    color: const Color.fromARGB(255, 143, 142, 142),
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
+                                    color: const Color.fromARGB(255, 27, 27, 27),
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
                             
                                     ) 
                                   )
-                                          
-                            ),
+                      
+                      ),
                     ),
+                    
                     
                   ],
           
