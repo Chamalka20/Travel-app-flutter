@@ -36,6 +36,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   var tripDays ={};
   var storeTripDays={};
   late List<dynamic>  selectedData ;
+  bool isTriphasData =false;
   
   _tripDetailsPlanState(this.isSelectPlaces);
 
@@ -44,17 +45,42 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   void initState() {
     super.initState();
 
-    
-   if(isSelectPlaces == true) {
-    listSelectedPlaces (); 
+    if(isSelectPlaces == true) {
 
-   }else{
+       _asyncMethod() ;
+    }else{
 
-    setTripDetails();
-
-   }
+      setTripDetails();
+    }
+   
      
   }
+
+  _asyncMethod() async {
+
+    final prefs = await SharedPreferences.getInstance();
+    final searchType = prefs.getString('searchType');
+    //get data list from database-------------------------------
+    
+    if(searchType =='city'){
+  
+      selectedData = await fechApiData.getCityDetails();
+      listSelectedPlaces (); 
+      
+
+    }else if(searchType =='attracrions'){
+      listSelectedPlaces (); 
+      selectedData = await fechApiData.getattractionDetails();
+      
+
+    }else if(searchType =='resturants'){
+      selectedData = await fechApiData.getResturantDetails();
+      listSelectedPlaces (); 
+    }
+    
+
+  } 
+
 
    Future <void> setTripDetails()async{
 
@@ -93,6 +119,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
     currentIndex = prefs.getInt('selectDay')!;
     final trip = jsonDecode(data!);
 
+    setState(() {
+      isTriphasData =true;
+
+    });
+    
     for(var i=1;i<=trip['tripDays'];i++){
 
       listTiles.add(i);
@@ -111,14 +142,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     final decodeData = jsonDecode(tripPlace!);
 
-    selectedData = await fechApiData.getattractionDetails();
-
-
     addPlaces=selectedData.map((element) { 
 
       if(decodeData[0]['places'].contains(element['placeId'])){
-
-        return{
+        
+        return {
           "name":element['title'],
           "photo_reference":element['imageUrls'][0],
 
@@ -145,8 +173,18 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     print(storeTripDays);
 
+  }else{
+    
+    storeTripDays['${currentIndex}']+=addPlaces;
+
+    final encodata = json.encode(storeTripDays);
+    prefs.setString('tripdays',encodata );
+
+    print(storeTripDays);
+
   }
 
+  
 
     setState(() {
       tripDays;
@@ -162,7 +200,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
           if (oldIndex < newIndex) {
             newIndex -= 1;
           }
-          final int item = storeTripDays['${currentIndex}'].removeAt(oldIndex);
+          final item = storeTripDays['${currentIndex}'].removeAt(oldIndex);
           storeTripDays['${currentIndex}'].insert(newIndex, item);
         });
   }
@@ -366,61 +404,679 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
    if(isSelectPlaces==true && storeTripDays['${currentIndex}']!=null){
    return  
    
-       Center(
-         child: Container(
-   
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                  Expanded(
-                    child: ReorderableListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      onReorder: reorderData,
-                      children: <Widget>[
-                        for (int index = 0; index < storeTripDays['${currentIndex}'].length; index += 1)
-                        ListTile(
-                          key: Key('$index'),
-                          tileColor:  evenItemColor,
-                          title: Text('Item ${[index]}'),
-                        ),
-                      ],
-                    ),
-                  )
-                
-                 
-              ],
-            ),
+      Padding(
+         padding: const EdgeInsets.only(top:17),
+         child: Column(
+           children: [
+               Expanded(
+                 child: Stack(
+                   children: [
+                    ReorderableListView(
+                     
+                     padding: const EdgeInsets.symmetric(horizontal: 10,),
+                     onReorder: reorderData,
+                     children: <Widget>[
+                       for (int index = 0; index < storeTripDays['${currentIndex}'].length; index += 1)
+                       Card(
+                         color:const Color.fromARGB(255, 240, 238, 238),
+                         key: ValueKey(index),
+                         shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.circular(17.0),
+                         ),
+                         elevation: 2,
+                         child: Container(
+                           height:90,
+                           child: Row(
+                            children: [
+                              Container(
+                                height: 90,
+                                width: 90,
+                                 decoration: BoxDecoration(
+                                  
+                                  borderRadius: BorderRadius.circular(17),
+                                  image: DecorationImage(
+                                    image: NetworkImage(storeTripDays['${currentIndex}'][index]['photo_reference']),
+                                    fit: BoxFit.cover
+                                            
+                                  ),
+                                
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left:6,top:5),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 200,
+                                          child: Text(storeTripDays['${currentIndex}'][index]['name'],
+                                            style: GoogleFonts.cabin(
+                                                  // ignore: prefer_const_constructors
+                                                  textStyle: TextStyle(
+                                                  color: const Color.fromARGB(255, 27, 27, 27),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600,
+                                          
+                                                  ) 
+                                                ),
+                                          
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top:35),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      width:20,
+                                      child: Text('${index+1}',
+                                        style: GoogleFonts.cabin(
+                                                      // ignore: prefer_const_constructors
+                                                      textStyle: TextStyle(
+                                                      color: const Color.fromARGB(255, 27, 27, 27),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.w600,
+                                              
+                                                      ) 
+                                                    ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                           )
+                         )
+                       )
+                     ],
+                   ),
+                   Visibility(
+                    visible: isTriphasData,
+                     child: Positioned(
+                      top:410,
+                      left:20,
+                      child:Row(
+                        children: [
+                          SizedBox(
+                            width:150,
+                            child: TextButton(
+                                onPressed:() async{
+
+                                      showModalBottomSheet(
+                                    context: context,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
+                                      ), 
+                                    builder: (BuildContext context) { 
+      
+                                      return
+                                        SizedBox(
+                                        height:200,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                // get atrractions---------------------------------------------
+                                                GestureDetector(
+                                                  onTap: () async{
+
+                                                    final prefs = await SharedPreferences.getInstance();
+                                                    prefs.setInt('selectDay',currentIndex );
+                                                    prefs.setString('searchType','attracrions' ); 
+
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'attraction',isSelectPlaces: true,)));
+                                                    
+                                                  },
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            width: 70,
+                                                            height:70,
+                                                            decoration: BoxDecoration(
+                                                              color: const Color.fromARGB(255, 240, 238, 238),
+                                                              borderRadius: BorderRadius.circular(45)
+                                                            ),
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Image.asset("assets/images/flash.png",width:40,height:40),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            )
+                                                            ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        
+                                                        children: [
+                                                          Text("Attracrions")
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                // get resturents----------------------------------------------------
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    final prefs = await SharedPreferences.getInstance();
+                                                    prefs.setInt('selectDay',currentIndex );
+                                                    prefs.setString('searchType','resturants' ); 
+
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'restaurant',isSelectPlaces: true,)));
+                                                    
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(right:33,left:33),
+                                                    child: Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Container(
+                                                              width: 70,
+                                                              height:70,
+                                                              decoration: BoxDecoration(
+                                                                color: const Color.fromARGB(255, 240, 238, 238),
+                                                                borderRadius: BorderRadius.circular(45)
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children: [
+                                                                      SizedBox(child: Image.asset("assets/images/hotel.png",width:40,height:40)),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              )
+                                                              ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Text("Resturants")
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                //get your like places----------------------------------------------------------
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            width: 70,
+                                                            height:70,
+                                                            decoration: BoxDecoration(
+                                                              color: const Color.fromARGB(255, 240, 238, 238),
+                                                              borderRadius: BorderRadius.circular(45)
+                                                            ),
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Image.asset("assets/images/heartBlack.png",width:40,height:40),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            )
+                                                            ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text("Your Favorites")
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        
+                                        );
+      
+                                      }, 
+                                    
+                                  
+                                  );
+                                  
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color.fromARGB(255, 2, 94, 14),
+                                  foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20), 
+                                    ),
+                                  
+                                ),
+                                child: Text('Add places',
+                                    style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        
+                                
+                                    ),
+                                
+                                ),
+                              ),
+                          ),
+                          SizedBox(
+                            width:140,
+                            child: TextButton(
+                                onPressed:() async{
+                                  
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                  foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20), 
+                                    ),
+                                  
+                                ),
+                                child: Text('Create a trip',
+                                    style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        
+                                
+                                    ),
+                                
+                                ),
+                              ),
+                          )
+                        ],
+                      ),
+                      
+                      ),
+                   )
+                   ]
+                 ),
+               )
+             
+              
+           ],
          ),
        );
-   }else if(isSelectPlaces==false && storeTripDays['${currentIndex}']!=null){
+}else if(isSelectPlaces==false && storeTripDays['${currentIndex}']!=null){
     return  
    
-       Center(
-         child: Container(
-   
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                  Expanded(
-                    child: ReorderableListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      onReorder: reorderData,
-                      children: <Widget>[
-                        for (int index = 0; index < storeTripDays['${currentIndex}'].length; index += 1)
-                        ListTile(
-                          key: Key('$index'),
-                          tileColor:  index.isOdd ? oddItemColor : evenItemColor,
-                          title: Text('Item ${[index]}'),
-                        ),
-                      ],
-                    ),
-                  )
-                
-                 
-              ],
-            ),
+       Padding(
+         padding: const EdgeInsets.only(top:17),
+         child: Column(
+           children: [
+               Expanded(
+                 child: Stack(
+                   children: [
+                    ReorderableListView(
+                     
+                     padding: const EdgeInsets.symmetric(horizontal: 10,),
+                     onReorder: reorderData,
+                     children: <Widget>[
+                       for (int index = 0; index < storeTripDays['${currentIndex}'].length; index += 1)
+                       Card(
+                         color:const Color.fromARGB(255, 240, 238, 238),
+                         key: ValueKey(index),
+                         shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.circular(17.0),
+                         ),
+                         elevation: 2,
+                         child: Container(
+                           height:90,
+                           child: Row(
+                            children: [
+                              Container(
+                                height: 90,
+                                width: 90,
+                                 decoration: BoxDecoration(
+                                  
+                                  borderRadius: BorderRadius.circular(17),
+                                  image: DecorationImage(
+                                    image: NetworkImage(storeTripDays['${currentIndex}'][index]['photo_reference']),
+                                    fit: BoxFit.cover
+                                            
+                                  ),
+                                
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left:6,top:5),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 200,
+                                          child: Text(storeTripDays['${currentIndex}'][index]['name'],
+                                            style: GoogleFonts.cabin(
+                                                  // ignore: prefer_const_constructors
+                                                  textStyle: TextStyle(
+                                                  color: const Color.fromARGB(255, 27, 27, 27),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600,
+                                          
+                                                  ) 
+                                                ),
+                                          
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top:35),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      width:20,
+                                      child: Text('${index+1}',
+                                        style: GoogleFonts.cabin(
+                                                      // ignore: prefer_const_constructors
+                                                      textStyle: TextStyle(
+                                                      color: const Color.fromARGB(255, 27, 27, 27),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.w600,
+                                              
+                                                      ) 
+                                                    ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                           )
+                         )
+                       )
+                     ],
+                   ),
+                   Visibility(
+                    visible: isTriphasData,
+                     child: Positioned(
+                      top:410,
+                      left:20,
+                      child:Row(
+                        children: [
+                          SizedBox(
+                            width:150,
+                            child: TextButton(
+                                onPressed:() async{
+                                      showModalBottomSheet(
+                                    context: context,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
+                                      ), 
+                                    builder: (BuildContext context) { 
+      
+                                      return
+                                        SizedBox(
+                                        height:200,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                // get atrractions---------------------------------------------
+                                                GestureDetector(
+                                                  onTap: () async{
+
+                                                    final prefs = await SharedPreferences.getInstance();
+                                                    prefs.setInt('selectDay',currentIndex );
+                                                    prefs.setString('searchType','attracrions' );
+
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'attraction',isSelectPlaces: true,)));
+                                                    
+                                                  },
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            width: 70,
+                                                            height:70,
+                                                            decoration: BoxDecoration(
+                                                              color: const Color.fromARGB(255, 240, 238, 238),
+                                                              borderRadius: BorderRadius.circular(45)
+                                                            ),
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Image.asset("assets/images/flash.png",width:40,height:40),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            )
+                                                            ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        
+                                                        children: [
+                                                          Text("Attracrions")
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                // get resturents----------------------------------------------------
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    
+                                                    final prefs = await SharedPreferences.getInstance();
+                                                    prefs.setInt('selectDay',currentIndex );
+                                                    prefs.setString('searchType','resturants' );
+
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'restaurant',isSelectPlaces: true,)));
+                                                    
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(right:33,left:33),
+                                                    child: Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Container(
+                                                              width: 70,
+                                                              height:70,
+                                                              decoration: BoxDecoration(
+                                                                color: const Color.fromARGB(255, 240, 238, 238),
+                                                                borderRadius: BorderRadius.circular(45)
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children: [
+                                                                      SizedBox(child: Image.asset("assets/images/hotel.png",width:40,height:40)),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              )
+                                                              ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Text("Resturants")
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                //get your like places----------------------------------------------------------
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            width: 70,
+                                                            height:70,
+                                                            decoration: BoxDecoration(
+                                                              color: const Color.fromARGB(255, 240, 238, 238),
+                                                              borderRadius: BorderRadius.circular(45)
+                                                            ),
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Image.asset("assets/images/heartBlack.png",width:40,height:40),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            )
+                                                            ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text("Your Favorites")
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        
+                                        );
+      
+                                      }, 
+                                    
+                                  
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color.fromARGB(255, 2, 94, 14),
+                                  foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20), 
+                                    ),
+                                  
+                                ),
+                                child: Text('Add places',
+                                    style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        
+                                
+                                    ),
+                                
+                                ),
+                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left:10),
+                            child: SizedBox(
+                              width:150,
+                              child: TextButton(
+                                  onPressed:() async{
+                                    
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                    foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20), 
+                                      ),
+                                    
+                                  ),
+                                  child: Text('Create a trip',
+                                      style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          
+                                  
+                                      ),
+                                  
+                                  ),
+                                ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      
+                      ),
+                   )
+                   ]
+                 ),
+               )
+             
+              
+           ],
          ),
        );
 
@@ -510,7 +1166,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
                                                 final prefs = await SharedPreferences.getInstance();
                                                 prefs.setInt('selectDay',currentIndex );
-
+                                                prefs.setString('searchType','attracrions' );
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'attraction',isSelectPlaces: true,)));
@@ -556,8 +1212,10 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                             ),
                                             // get resturents----------------------------------------------------
                                             GestureDetector(
-                                              onTap: () {
-   
+                                              onTap: () async {
+                                                final prefs = await SharedPreferences.getInstance();
+                                                prefs.setInt('selectDay',currentIndex );
+                                                prefs.setString('searchType','resturants' );
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'restaurant',isSelectPlaces: true,)));
@@ -672,7 +1330,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                             
                             ),
                           ),
-                                           ),
+                        ),
                   
                       ],
                     ),
