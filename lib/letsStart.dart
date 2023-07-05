@@ -199,7 +199,7 @@ class _MyWidgetState extends State<letsStart> {
 
                                   Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                                    child: navigationPage(isBackButtonClick:false)));
+                                    child: navigationPage(isBackButtonClick:false,autoSelectedIndex: 0,)));
 
                                   }else{
                                     print('Unable to fetch the current country');

@@ -590,7 +590,7 @@ class _welcomePageState extends State<welcomePage> {
             print('userid:${userId}');
             Navigator.of(context).pushReplacement(customPageRoutes(
 
-            child:const navigationPage(isBackButtonClick: false,)));
+            child: navigationPage(isBackButtonClick: false,autoSelectedIndex: 0,)));
 
 
           }else{

@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
      initialRoute:initialRoute,
      routes: {
         '/login': (context) => const welcomePage(),
-        '/home': (context) =>  const navigationPage(isBackButtonClick:false),
+        '/home': (context) =>  navigationPage(isBackButtonClick:false,autoSelectedIndex: 0,),
       },
       
     );

@@ -70,7 +70,7 @@ class _createNewTripState extends State<createNewTrip> {
       'tripudget':TripBudgetController.text,
       'tripLocation':TripLocationController.text,
       'tripDescription':TripDescriptionController.text,
-      'tripCoverPhoto':defultBacPhotoUrl,
+      'tripCoverPhoto':defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
 
     };
 
@@ -575,7 +575,7 @@ class _createNewTripState extends State<createNewTrip> {
                                       Navigator.push(
                                       context,
                                       MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,)),
-                                    );
+                                      );
                                       
                                     },
                                     style: ElevatedButton.styleFrom(

@@ -10,6 +10,7 @@ import 'package:travelapp/search.dart';
 import 'package:travelapp/fechApiData.dart';
 
 import 'customPageRoutes.dart';
+import 'myTrips.dart';
 import 'navigationPage.dart';
 
 class tripDetailsPlan extends StatefulWidget {
@@ -231,7 +232,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
                           Navigator.of(context).pushReplacement(customPageRoutes(
                     
-                          child: navigationPage(isBackButtonClick:true)));  
+                          child: navigationPage(isBackButtonClick:true,autoSelectedIndex: 2,)));  
                         },
                         child: Text('No'),
                       ),
@@ -730,6 +731,24 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                               width:150,
                               child: TextButton(
                                   onPressed:() async{
+
+                                    final prefs = await SharedPreferences.getInstance();
+                                    final data = prefs.getString('trip');
+                                    final trip = jsonDecode(data!);
+                                    final enTrip = jsonEncode(storeTripDays);
+
+                                    await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],enTrip);
+
+                                    prefs.setString('trip','');
+                                    print('done');
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+                                    );
+                                    
+                                   
                                     
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -1076,13 +1095,21 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     final enTrip = jsonEncode(storeTripDays);
 
                                     await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                    trip['tripDuration'],trip['tripDescription'],'fgdf',enTrip);
-
+                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],enTrip);
+                                    
+                                    prefs.setString('trip','');
                                     print('done');
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+                                    );
+
+                                    
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                                    foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                    foregroundColor:Color.fromARGB(255, 107, 82, 82),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20), 
                                       ),

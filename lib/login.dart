@@ -253,7 +253,7 @@ class _loginState extends State<login> {
                                                        showError = false;
                                                         Navigator.of(context).pushReplacement(customPageRoutes(
                 
-                                                        child: navigationPage(isBackButtonClick:false)));
+                                                        child: navigationPage(isBackButtonClick:false,autoSelectedIndex: 0,)));
                                                        }else{
 
                                                         setState(() {

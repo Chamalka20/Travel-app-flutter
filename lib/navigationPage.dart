@@ -15,11 +15,13 @@ import 'myTrips.dart';
 
 class navigationPage extends StatefulWidget {
 
- final   bool isBackButtonClick;  
- const navigationPage({required this.isBackButtonClick, Key? key}) : super(key: key);
+ final   bool isBackButtonClick; 
+ int  autoSelectedIndex;
+
+  navigationPage({required this.isBackButtonClick,required this.autoSelectedIndex, Key? key}) : super(key: key);
 
   @override
-  State<navigationPage> createState() => _navigationPageState(isBackButtonClick);
+  State<navigationPage> createState() => _navigationPageState(isBackButtonClick,autoSelectedIndex);
 }
 
 
@@ -27,17 +29,20 @@ class navigationPage extends StatefulWidget {
 class _navigationPageState extends State<navigationPage> {
 
   bool isBackButtonClick;
+  int autoSelectedIndex;
   int _selectedIndex = 0;
   late List<Widget> _pages;
    late StreamSubscription<bool> keyboardSubscription;
   bool isKeyboardVisible = false;
 
 
-   _navigationPageState(this.isBackButtonClick);
+   _navigationPageState(this.isBackButtonClick,this.autoSelectedIndex);
   
  
  void _onItemTapped(int index) {
     setState(() {
+
+
       _selectedIndex = index;
        isBackButtonClick = true;
 
@@ -50,25 +55,48 @@ class _navigationPageState extends State<navigationPage> {
     ] ;
 
     });
+
+    
   }
 
    @override
   void initState() {
     super.initState();
-    isBackButtonClick = isBackButtonClick;
-    _selectedIndex =_selectedIndex;
-    var keyboardVisibilityController = KeyboardVisibilityController();
-    _pages = [
-      home(isBackButtonClick: isBackButtonClick),
-      const search(isTextFieldClicked: false,searchType:'city',isSelectPlaces: false,),
-      // PlanPage(),
-      // FavoritePage(),
-      // AccountPage(),
-    ];
-    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
-    
-    setState(() { isKeyboardVisible = visible; });
-    });
+
+    if(autoSelectedIndex==0){
+      isBackButtonClick = isBackButtonClick;
+      _selectedIndex =_selectedIndex;
+      var keyboardVisibilityController = KeyboardVisibilityController();
+      _pages = [
+        home(isBackButtonClick: isBackButtonClick),
+        const search(isTextFieldClicked: false,searchType:'city',isSelectPlaces: false,),
+        mytrips(),
+        myFavorite(),
+        const myAccount(),
+      ];
+      keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+      
+      setState(() { isKeyboardVisible = visible; });
+      });
+
+    }else{
+
+      _selectedIndex = autoSelectedIndex;
+
+        var keyboardVisibilityController = KeyboardVisibilityController();
+      _pages = [
+        home(isBackButtonClick: isBackButtonClick),
+        const search(isTextFieldClicked: false,searchType:'city',isSelectPlaces: false,),
+        mytrips(),
+        myFavorite(),
+        const myAccount(),
+        ];
+        keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+      
+      setState(() { isKeyboardVisible = visible; });
+      });
+      
+    }
      
   }
 
@@ -133,7 +161,7 @@ class _navigationPageState extends State<navigationPage> {
               
                 Navigator.of(context).pushReplacement(customPageRoutes(
                     
-                child: navigationPage(isBackButtonClick:true)));  
+                child: navigationPage(isBackButtonClick:true,autoSelectedIndex: 0,)));  
         
           
               
