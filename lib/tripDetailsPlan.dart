@@ -37,8 +37,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   var storeTripDays={};
   late List<dynamic>  selectedData ;
   bool isTriphasData =false;
+  bool isAddDay =false;
+  ScrollController scrollController = ScrollController();
   
   _tripDetailsPlanState(this.isSelectPlaces);
+
 
 
    @override
@@ -53,7 +56,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
       setTripDetails();
     }
    
-     
+     scrollController; 
   }
 
   _asyncMethod() async {
@@ -69,11 +72,12 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
       
 
     }else if(searchType =='attracrions'){
-      listSelectedPlaces (); 
+      setTripDetails();
       selectedData = await fechApiData.getattractionDetails();
+      listSelectedPlaces ();   
       
-
     }else if(searchType =='resturants'){
+      setTripDetails();
       selectedData = await fechApiData.getResturantDetails();
       listSelectedPlaces (); 
     }
@@ -89,18 +93,21 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
     currentIndex = prefs.getInt('selectDay')!;
     final trip = jsonDecode(data!);
 
-    final encodata = json.encode(tripDays);
-    prefs.setString('tripdays',encodata ); 
+
+    if(isSelectPlaces!= true){
+
+      final encodata = json.encode(tripDays);
+      prefs.setString('tripdays',encodata ); 
+
+    }
+    
 
     
     for(var i=1;i<=trip['tripDays'];i++){
 
       listTiles.add(i);
 
-      if(i==trip['tripDays']){
-
-        listTiles.add('addDay');
-      }
+      
     }
     print(listTiles);
 
@@ -115,29 +122,15 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     final prefs = await SharedPreferences.getInstance();
     final tripPlace = prefs.getString('TripPlaceIds');
-    final data = prefs.getString('trip');
-    currentIndex = prefs.getInt('selectDay')!;
-    final trip = jsonDecode(data!);
+    
 
     setState(() {
       isTriphasData =true;
 
     });
     
-    for(var i=1;i<=trip['tripDays'];i++){
-
-      listTiles.add(i);
-
-      if(i==trip['tripDays']){
-
-        listTiles.add('addDay');
-      }
-    }
-    print(listTiles);
-
-    setState(() {
-      listTiles;
-    });
+    
+    
 
 
     final decodeData = jsonDecode(tripPlace!);
@@ -195,7 +188,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
   }
   
-  void reorderData(int oldIndex, int newIndex){
+  Future<void> reorderData(int oldIndex, int newIndex) async {
     setState(() {
           if (oldIndex < newIndex) {
             newIndex -= 1;
@@ -203,6 +196,13 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
           final item = storeTripDays['${currentIndex}'].removeAt(oldIndex);
           storeTripDays['${currentIndex}'].insert(newIndex, item);
         });
+
+    //temporaly store user changers------------------------------------
+    final prefs = await SharedPreferences.getInstance();
+    final encodata = json.encode(storeTripDays);
+    prefs.setString('tripdays',encodata );
+
+
   }
 
   @override
@@ -288,21 +288,36 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                 children: [
                                   Expanded(
                                   child: ListView.builder(
+                                    controller: scrollController,
                                     cacheExtent: 9999,
                                     scrollDirection: Axis.horizontal, 
                                     itemCount: listTiles.length,
                                     itemBuilder: (context, index) {
-                                      // final attraction = attractionList[index];
-                                      // final placeId = attraction['id'];
-                                      // final attractionName = attraction['name'];
-                                      // final attractionImgUrl = attraction['photoRef'];
-                                      // final attractionRating = attraction['rating'];
-                                      // final address = attraction['address'];
-                                      // final type = attraction['type'];
-   
+                                      
                                       if (index == listTiles.length - 1) {
+
+                                        // add trip days------------------------------
                                         return GestureDetector(
-                                          onTap: () {
+                                          onTap: () async {
+                                            currentIndex=0;
+                                            setState(()  {
+                                              listTiles.add(listTiles.length+1);
+                                              isAddDay =true;
+                                              currentIndex =index;
+                                            });
+
+
+                                            //when tap the add button scrolling to the center-----------------------------
+                                            scrollController.animateTo(scrollController.offset + 130,
+                                              curve: Curves.linear, duration: Duration(milliseconds: 500));
+                                            //change trip days-----------------------------
+                                            final prefs = await SharedPreferences.getInstance();
+                                            final data = prefs.getString('trip');
+                                            final trip = jsonDecode(data!);
+                                            trip['tripDays'] =listTiles.length;
+                                            //Re store temproly -----------------------------------
+                                            final endata = jsonEncode(trip);
+                                            prefs.setString('trip', endata);
                                             
                                           },
                                           child: Container(
@@ -317,14 +332,22 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
    
                                         return InkWell(
                                           onTap: ()=>{
-                                            setState(() {
+
+                                            if(isSelectPlaces==true && storeTripDays['${currentIndex}']==null && isAddDay ==false){
+
+                                              null
+                                            }else{
+
+                                              setState(() {
    
-                                              day =listTiles[index];
-                                              currentIndex = index;
-                                              isSelectPlaces=false;
-                                              tripDays;
-                                            }),
-                                            print("${currentIndex+1}"),
+                                                day =listTiles[index];
+                                                currentIndex = index;
+                                                isSelectPlaces=false;
+                                                tripDays;
+                                              }),
+                                              print("${currentIndex+1}"),
+                                            }
+                                            
                                            
                                           },
                                           child: Card(
@@ -474,7 +497,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      width:20,
+                                      width:30,
                                       child: Text('${index+1}',
                                         style: GoogleFonts.cabin(
                                                       // ignore: prefer_const_constructors
@@ -701,30 +724,33 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                 ),
                               ),
                           ),
-                          SizedBox(
-                            width:140,
-                            child: TextButton(
-                                onPressed:() async{
+                          Padding(
+                            padding: const EdgeInsets.only(left:10),
+                            child: SizedBox(
+                              width:150,
+                              child: TextButton(
+                                  onPressed:() async{
+                                    
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                    foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20), 
+                                      ),
+                                    
+                                  ),
+                                  child: Text('Create a trip',
+                                      style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          
                                   
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                                  foregroundColor:Color.fromARGB(255, 255, 255, 255),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20), 
-                                    ),
+                                      ),
                                   
+                                  ),
                                 ),
-                                child: Text('Create a trip',
-                                    style: GoogleFonts.roboto(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        
-                                
-                                    ),
-                                
-                                ),
-                              ),
+                            ),
                           )
                         ],
                       ),
@@ -812,7 +838,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      width:20,
+                                      width:30,
                                       child: Text('${index+1}',
                                         style: GoogleFonts.cabin(
                                                       // ignore: prefer_const_constructors
@@ -1044,7 +1070,15 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                               width:150,
                               child: TextButton(
                                   onPressed:() async{
-                                    
+                                    final prefs = await SharedPreferences.getInstance();
+                                    final data = prefs.getString('trip');
+                                    final trip = jsonDecode(data!);
+                                    final enTrip = jsonEncode(storeTripDays);
+
+                                    await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                    trip['tripDuration'],trip['tripDescription'],'fgdf',enTrip);
+
+                                    print('done');
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color.fromARGB(255, 0, 0, 0),
@@ -1080,7 +1114,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
          ),
        );
 
-   }else if(isSelectPlaces==true && storeTripDays['${currentIndex}']==null){
+   }else if(isSelectPlaces==true && storeTripDays['${currentIndex}']==null&& isAddDay ==false){
 
      return const Center(
         child: CircularProgressIndicator(),

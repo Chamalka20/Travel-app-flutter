@@ -208,14 +208,28 @@ class fechApiData {
 
     }
 
-    static creatTrip(String? tripName,int? days,int? tripBudget, String tripLocation, String description)async{
+    static creatTrip(String? tripName,String tripBudget, String tripLocation,String tripDuration, String description,String tripCoverPhoto,String places)async{
 
-      // await FirebaseFirestore.instance
-      // .collection('users').doc(userId).update({
+      var userId ;
+      final deData = jsonDecode(places);
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
 
-      //   'location':city,
+      await FirebaseFirestore.instance
+      .collection('users').doc(userId).collection('trips').add({
+
+        
+
+            "tripName":tripName,
+            "tripBudget":tripBudget,
+            "tripLocation":tripLocation,
+            "tripDuration":tripDuration,
+            "tripDescription":description,
+            "tripCoverPhoto":tripCoverPhoto,
+            "places":deData,
+        
     
-      // });
+      });
 
 
     }

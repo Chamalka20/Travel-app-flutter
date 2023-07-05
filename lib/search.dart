@@ -34,6 +34,7 @@ class search extends StatefulWidget {
   var isTextFieldClicked;
   var searchType;
   var isSelectPlaces;
+  var isDataReady;
   String keyboardInput='';
   var searchResults=[];
   Timer? _debounce;
@@ -69,14 +70,49 @@ class search extends StatefulWidget {
   
        data = await fechApiData.getCityDetails();
       
+      if(data == null){
+
+        setState(() {
+          isDataReady= false;
+        });
+        
+      }else{
+         setState(() {
+          isDataReady= true;
+        });
+      }
       
 
     }else if(searchType =='attraction'){
       data = await fechApiData.getattractionDetails();
+
+      if(data == null){
+
+        setState(() {
+          isDataReady= false;
+        });
+        
+      }else{
+         setState(() {
+          isDataReady= true;
+        });
+      }
       
 
     }else if(searchType =='restaurant'){
       data = await fechApiData.getResturantDetails();
+
+      if(data == null){
+
+        setState(() {
+          isDataReady= false;
+        });
+        
+      }else{
+         setState(() {
+          isDataReady= true;
+        });
+      }
 
     }
   
@@ -140,6 +176,7 @@ class search extends StatefulWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(isDataReady == true){
     return 
        Scaffold(
         body:Column(
@@ -625,5 +662,11 @@ class search extends StatefulWidget {
         
     
   
+    }else{
+
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
   }
 }

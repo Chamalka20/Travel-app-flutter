@@ -66,9 +66,11 @@ class _createNewTripState extends State<createNewTrip> {
     final trip ={
       'tripName':TripNameController.text,
       'tripDays':daysDuration??0,
+      'tripDuration':dateinput.text,
       'tripudget':TripBudgetController.text,
       'tripLocation':TripLocationController.text,
       'tripDescription':TripDescriptionController.text,
+      'tripCoverPhoto':defultBacPhotoUrl,
 
     };
 
