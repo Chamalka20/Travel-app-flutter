@@ -38,6 +38,7 @@ class _mytripsState extends State<mytrips> {
       }else{
          setState(() {
           isDataReady= true;
+          print(trips.length);
         });
       }
 
@@ -90,9 +91,10 @@ class _mytripsState extends State<mytrips> {
                 child:
                   Stack(
                     children: [
+                      trips.isNotEmpty?
                       ListView.builder(
                         cacheExtent: 9999, 
-                        itemCount: trips[0].length,
+                        itemCount: trips.length,
                         itemBuilder: (context, index) {
                           return
                             Padding(
@@ -207,53 +209,86 @@ class _mytripsState extends State<mytrips> {
                         
                         }
                       
-                      ),
-                      Visibility(
-                        visible: true,
-                        child: Positioned(
-                          top:500,
-                          left:95,
+                      ):
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center, 
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center, 
                                 children: [
-                                  SizedBox(
-                                    width: 155,
-                                    height: 45,
-                                    child: TextButton(
-                                      onPressed:() async{
-                                      
-
-                                          Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',)));
-                                        
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                                        foregroundColor:Color.fromARGB(255, 255, 255, 255),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(20), 
-                                          ),
-                                        
-                                      ),
-                                      child: Text('Create a new trip',
-                                          style: GoogleFonts.roboto(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                              
-                                      
-                                          ),
-                                      
-                                      ),
-                                    ),
-                                  ),
+                                  Image.asset('assets/images/destination.png',width:50,height:50)
                                 ],
                               ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center, 
+                                children: [
+                                  Text("Create your the best trip",
+                                     style: GoogleFonts.cabin(
+                                            // ignore: prefer_const_constructors
+                                            textStyle: TextStyle(
+                                            color: const Color.fromARGB(255, 27, 27, 27),
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                                                          
+                                            ) 
+                                            )
+                                  )
+                                ],
+                              )
+                        
                             ],
                           ),
-                          
                         ),
+                      ),
+                      Positioned(
+                        top:500,
+                        left:95,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 155,
+                                  height: 45,
+                                  child: TextButton(
+                                    onPressed:() async{
+                                    
+
+                                        Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',)));
+                                      
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                      foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20), 
+                                        ),
+                                      
+                                    ),
+                                    child: Text('Create a new trip',
+                                        style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            
+                                    
+                                        ),
+                                    
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        
                       )
                     ]
                   )
