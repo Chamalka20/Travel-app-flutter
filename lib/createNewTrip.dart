@@ -16,18 +16,19 @@ class createNewTrip extends StatefulWidget {
 
   final String placeName;
   final String placePhotoUrl;
-  
+  final isEditTrip;
 
-  const createNewTrip({super.key, required this.placeName,required this.placePhotoUrl }) ;
+  const createNewTrip({super.key, required this.placeName,required this.placePhotoUrl,required this.isEditTrip }) ;
 
   @override
-  State<createNewTrip> createState() => _createNewTripState(placeName,placePhotoUrl);
+  State<createNewTrip> createState() => _createNewTripState(placeName,placePhotoUrl,isEditTrip);
 }
 
 class _createNewTripState extends State<createNewTrip> {
   var isDataReady =false;
   final String placeName;
-  final String backGroundPlacePhotoUrl;
+  final bool isEditTrip;
+  late final String backGroundPlacePhotoUrl;
   late final defultBacPhotoUrl;
   late final String planTrips = '5';
   late  String tripName ='';
@@ -40,15 +41,21 @@ class _createNewTripState extends State<createNewTrip> {
   final TripLocationController = TextEditingController();
   final TripDescriptionController = TextEditingController();
 
-  _createNewTripState(this.placeName,this.backGroundPlacePhotoUrl);
+  _createNewTripState(this.placeName,this.backGroundPlacePhotoUrl,this.isEditTrip);
 
   
   @override
   void initState(){
      super.initState();
     //get data list from api-------------------------------
+    getBackGroundImage ();
+
+    if(isEditTrip ==true){
+      editTrip();
+
+    }
   
-   getBackGroundImage ();
+   
     
   }
 
@@ -61,6 +68,23 @@ class _createNewTripState extends State<createNewTrip> {
     TripDescriptionController.dispose();
   }
 
+  Future<void> editTrip()async{
+
+    final prefs = await SharedPreferences.getInstance();
+    final endata = prefs.getString('tripdays');
+    final storeTripDays =jsonDecode(endata!);
+
+    TripNameController.text =storeTripDays['tripName'];
+    tripName =storeTripDays['tripName'];
+
+    defultBacPhotoUrl =storeTripDays['tripCoverPhoto'];
+
+    dateinput.text =storeTripDays['tripDuration'];
+    TripBudgetController.text =storeTripDays['tripBudget'];
+    TripLocationController.text =storeTripDays['tripLocation'];
+    TripDescriptionController.text =storeTripDays['tripDescription'];
+  
+  }
 
   Future<void> createTrip ()async{
 
@@ -127,11 +151,11 @@ class _createNewTripState extends State<createNewTrip> {
       final data = jsonDecode(response.body);
       final photoUrl = data['photos'][17]['src']['medium']??'https://www.pexels.com/photo/mountain-covered-snow-under-star-572897/';
 
-      if(placeName!="" && backGroundPlacePhotoUrl!=""){
+      if(placeName!="" && backGroundPlacePhotoUrl!="" && isEditTrip ==false){
 
           defultBacPhotoUrl =  backGroundPlacePhotoUrl ; //set your choose location photo
           tripName =  placeName;     
-      }else{
+      }else if(isEditTrip ==false){
 
         defultBacPhotoUrl = photoUrl;
 

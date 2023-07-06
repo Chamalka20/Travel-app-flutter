@@ -1745,7 +1745,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                       //dierect place details page again---------------------
                                                                        Navigator.push(
                                                                         context,
-                                                                        MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl:'')),
+                                                                        MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl:'',isEditTrip: false,)),
                                                                       ),
                                                                     },
                                                                     child: Container(
@@ -1808,7 +1808,7 @@ class _locationDetailsState extends State<locationDetails> {
                                     //derect trip plan page---------------------------------
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) =>  createNewTrip(placeName:searchResults[0]['name'],placePhotoUrl:searchResults[0]['photo_reference'])),
+                                      MaterialPageRoute(builder: (context) =>  createNewTrip(placeName:searchResults[0]['name'],placePhotoUrl:searchResults[0]['photo_reference'],isEditTrip: false,)),
                                     );
                                     
                                   },

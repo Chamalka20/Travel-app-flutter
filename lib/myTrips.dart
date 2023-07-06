@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/createNewTrip.dart';
 import 'package:travelapp/fechApiData.dart';
 
@@ -38,7 +41,7 @@ class _mytripsState extends State<mytrips> {
       }else{
          setState(() {
           isDataReady= true;
-          print(trips.length);
+          print(trips[1]);
         });
       }
 
@@ -102,8 +105,15 @@ class _mytripsState extends State<mytrips> {
                               child: Column(
                                 children: [
                                   GestureDetector(
-                                    onTap: () {
-                                      print('fgdfgd');
+                                    onTap: () async {
+
+                                      final prefs = await SharedPreferences.getInstance();
+                                      final encodata = json.encode(trips[index]);
+                                      prefs.setString('tripdays',encodata );
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: true,)));
                                     },
                                     child: Container(
                                       width: 340,
@@ -262,7 +272,7 @@ class _mytripsState extends State<mytrips> {
 
                                         Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',)));
+                                        MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: false,)));
                                       
                                     },
                                     style: ElevatedButton.styleFrom(
