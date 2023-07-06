@@ -208,7 +208,8 @@ class fechApiData {
 
     }
 
-    static creatTrip(String? tripName,String tripBudget, String tripLocation,String tripDuration, String description,String tripCoverPhoto,String places)async{
+    static creatTrip(String? tripName,String tripBudget, String tripLocation,String tripDuration, 
+            String description,String tripCoverPhoto,String endDate,String places)async{
 
       var userId ;
       final deData = jsonDecode(places);
@@ -226,11 +227,34 @@ class fechApiData {
             "tripDuration":tripDuration,
             "tripDescription":description,
             "tripCoverPhoto":tripCoverPhoto,
+            'endDate':endDate,
             "places":deData,
         
     
       });
 
+
+    }
+
+    static getTrips ()async{
+
+      List data =[];
+      var userId;
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+
+      await FirebaseFirestore.instance
+        .collection('users').doc(userId).collection('trips').get().then((QuerySnapshot querySnapshot) => {
+
+           querySnapshot.docs.forEach((doc) {
+              
+                data.add(doc.data()) ;
+              
+              
+            })
+        });
+      print(data);
+      return data;
 
     }
 

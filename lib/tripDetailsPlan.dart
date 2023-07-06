@@ -738,7 +738,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     final enTrip = jsonEncode(storeTripDays);
 
                                     await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],enTrip);
+                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['endDate'],enTrip);
 
                                     prefs.setString('trip','');
                                     print('done');
@@ -1095,7 +1095,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     final enTrip = jsonEncode(storeTripDays);
 
                                     await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],enTrip);
+                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['endDate'],enTrip);
                                     
                                     prefs.setString('trip','');
                                     print('done');

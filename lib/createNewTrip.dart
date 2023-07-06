@@ -25,12 +25,14 @@ class createNewTrip extends StatefulWidget {
 }
 
 class _createNewTripState extends State<createNewTrip> {
+  var isDataReady =false;
   final String placeName;
   final String backGroundPlacePhotoUrl;
   late final defultBacPhotoUrl;
   late final String planTrips = '5';
   late  String tripName ='';
   var daysDuration;
+  var endDate;
 
   TextEditingController dateinput = TextEditingController(); 
   final TripNameController = TextEditingController();
@@ -47,7 +49,6 @@ class _createNewTripState extends State<createNewTrip> {
     //get data list from api-------------------------------
   
    getBackGroundImage ();
-
     
   }
 
@@ -71,7 +72,7 @@ class _createNewTripState extends State<createNewTrip> {
       'tripLocation':TripLocationController.text,
       'tripDescription':TripDescriptionController.text,
       'tripCoverPhoto':defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
-
+      'endDate':endDate,
     };
 
     print(trip);
@@ -135,6 +136,18 @@ class _createNewTripState extends State<createNewTrip> {
         defultBacPhotoUrl = photoUrl;
 
       }
+
+      if(defultBacPhotoUrl == null){
+
+        setState(() {
+          isDataReady= false;
+        });
+        
+      }else{
+         setState(() {
+          isDataReady= true;
+        });
+      }
       
 
     }else{
@@ -149,6 +162,9 @@ class _createNewTripState extends State<createNewTrip> {
   
   @override
   Widget build(BuildContext context) {
+
+    if(isDataReady == true){
+
     return WillPopScope(
       onWillPop: () async {
          Navigator.pop(context);
@@ -376,7 +392,7 @@ class _createNewTripState extends State<createNewTrip> {
                                         String formattedDate2 = DateFormat('yyyy/MM/dd').format(pickedDate.end); 
                                         print(pickedDate.duration.inDays); 
                                         daysDuration =pickedDate.duration.inDays;
-                  
+                                        endDate = formattedDate2;
                                         setState(() {
                                           dateinput.text = '${formattedDate1} - ${formattedDate2}';                      //set output date to TextField value. 
                                         });
@@ -615,5 +631,12 @@ class _createNewTripState extends State<createNewTrip> {
         ),
       ),
     );
+
+    }else{
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+
+    }
   }
 }
