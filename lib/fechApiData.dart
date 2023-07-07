@@ -296,7 +296,7 @@ class fechApiData {
 
       var userId ;
       var tripId;
-      //final deData = jsonDecode(places);
+      final deData = jsonDecode(places);
       final prefs = await SharedPreferences.getInstance();
       userId = prefs.getString('userDbId');
       tripId=prefs.getString('triDocId');
@@ -312,7 +312,7 @@ class fechApiData {
             "tripDescription":description,
             "tripCoverPhoto":tripCoverPhoto,
             'endDate':endDate,
-            "places":'',
+            "places":deData,
 
       });
     }

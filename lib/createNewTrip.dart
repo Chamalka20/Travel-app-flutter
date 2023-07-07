@@ -624,9 +624,12 @@ class _createNewTripState extends State<createNewTrip> {
                                                 final endata = prefs.getString('tripdays');
                                                 final storeTripDays =jsonDecode(endata!);
 
+                                                final places = jsonEncode(storeTripDays['places']);
+                                                
+
                                                 await fechApiData.editTrip(TripNameController.text,TripBudgetController.text
                                                     ,TripLocationController.text,dateinput.text,TripDescriptionController.text,
-                                                    defultBacPhotoUrl??'','','');
+                                                    defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,endDate?? storeTripDays['endDate'],places);
 
                                                 Navigator.push(
                                                 context,
