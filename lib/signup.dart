@@ -377,6 +377,9 @@ class _signupState extends State<signup> {
 
                                                           if(userId!=null){
                                                             // ignore: use_build_context_synchronously
+                                                            final prefs = await SharedPreferences.getInstance();
+                                                            await prefs.setBool('isLocalAccount', true);
+
                                                             Navigator.of(context).pushReplacement(MaterialPageRoute(
                                                               
                                                               builder:(context)=> letsStart()));

@@ -35,9 +35,11 @@ class _myAccountState extends State<myAccount> {
 
   Future <void> logOut()async{
 
-    await GoogleSigninApi.logout();
+    final prefs = await SharedPreferences.getInstance();
+    bool? isLocalAccount = prefs.getBool('isLocalAccount');
     
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  if(isLocalAccount ==true){
+
     await prefs.setBool('isLoggedIn', false);
 
     // ignore: use_build_context_synchronously
@@ -45,6 +47,24 @@ class _myAccountState extends State<myAccount> {
     context,
     MaterialPageRoute(builder: (context) =>  welcomePage()),
     );
+
+
+
+  }else{
+     await GoogleSigninApi.logout();
+
+     await prefs.setBool('isLoggedIn', false);
+
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>  welcomePage()),
+    );
+
+  }
+
+  
+    
 
   }
 
@@ -125,7 +145,7 @@ class _myAccountState extends State<myAccount> {
                             Padding(
                               padding: const EdgeInsets.only(left:6),
                               child: SizedBox(
-                                width:200,
+                                width:250,
                                 child: Text("${data['email']}",
                                 style: GoogleFonts.poppins(
                                     textStyle: const TextStyle(
@@ -175,7 +195,7 @@ class _myAccountState extends State<myAccount> {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(top:390),
+            padding: const EdgeInsets.only(top:300),
             child: SizedBox(
               width: 200,
               height: 45,
@@ -183,6 +203,7 @@ class _myAccountState extends State<myAccount> {
                 onPressed: () async {
                   
                   logOut();
+
                   
                 },
                 style: ElevatedButton.styleFrom(

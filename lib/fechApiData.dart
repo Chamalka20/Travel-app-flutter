@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class fechApiData {
 
@@ -216,11 +217,13 @@ class fechApiData {
       final prefs = await SharedPreferences.getInstance();
       userId = prefs.getString('userDbId');
 
+      var uuid = const Uuid();
+
       await FirebaseFirestore.instance
       .collection('users').doc(userId).collection('trips').add({
 
         
-
+            "tripId":uuid.v1(),
             "tripName":tripName,
             "tripBudget":tripBudget,
             "tripLocation":tripLocation,
@@ -253,9 +256,65 @@ class fechApiData {
               
             })
         });
-     
+      print(data);
       return data;
 
+    }
+
+    static getTripDocId(String tripId)async{
+
+      var userId ;
+      var userDocId;
+
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+
+      await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId).collection('trips')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+            querySnapshot.docs.forEach((doc) {
+
+              if(doc['tripId']==tripId){
+              
+                userDocId = doc.id;
+              
+              }
+            });
+            
+      });
+
+      return userDocId;
+
+
+    }
+
+
+    static editTrip (String? tripName,String tripBudget, String tripLocation,String tripDuration, 
+            String description,String tripCoverPhoto,String endDate,String places)async{
+
+      var userId ;
+      var tripId;
+      //final deData = jsonDecode(places);
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+      tripId=prefs.getString('triDocId');
+
+      print('tripocid:${tripId}');
+       await FirebaseFirestore.instance
+      .collection('users').doc(userId).collection('trips').doc(tripId).update({
+        
+            "tripName":tripName,
+            "tripBudget":tripBudget,
+            "tripLocation":tripLocation,
+            "tripDuration":tripDuration,
+            "tripDescription":description,
+            "tripCoverPhoto":tripCoverPhoto,
+            'endDate':endDate,
+            "places":'',
+
+      });
     }
 
   

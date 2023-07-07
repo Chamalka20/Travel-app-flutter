@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -32,23 +33,26 @@ class _mytripsState extends State<mytrips> {
 
     trips=await fechApiData.getTrips();
 
-    if(trips == null){
-
-        setState(() {
-          isDataReady= false;
-        });
-        
-      }else{
-         setState(() {
-          isDataReady= true;
-          print(trips[1]);
-        });
-      }
-
     setState(() {
       trips;
     });
 
+    if(trips == null){
+
+        setState(() {
+          isDataReady= false;
+          
+        });
+        
+    }else{
+         setState(() {
+          isDataReady= true;
+          
+          print(trips[1]);
+        });
+      }
+
+    
   }
 
 
@@ -110,6 +114,12 @@ class _mytripsState extends State<mytrips> {
                                       final prefs = await SharedPreferences.getInstance();
                                       final encodata = json.encode(trips[index]);
                                       prefs.setString('tripdays',encodata );
+
+                                      final tripId = trips[0]['tripId'];
+                                      //find database user selectdoc id -----------------------------------------
+                                      final tripDocId=await fechApiData.getTripDocId(tripId);
+
+                                      await prefs.setString('triDocId',tripDocId );
 
                                       Navigator.push(
                                         context,

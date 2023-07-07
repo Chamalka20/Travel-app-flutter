@@ -53,6 +53,7 @@ dependencies:
   syncfusion_flutter_maps: ^21.2.10
   cloud_firestore: ^4.8.2
   firebase_auth: ^4.6.3
+  uuid: ^3.0.7
   
 
 

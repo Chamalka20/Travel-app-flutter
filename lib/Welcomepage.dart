@@ -286,6 +286,7 @@ class _welcomePageState extends State<welcomePage> {
 
                                                                                 final prefs = await SharedPreferences.getInstance();
                                                                                 prefs.setString('userDbId', userId);
+                                                                                await prefs.setBool('isLocalAccount', true);
 
                                                                                 Navigator.of(context).pushReplacement(customPageRoutes(
                 
@@ -586,6 +587,7 @@ class _welcomePageState extends State<welcomePage> {
             final prefs = await SharedPreferences.getInstance();
             prefs.setString('userDbId', userId);
             await prefs.setBool('isLoggedIn', true);
+            await prefs.setBool('isLocalAccount', false);
 
             print('userid:${userId}');
             Navigator.of(context).pushReplacement(customPageRoutes(
@@ -602,7 +604,8 @@ class _welcomePageState extends State<welcomePage> {
               final prefs = await SharedPreferences.getInstance();
               prefs.setString('userDbId', userId);
               await prefs.setBool('isLoggedIn', true);
-              
+              await prefs.setBool('isLocalAccount', false);
+
               // ignore: use_build_context_synchronously
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                 

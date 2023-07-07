@@ -9,7 +9,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelapp/navigationPage.dart';
 import 'package:travelapp/tripDetailsPlan.dart';
+import 'package:travelapp/fechApiData.dart';
 
 
 class createNewTrip extends StatefulWidget {
@@ -604,39 +606,92 @@ class _createNewTripState extends State<createNewTrip> {
                                  ),
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20.0),
-                              child: SizedBox(
-                                  width: 270,
-                                  height: 45,
-                                  child: TextButton(
-                                    onPressed: () {
-                                      createTrip ();
-                                      Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,)),
-                                      );
-                                      
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                                      foregroundColor:Color.fromARGB(255, 255, 255, 255),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20), 
-                                        ),
-                                      
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Visibility(
+                                      visible: isEditTrip,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 20.0,right: 20),
+                                        child: SizedBox(
+                                            width: 100,
+                                            height: 45,
+                                            child: TextButton(
+                                              onPressed: () async {
+                                                //save user edit details--------------------------------------
+                                                final prefs = await SharedPreferences.getInstance();
+                                                final endata = prefs.getString('tripdays');
+                                                final storeTripDays =jsonDecode(endata!);
+
+                                                await fechApiData.editTrip(TripNameController.text,TripBudgetController.text
+                                                    ,TripLocationController.text,dateinput.text,TripDescriptionController.text,
+                                                    defultBacPhotoUrl??'','','');
+
+                                                Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+                                                );
+                                                
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                                foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20), 
+                                                  ),
+                                                
+                                              ),
+                                              child: Text('Save',
+                                                  style: GoogleFonts.roboto(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16,
+                                                      
+                                              
+                                                  ),
+                                              
+                                              ),
+                                            ),
+                                          ),
+                                      ),
                                     ),
-                                    child: Text('Next',
-                                        style: GoogleFonts.roboto(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 20.0,),
+                                      child: SizedBox(
+                                          width:isEditTrip?100: 270,
+                                          height: 45,
+                                          child: TextButton(
+                                            onPressed: () {
+                                              createTrip ();
+                                              Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,)),
+                                              );
+                                              
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                              foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(20), 
+                                                ),
+                                              
+                                            ),
+                                            child: Text(isEditTrip?"Edit places":'Next',
+                                                style: GoogleFonts.roboto(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                    
                                             
-                                    
+                                                ),
+                                            
+                                            ),
+                                          ),
                                         ),
-                                    
                                     ),
-                                  ),
+                                  ],
                                 ),
+                              ],
                             ),
 
                           ],
