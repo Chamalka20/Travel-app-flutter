@@ -198,6 +198,12 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
   Future <void> editTrip()async{
 
+    final prefs = await SharedPreferences.getInstance();
+    final editData = prefs.getString('trip');
+    final trip = jsonDecode(editData!);
+    
+    storeTripDays = jsonDecode(trip['places']);
+    
 
 
   } 
