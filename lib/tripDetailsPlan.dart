@@ -56,7 +56,8 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
        _asyncMethod() ;
 
     }else if(isSelectPlaces == false && isEditPlace== true) {
-    
+
+      setTripDetails();
       editTrip();
     }else{
 

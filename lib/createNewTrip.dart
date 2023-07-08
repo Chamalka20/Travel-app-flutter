@@ -122,7 +122,7 @@ class _createNewTripState extends State<createNewTrip> {
 
       final trip ={
         'tripName':TripNameController.text,
-        'tripDays':daysDuration!=null?daysDuration:int.parse(storeTripDays['duration']),
+        'tripDays':daysDuration!=null?daysDuration:int.parse(storeTripDays['duration'])+1,
         'tripDuration':dateinput.text,
         'tripudget':TripBudgetController.text,
         'tripLocation':TripLocationController.text,
@@ -664,7 +664,7 @@ class _createNewTripState extends State<createNewTrip> {
 
                                                 await fechApiData.editTrip(TripNameController.text,TripBudgetController.text
                                                     ,TripLocationController.text,dateinput.text,TripDescriptionController.text,
-                                                    defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,daysDuration?? storeTripDays['duration'],endDate?? storeTripDays['endDate'],places);
+                                                    defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,daysDuration==null? storeTripDays['duration']:daysDuration.toString(),endDate?? storeTripDays['endDate'],places);
 
                                                 Navigator.push(
                                                 context,
