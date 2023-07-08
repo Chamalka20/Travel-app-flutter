@@ -503,7 +503,7 @@ class search extends StatefulWidget {
 
                                              Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,)));
+                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: false,)));
                                             
                                           },
                                           style: ElevatedButton.styleFrom(

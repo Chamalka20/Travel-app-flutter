@@ -16,19 +16,21 @@ import 'navigationPage.dart';
 class tripDetailsPlan extends StatefulWidget {
 
  bool isSelectPlaces;
+ bool isEditPlace;
 
- tripDetailsPlan({required this.isSelectPlaces, Key? key}) : super(key: key);
+ tripDetailsPlan({required this.isSelectPlaces,required this.isEditPlace, Key? key}) : super(key: key);
  
   
 
   @override
-  State<tripDetailsPlan> createState() => _tripDetailsPlanState(isSelectPlaces);
+  State<tripDetailsPlan> createState() => _tripDetailsPlanState(isSelectPlaces,isEditPlace);
 }
 
 class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
   bool isSelectPlaces;
-  
+  bool isEditPlace;
+
   List listTiles = [];
   var day = 1;
   var currentIndex = 0 ;
@@ -41,7 +43,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   bool isAddDay =false;
   ScrollController scrollController = ScrollController();
   
-  _tripDetailsPlanState(this.isSelectPlaces);
+  _tripDetailsPlanState(this.isSelectPlaces,this.isEditPlace);
 
 
 
@@ -49,9 +51,13 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   void initState() {
     super.initState();
 
-    if(isSelectPlaces == true) {
+    if(isSelectPlaces == true && isEditPlace== false) {
 
        _asyncMethod() ;
+
+    }else if(isSelectPlaces == false && isEditPlace== true) {
+    
+      editTrip();
     }else{
 
       setTripDetails();
@@ -188,7 +194,13 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
      
 
   }
-  
+
+  Future <void> editTrip()async{
+
+
+
+  } 
+
   Future<void> reorderData(int oldIndex, int newIndex) async {
     setState(() {
           if (oldIndex < newIndex) {
@@ -738,7 +750,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     final enTrip = jsonEncode(storeTripDays);
 
                                     await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['endDate'],enTrip);
+                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
 
                                     prefs.setString('trip','');
                                     print('done');
@@ -1095,7 +1107,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     final enTrip = jsonEncode(storeTripDays);
 
                                     await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['endDate'],enTrip);
+                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
                                     
                                     prefs.setString('trip','');
                                     print('done');

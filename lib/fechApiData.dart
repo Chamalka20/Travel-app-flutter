@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -210,7 +211,7 @@ class fechApiData {
     }
 
     static creatTrip(String? tripName,String tripBudget, String tripLocation,String tripDuration, 
-            String description,String tripCoverPhoto,String endDate,String places)async{
+            String description,String tripCoverPhoto,String duration,String endDate,String places)async{
 
       var userId ;
       final deData = jsonDecode(places);
@@ -230,6 +231,7 @@ class fechApiData {
             "tripDuration":tripDuration,
             "tripDescription":description,
             "tripCoverPhoto":tripCoverPhoto,
+            "duration":duration,
             'endDate':endDate,
             "places":deData,
         
@@ -292,7 +294,7 @@ class fechApiData {
 
 
     static editTrip (String? tripName,String tripBudget, String tripLocation,String tripDuration, 
-            String description,String tripCoverPhoto,String endDate,String places)async{
+            String description,String tripCoverPhoto,String duration,String endDate,String places)async{
 
       var userId ;
       var tripId;
@@ -311,6 +313,7 @@ class fechApiData {
             "tripDuration":tripDuration,
             "tripDescription":description,
             "tripCoverPhoto":tripCoverPhoto,
+            "duration":duration,
             'endDate':endDate,
             "places":deData,
 

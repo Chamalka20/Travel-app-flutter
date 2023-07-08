@@ -90,24 +90,58 @@ class _createNewTripState extends State<createNewTrip> {
 
   Future<void> createTrip ()async{
 
-    final trip ={
-      'tripName':TripNameController.text,
-      'tripDays':daysDuration??0,
-      'tripDuration':dateinput.text,
-      'tripudget':TripBudgetController.text,
-      'tripLocation':TripLocationController.text,
-      'tripDescription':TripDescriptionController.text,
-      'tripCoverPhoto':defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
-      'endDate':endDate,
-    };
+    if(isEditTrip != true){
+    
+      final trip ={
+        'tripName':TripNameController.text,
+        'tripDays':daysDuration??0,
+        'tripDuration':dateinput.text,
+        'tripudget':TripBudgetController.text,
+        'tripLocation':TripLocationController.text,
+        'tripDescription':TripDescriptionController.text,
+        'tripCoverPhoto':defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
+        'endDate':endDate,
+      };
 
-    print(trip);
+      print(trip);
 
-  //temporaly store trip data -------------------------
-    final prefs = await SharedPreferences.getInstance();
-    final data = json.encode(trip);
-    prefs.setString('trip',data );
-    prefs.setInt('selectDay',0 );
+    //temporaly store trip data -------------------------
+      final prefs = await SharedPreferences.getInstance();
+      final data = json.encode(trip);
+      prefs.setString('trip',data );
+      prefs.setInt('selectDay',0 );
+
+    }else{
+
+      final prefs = await SharedPreferences.getInstance();
+      final endata = prefs.getString('tripdays');
+      final storeTripDays =jsonDecode(endata!);
+
+      final places = jsonEncode(storeTripDays['places']);
+
+
+      final trip ={
+        'tripName':TripNameController.text,
+        'tripDays':daysDuration!=null?daysDuration:int.parse(storeTripDays['duration']),
+        'tripDuration':dateinput.text,
+        'tripudget':TripBudgetController.text,
+        'tripLocation':TripLocationController.text,
+        'tripDescription':TripDescriptionController.text,
+        'tripCoverPhoto':defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
+        'endDate':endDate!=null?endDate:storeTripDays['endDate'],
+        'places':places,
+      };
+
+      print(trip);
+
+    //temporaly store trip data -------------------------
+      
+      final data = json.encode(trip);
+      prefs.setString('trip',data );
+      prefs.setInt('selectDay',0 );
+
+
+    }
 
 
   }
@@ -619,6 +653,7 @@ class _createNewTripState extends State<createNewTrip> {
                                             height: 45,
                                             child: TextButton(
                                               onPressed: () async {
+
                                                 //save user edit details--------------------------------------
                                                 final prefs = await SharedPreferences.getInstance();
                                                 final endata = prefs.getString('tripdays');
@@ -629,7 +664,7 @@ class _createNewTripState extends State<createNewTrip> {
 
                                                 await fechApiData.editTrip(TripNameController.text,TripBudgetController.text
                                                     ,TripLocationController.text,dateinput.text,TripDescriptionController.text,
-                                                    defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,endDate?? storeTripDays['endDate'],places);
+                                                    defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,daysDuration?? storeTripDays['duration'],endDate?? storeTripDays['endDate'],places);
 
                                                 Navigator.push(
                                                 context,
@@ -665,11 +700,26 @@ class _createNewTripState extends State<createNewTrip> {
                                           height: 45,
                                           child: TextButton(
                                             onPressed: () {
-                                              createTrip ();
-                                              Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,)),
-                                              );
+
+                                              if(isEditTrip ==true){
+                                                createTrip ();
+                                                Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true,)),
+                                                );
+
+
+                                              }else{
+                                                
+                                                createTrip ();
+                                                Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: false,)),
+                                                );
+                                                
+                                              }
+
+                                              
                                               
                                             },
                                             style: ElevatedButton.styleFrom(
