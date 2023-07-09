@@ -115,6 +115,7 @@ flutter:
     - assets/images/mapClick.png
     - assets/images/searchClick.png
     - assets/images/userClick.png
+    - assets/images/likeClick.png
     - assets/images/Boat-Windows-10-Wallpaper.jpg
     - assets/images/cloudy.png
     - assets/images/mostly-cloudy.png
