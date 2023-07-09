@@ -320,6 +320,24 @@ class fechApiData {
       });
     }
 
+    static countTotalTrips()async{
+
+      var userId ;
+      var count ;
+
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+
+      await FirebaseFirestore.instance
+      .collection('users').doc(userId).collection('trips').count().get().then(
+        
+        (ele) => count=ele.count,
+        
+        );
+
+        return count;
+
+    }
   
 }
 

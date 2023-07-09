@@ -183,9 +183,11 @@ class _createNewTripState extends State<createNewTrip> {
 
     if (response.statusCode == 200) {
 
+      final tripCount=await fechApiData.countTotalTrips();
       print('photo url get susses');
+      
       final data = jsonDecode(response.body);
-      final photoUrl = data['photos'][17]['src']['medium']??'https://www.pexels.com/photo/mountain-covered-snow-under-star-572897/';
+      final photoUrl = data['photos'][tripCount]['src']['medium']??'https://www.pexels.com/photo/mountain-covered-snow-under-star-572897/';
 
       if(placeName!="" && backGroundPlacePhotoUrl!="" && isEditTrip ==false){
 
@@ -699,9 +701,12 @@ class _createNewTripState extends State<createNewTrip> {
                                           width:isEditTrip?100: 270,
                                           height: 45,
                                           child: TextButton(
-                                            onPressed: () {
+                                            onPressed: () async {
+                                              final prefs = await SharedPreferences.getInstance();
 
                                               if(isEditTrip ==true){
+                                                 
+                                                prefs.setBool('isEditTrip',true);
                                                 createTrip ();
                                                 Navigator.push(
                                                 context,
@@ -710,7 +715,7 @@ class _createNewTripState extends State<createNewTrip> {
 
 
                                               }else{
-                                                
+                                                prefs.setBool('isEditTrip',false);
                                                 createTrip ();
                                                 Navigator.push(
                                                 context,

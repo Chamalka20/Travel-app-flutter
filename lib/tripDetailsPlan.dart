@@ -53,7 +53,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     if(isSelectPlaces == true && isEditPlace== false) {
 
-       _asyncMethod() ;
+       getPlacesData() ;
+
+    }else if(isSelectPlaces == true && isEditPlace== true) {
+
+      getPlacesData() ;
 
     }else if(isSelectPlaces == false && isEditPlace== true) {
 
@@ -67,10 +71,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
      scrollController; 
   }
 
-  _asyncMethod() async {
+  getPlacesData() async {
 
     final prefs = await SharedPreferences.getInstance();
     final searchType = prefs.getString('searchType');
+    final isEditPlace =prefs.getBool('isEditTrip');
     //get data list from database-------------------------------
     
     if(searchType =='city'){
@@ -80,14 +85,28 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
       
 
     }else if(searchType =='attracrions'){
-      setTripDetails();
-      selectedData = await fechApiData.getattractionDetails();
-      listSelectedPlaces ();   
+      //check if ceate trip or user edit the trip---------------------------------
+      if(isEditPlace== false){
+        setTripDetails();
+        selectedData = await fechApiData.getattractionDetails();
+        listSelectedPlaces (); 
+      }else{
+        setTripDetails();
+        selectedData = await fechApiData.getattractionDetails();
+        editTrip();
+      }  
       
     }else if(searchType =='resturants'){
-      setTripDetails();
-      selectedData = await fechApiData.getResturantDetails();
-      listSelectedPlaces (); 
+      //check if ceate trip or user edit the trip---------------------------------
+      if(isEditPlace== false){
+        setTripDetails();
+        selectedData = await fechApiData.getResturantDetails();
+        listSelectedPlaces (); 
+      }else{
+        setTripDetails();
+        selectedData = await fechApiData.getResturantDetails();
+        editTrip();
+      }  
     }
     
 
@@ -125,11 +144,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
    }
 
-
+//--------------------------------------------------------------------------
   Future <void> listSelectedPlaces ()async{
 
     final prefs = await SharedPreferences.getInstance();
-    final tripPlace = prefs.getString('TripPlaceIds');
+    final setectedTripPlaces = prefs.getString('TripPlaceIds');
     
 
     setState(() {
@@ -138,10 +157,8 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
     });
     
     
-    
 
-
-    final decodeData = jsonDecode(tripPlace!);
+    final decodeData = jsonDecode(setectedTripPlaces!);
 
     addPlaces=selectedData.map((element) { 
 
@@ -195,15 +212,73 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
      
 
   }
-
+//-----------------------------------------------------------------------
   Future <void> editTrip()async{
 
     final prefs = await SharedPreferences.getInstance();
     final editData = prefs.getString('trip');
+    final setectedTripPlaces = prefs.getString('TripPlaceIds');
     final trip = jsonDecode(editData!);
-    
-    storeTripDays = jsonDecode(trip['places']);
-    
+
+     setState(() {
+      isTriphasData =true;
+
+    });
+
+
+    if(isSelectPlaces ==true){
+
+      final enData =prefs.getString('editPlaces');
+      storeTripDays = jsonDecode(enData!);
+
+      final decodeData = jsonDecode(setectedTripPlaces!);
+
+      addPlaces=selectedData.map((element) { 
+
+      if(decodeData[0]['places'].contains(element['placeId'])){
+        
+          return {
+            "name":element['title'],
+            "photo_reference":element['imageUrls'][0],
+
+          };
+
+        }
+
+      }).where((element) => element != null).toList();
+
+      //-----------------------------------------------------------
+
+      if(storeTripDays['${currentIndex}'] == null){
+
+        storeTripDays['${currentIndex}']=addPlaces;
+
+        final encodata = json.encode(storeTripDays);
+        prefs.setString('editPlaces',encodata );
+
+        print(storeTripDays);
+
+      }else{
+        
+        storeTripDays['${currentIndex}']+=addPlaces;
+
+        final encodata = json.encode(storeTripDays);
+        prefs.setString('editPlaces',encodata );
+
+        print(storeTripDays);
+
+      }
+
+
+
+    }else{
+
+      storeTripDays = jsonDecode(trip['places']);
+      //temperaly store editable data sheared memory------------------------
+      final enEditPlaces =jsonEncode(storeTripDays);
+      prefs.setString('editPlaces',enEditPlaces);
+
+    }
 
 
   } 
@@ -756,18 +831,35 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     final trip = jsonDecode(data!);
                                     final enTrip = jsonEncode(storeTripDays);
 
-                                    await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
+                                    if(isEditPlace == true){
 
-                                    prefs.setString('trip','');
-                                    print('done');
+                                      await fechApiData.editTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
 
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
-                                    );
+                                       prefs.setString('trip','');
+                                      print('done');
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+                                      );
+
+                                    }else{
+
+                                      await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
+
+                                      prefs.setString('trip','');
+                                      print('done');
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+                                      );
+
+                                    }
+
                                     
-                                   
                                     
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -778,7 +870,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                       ),
                                     
                                   ),
-                                  child: Text('Create a trip',
+                                  child: Text(isEditPlace?'Save changes':'Create a trip',
                                       style: GoogleFonts.roboto(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
@@ -1113,28 +1205,47 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     final trip = jsonDecode(data!);
                                     final enTrip = jsonEncode(storeTripDays);
 
-                                    await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                    trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
-                                    
-                                    prefs.setString('trip','');
-                                    print('done');
+                                    if(isEditPlace == true){
 
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
-                                    );
+                                      await fechApiData.editTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
+
+                                      prefs.setString('trip','');
+                                      print('done');
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+                                      );
+
+
+                                    }else{
+
+                                      await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
+
+                                      prefs.setString('trip','');
+                                      print('done');
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+                                      );
+
+                                    }
+
 
                                     
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                                    foregroundColor:Color.fromARGB(255, 107, 82, 82),
+                                    foregroundColor:Color.fromARGB(255, 255, 255, 255),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20), 
                                       ),
                                     
                                   ),
-                                  child: Text('Create a trip',
+                                  child: Text(isEditPlace?'Save changes':'Create a trip',
                                       style: GoogleFonts.roboto(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,

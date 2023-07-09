@@ -500,10 +500,19 @@ class search extends StatefulWidget {
                                             final prefs = await SharedPreferences.getInstance();
                                             final data = json.encode(selectedIds);
                                             prefs.setString('TripPlaceIds',data );
-
+                                            final isEditPlace =prefs.getBool('isEditTrip');
+    
+                                            if(isEditPlace == true){
                                              Navigator.push(
                                               context,
+                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: true,)));
+                                            }else{
+
+                                              Navigator.push(
+                                              context,
                                               MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: false,)));
+
+                                            }  
                                             
                                           },
                                           style: ElevatedButton.styleFrom(
