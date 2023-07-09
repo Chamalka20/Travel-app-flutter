@@ -540,6 +540,54 @@ class _locationDetailsState extends State<locationDetails> {
                         ),
                       
                       ),
+
+                      child:Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top:30,right:14),
+                                child: SizedBox(
+                                    width:55,
+                                    height:55,
+                                    child: GestureDetector(
+                                      onTap: () async =>{
+
+                                        await fechApiData.addToFavorite(placeId,placePhoto),
+
+                                      },
+                                      child: Card(
+                                        elevation: 0,
+                                            color:const Color.fromARGB(200, 240, 238, 238),
+                                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                                            shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(50.0),
+                                                  ),
+                                            child:Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Image.asset("assets/images/heart.png",width:25,height:25),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),  
+                                                                                          
+                                      ),
+                                    ),
+                                                          
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      )
                      
                     ),
                   ],

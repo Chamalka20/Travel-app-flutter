@@ -338,6 +338,26 @@ class fechApiData {
         return count;
 
     }
+
+    static addToFavorite (String placeId,String placePhotoUrl)async{
+
+      var userId ;
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+
+      var uuid = const Uuid();
+
+      await FirebaseFirestore.instance
+      .collection('users').doc(userId).collection('favorites').add({
+
+        
+            "placeId":placeId,
+           'placePhotoUrl':placePhotoUrl,
+        
+    
+      });
+
+    }
   
 }
 
