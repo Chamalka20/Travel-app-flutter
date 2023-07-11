@@ -37,6 +37,9 @@ class _locationDetailsState extends State<locationDetails> {
 
   late List<dynamic>  data ;
 
+  var isAddFavorite =false;
+  var favorites=[];
+
   late final double placelat;
   late final double placelng;
   late final String placePhoto;
@@ -552,10 +555,41 @@ class _locationDetailsState extends State<locationDetails> {
                                 child: SizedBox(
                                     width:55,
                                     height:55,
-                                    child: GestureDetector(
+                                    child: InkWell(
                                       onTap: () async =>{
 
-                                        await fechApiData.addToFavorite(placeId,placePhoto),
+                                        favorites =await fechApiData.getFavorites(),
+                                        
+                                        for(var i=0;i<favorites.length;i++){
+
+                                          if(favorites[i]['placeId'].contains(placeId)){
+
+                                            setState(() {
+                                              isAddFavorite = false;
+                                            }),
+
+                                          }else{
+
+                                            setState(() {
+                                              isAddFavorite = true;
+                                            }),
+
+                                            
+                                          } , 
+
+                                        }, 
+
+                                        if(isAddFavorite){
+
+                                          await fechApiData.addToFavorite(placeId,searchResults[0]['name'],searchResults[0]['photo_reference'],searchType),
+                                        }else{
+                                          
+
+                                        }  
+
+                                        
+                                        
+                              
 
                                       },
                                       child: Card(
@@ -573,7 +607,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
-                                                    Image.asset("assets/images/heart.png",width:25,height:25),
+                                                    Image.asset(isAddFavorite?"assets/images/heartBlack.png":"assets/images/heart.png",width:25,height:25),
                                                   ],
                                                 ),
                                               ],

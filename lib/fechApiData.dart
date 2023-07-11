@@ -339,7 +339,7 @@ class fechApiData {
 
     }
 
-    static addToFavorite (String placeId,String placePhotoUrl)async{
+    static addToFavorite (String placeId,String placeName,String placePhotoUrl,String placeType)async{
 
       var userId ;
       final prefs = await SharedPreferences.getInstance();
@@ -351,11 +351,34 @@ class fechApiData {
       .collection('users').doc(userId).collection('favorites').add({
 
         
-            "placeId":placeId,
-           'placePhotoUrl':placePhotoUrl,
-        
+          "placeId":placeId,
+          'placeName':placeName,
+          'placePhotoUrl':placePhotoUrl,
+          'placeType':placeType,
     
       });
+
+    }
+
+    static getFavorites () async{
+
+      var userId ;
+      var data =[];
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+
+      await FirebaseFirestore.instance
+        .collection('users').doc(userId).collection('favorites').get().then((QuerySnapshot querySnapshot) => {
+
+           querySnapshot.docs.forEach((doc) {
+              
+                data.add(doc.data()) ;
+              
+              
+            })
+        });
+
+      return data;
 
     }
   
