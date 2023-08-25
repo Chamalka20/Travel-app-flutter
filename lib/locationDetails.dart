@@ -1295,11 +1295,14 @@ class _locationDetailsState extends State<locationDetails> {
                                                                               setState(() {
                                                                                 isaddAttractionToFavorite[index] = true;
                                                                               }),
+                                                                              await fechApiData.addToFavorite(atPlaceId,attractionName,attractionImgUrl,type),
                                                                             } else {
                                                                               
                                                                               setState(() {
                                                                                 isaddAttractionToFavorite[index] = false;
                                                                               }),
+                                                                              //remove favorite form the database-----------------
+                                                                              await fechApiData.removeFavorites(atPlaceId),
                                                                             }
                                                                           
                                                                           },
