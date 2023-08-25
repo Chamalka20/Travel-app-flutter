@@ -37,8 +37,9 @@ class _locationDetailsState extends State<locationDetails> {
 
   late List<dynamic>  data ;
 
-  var isAddFavorite =false;
+  var isAddFavorite= false;
   var favorites=[];
+  List<bool> isaddAttractionToFavorite=[];
 
   late final double placelat;
   late final double placelng;
@@ -193,7 +194,7 @@ class _locationDetailsState extends State<locationDetails> {
      
      getAboutData ();
      calculateDistance ();
-    
+     checkThisFavorite();
             
 
    }
@@ -201,7 +202,7 @@ class _locationDetailsState extends State<locationDetails> {
    
 
     Future<void> findWeather ()async {
-        const String apikey = '44uxmYtWX39vfBU6EgSPDrJI8TSJi4tViH6a2uojU9U';
+        const String apikey = 'qjo4a0EcZrWJD1tgIkc5XH3-4DbeT5NJSmzGKsfHSLY';
         const apiUrl = 'https://atlas.microsoft.com/weather/currentConditions/json';
         final url ='$apiUrl?api-version=1.1&query=${searchResults[0]['location']['lat']},${searchResults[0]['location']['lng']}&unit=metric&subscription-key=$apikey';
 
@@ -291,7 +292,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${searchResults[0]['name']} and place address is ${searchResults[0]['name']} in Srilanka';
 
@@ -367,7 +368,7 @@ class _locationDetailsState extends State<locationDetails> {
 
     currentCity = prefs.getString('currentCity');
 
-    const String apikey = '44uxmYtWX39vfBU6EgSPDrJI8TSJi4tViH6a2uojU9U';
+    const String apikey = 'qjo4a0EcZrWJD1tgIkc5XH3-4DbeT5NJSmzGKsfHSLY';
     const String apiUrl = 'https://atlas.microsoft.com/route/directions/json';
     final url ='$apiUrl?api-version=1.0&query=${currentLocation['lat']},${currentLocation['lng']}:${searchResults[0]['location']['lat']},${searchResults[0]['location']['lng']}&report=effectiveSettings&subscription-key=$apikey';
 
@@ -436,12 +437,23 @@ class _locationDetailsState extends State<locationDetails> {
               
             }).where((element) => element != null).toList();
 
+
+      print("attractions:${attractionList.length}");
+      
+      for(var i=0;i<attractionList.length;i++){
+        print("set");
+        isaddAttractionToFavorite.addAll([false]);
+      }
+
+      print(isaddAttractionToFavorite);
+
       setState(() {
         attractionList;
 
       });
 
-    print("attractions:${attractionList.length}");
+
+    
 
 
    
@@ -486,6 +498,30 @@ class _locationDetailsState extends State<locationDetails> {
 
 
   }
+
+  Future <void> checkThisFavorite()async{
+
+    favorites =await fechApiData.getFavorites();
+
+    for(var i=0;i<favorites.length;i++){
+
+      if(favorites[i]['placeId'].contains(placeId)){
+        print('this is favorite place');
+        setState(() {
+          isAddFavorite = true;
+        });
+
+        
+      }else{
+        print('This is not favorite place');
+      }; 
+
+    };
+
+
+
+  }
+
 
 
   @override
@@ -558,18 +594,31 @@ class _locationDetailsState extends State<locationDetails> {
                                     child: InkWell(
                                       onTap: () async =>{
 
+                                        print("user tap the hart button"),
+
                                         favorites =await fechApiData.getFavorites(),
-                                        
+
+                                        //if user firstly add to the favorite list to the item------------------
+                                       
+                                        if(favorites.isEmpty){
+                                         setState(() {
+                                              isAddFavorite = true;
+                                            }),
+                                        },
+
+                                        //check if user already add to the favorite list to the this item-------------
                                         for(var i=0;i<favorites.length;i++){
 
                                           if(favorites[i]['placeId'].contains(placeId)){
-
+                                            print('remove'),
                                             setState(() {
                                               isAddFavorite = false;
                                             }),
 
-                                          }else{
+                                            await fechApiData.removeFavorites(placeId),
 
+                                          }else{
+                                            print('add'),
                                             setState(() {
                                               isAddFavorite = true;
                                             }),
@@ -578,9 +627,9 @@ class _locationDetailsState extends State<locationDetails> {
                                           } , 
 
                                         }, 
-
+                                        //add to the favorite place from the database-------------
                                         if(isAddFavorite){
-
+                                          print("add to the Favorite"),
                                           await fechApiData.addToFavorite(placeId,searchResults[0]['name'],searchResults[0]['photo_reference'],searchType),
                                         }else{
                                           
@@ -588,8 +637,6 @@ class _locationDetailsState extends State<locationDetails> {
                                         }  
 
                                         
-                                        
-                              
 
                                       },
                                       child: Card(
@@ -1154,12 +1201,13 @@ class _locationDetailsState extends State<locationDetails> {
                                       itemCount: attractionList.length,
                                       itemBuilder: (context, index) {
                                         final attraction = attractionList[index];
-                                        final placeId = attraction['id'];
+                                        final atPlaceId = attraction['id'];
                                         final attractionName = attraction['name'];
                                         final attractionImgUrl = attraction['photoRef'];
                                         final attractionRating = attraction['rating'];
                                         final address = attraction['address'];
                                         final type = attraction['type'];
+                                        
                                         
                                           return GestureDetector(
                                             onTap: ()=>{
@@ -1167,7 +1215,7 @@ class _locationDetailsState extends State<locationDetails> {
 
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) =>  locationDetails(placeId:placeId,searchType: 'attraction',)),
+                                                MaterialPageRoute(builder: (context) =>  locationDetails(placeId:atPlaceId,searchType: 'attraction',)),
                                               ),
                                             },
                                             child: Card(
@@ -1238,8 +1286,23 @@ class _locationDetailsState extends State<locationDetails> {
                                                                   child: SizedBox(
                                                                       width:37,
                                                                       height:37,
-                                                                      child: GestureDetector(
-                                                                        onTap: ()=>{print("hart")},
+                                                                      child: InkWell(
+                                                                        onTap: () async =>{
+                                                                          favorites =await fechApiData.getFavorites(),
+
+                                                                            if (isaddAttractionToFavorite[index] == false) {
+                                                                              
+                                                                              setState(() {
+                                                                                isaddAttractionToFavorite[index] = true;
+                                                                              }),
+                                                                            } else {
+                                                                              
+                                                                              setState(() {
+                                                                                isaddAttractionToFavorite[index] = false;
+                                                                              }),
+                                                                            }
+                                                                          
+                                                                          },
                                                                         child: Card(
                                                                           elevation: 0,
                                                                               color:const Color.fromARGB(200, 240, 238, 238),
@@ -1255,7 +1318,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                                                     children: [
-                                                                                      Image.asset("assets/images/heart.png",width:18,height:18),
+                                                                                      Image.asset(isaddAttractionToFavorite[index]?"assets/images/heartBlack.png":"assets/images/heart.png",width:18,height:18),
                                                                                     ],
                                                                                   ),
                                                                                 ],

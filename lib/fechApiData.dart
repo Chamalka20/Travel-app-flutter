@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -381,6 +382,39 @@ class fechApiData {
       return data;
 
     }
+
+    static removeFavorites (placeId) async{
+
+      var userId;
+      var favId;
+
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+
+    //get spesific id to remove the favorite place-------------------
+      await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId).collection('favorites').get()
+            .then((QuerySnapshot querySnapshot) {
+                querySnapshot.docs.forEach((doc) {
+
+                  if(doc['placeId']==placeId){
+                  
+                    favId = doc.id;
+                  
+                  }
+                });
+                
+            });
+
+      //then remove the item from the favorite list-------------
+     FirebaseFirestore.instance
+        .collection('users').doc(userId).collection('favorites').doc(favId).delete()
+          .then((_) => print('Deleted'))
+          .catchError((error) => print('Delete failed: $error'));
+
+    }
+
   
 }
 

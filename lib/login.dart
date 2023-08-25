@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
 import 'package:travelapp/fechApiData.dart';
@@ -247,10 +248,15 @@ class _loginState extends State<login> {
                                                   width: 250,
                                                   height: 40, 
                                                  child: TextButton(
-                                                    onPressed: () {
+                                                    onPressed: ()  async {
                                                        //check password validation---------------------------------------
                                                        if(data['password']==passwordController.text){
                                                        showError = false;
+
+                                                        final prefs = await SharedPreferences.getInstance();
+                                                        await prefs.setBool('isLoggedIn', true);
+                                                        
+
                                                         Navigator.of(context).pushReplacement(customPageRoutes(
                 
                                                         child: navigationPage(isBackButtonClick:false,autoSelectedIndex: 0,)));
