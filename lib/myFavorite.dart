@@ -86,7 +86,7 @@ favorites=await fechApiData.getFavorites();
                     itemBuilder: (context, index) {
                       return
                         Card(
-                         color:const Color.fromARGB(255, 240, 238, 238),
+                         color:Color.fromARGB(255, 253, 250, 250),
                          key: ValueKey(index),
                          shape: RoundedRectangleBorder(
                            borderRadius: BorderRadius.circular(17.0),
@@ -113,6 +113,7 @@ favorites=await fechApiData.getFavorites();
                               Padding(
                                 padding: const EdgeInsets.only(left:6,top:5),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
@@ -132,6 +133,43 @@ favorites=await fechApiData.getFavorites();
                                           ),
                                         )
                                       ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(top:13),
+                                          child: SizedBox(
+                                              height:28,
+                                              child: Card(
+                                                  elevation: 0,
+                                                    color:Color.fromARGB(197, 221, 220, 220),
+                                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                    shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(5.0),
+                                                          ),
+                                                      child: FittedBox(
+                                                              fit: BoxFit.cover,
+                                                              child:Padding(
+                                                                padding: const EdgeInsets.all(10.0),
+                                                                child: Text('${favorites[index]['placeType']}',
+                                                                  style: GoogleFonts.cabin(
+                                                                    // ignore: prefer_const_constructors
+                                                                    textStyle: TextStyle(
+                                                                    color: Color.fromARGB(255, 95, 95, 95),
+                                                                    fontSize: 16,
+                                                                    fontWeight: FontWeight.bold,
+                                                                                                                              
+                                                                    ) 
+                                                                  )
+                                                                                                                                
+                                                                ),
+                                                              ), 
+                                                        )
+                                                  
+                                              ),
+                                            ),
+                                        ),
+                                      ],
                                     )
                                   ],
                                 ),
@@ -141,9 +179,21 @@ favorites=await fechApiData.getFavorites();
                                 padding: const EdgeInsets.only(top:35),
                                 child: Column(
                                   children: [
-                                    SizedBox(
-                                      width:30,
-                                      child: Image.asset("assets/images/heartBlack.png",width:20,height:20),
+                                    GestureDetector(
+                                      onTap: () async{
+                                        
+                                        //remove favorite form the database-----------------
+                                        await fechApiData.removeFavorites(favorites[index]['placeId']);
+                                        getFavoriteList();
+
+                                        //show message to the user-----------------
+                                        ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(content:Text("Removed place from the favorites"))); 
+                                      },
+                                      child: SizedBox(
+                                        width:30,
+                                        child: Image.asset("assets/images/heartBlack.png",width:25,height:25),
+                                      ),
                                     )
                                   ],
                                 ),

@@ -641,6 +641,10 @@ class _locationDetailsState extends State<locationDetails> {
 
                                             await fechApiData.removeFavorites(placeId),
 
+                                            //show message to the user-----------------
+                                          ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(content:Text("Removed place from the favorites"))), 
+
                                           }else{
                                             print('add'),
                                             setState(() {
@@ -655,6 +659,11 @@ class _locationDetailsState extends State<locationDetails> {
                                         if(isAddFavorite){
                                           print("add to the Favorite"),
                                           await fechApiData.addToFavorite(placeId,searchResults[0]['name'],searchResults[0]['photo_reference'],searchType),
+
+                                          //show message to the user-----------------
+                                          ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(content:Text("Add place to the favorites"))), 
+
                                         }else{
                                           
 
@@ -1320,6 +1329,11 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                 isaddAttractionToFavorite[index] = true;
                                                                               }),
                                                                               await fechApiData.addToFavorite(atPlaceId,attractionName,attractionImgUrl,type),
+
+                                                                              //show message to the user-----------------
+                                                                              ScaffoldMessenger.of(context)
+                                                                                .showSnackBar(const SnackBar(content:Text("Add place to the favorites"))),
+
                                                                             } else {
                                                                               
                                                                               setState(() {
@@ -1327,6 +1341,10 @@ class _locationDetailsState extends State<locationDetails> {
                                                                               }),
                                                                               //remove favorite form the database-----------------
                                                                               await fechApiData.removeFavorites(atPlaceId),
+
+                                                                              //show message to the user-----------------
+                                                                                ScaffoldMessenger.of(context)
+                                                                                  .showSnackBar(const SnackBar(content:Text("Removed place from the favorites"))),
                                                                             }
                                                                           
                                                                           },
