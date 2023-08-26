@@ -455,13 +455,15 @@ class _locationDetailsState extends State<locationDetails> {
 
          for( var i=0;i<favorites.length;i++){
 
-            if(favorites[i]['placeId'].contains(e['id'])){
+            if(e['id']!=null){
 
-              found=true,
-             
+              if(favorites[i]['placeId'].contains(e['id'])){
+
+                found=true,
+              
+              }
+
             }
-
-      
         },
         isaddAttractionToFavorite.add(found),
 
@@ -552,10 +554,8 @@ class _locationDetailsState extends State<locationDetails> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-         Navigator.of(context).pushReplacement(customPageRoutes(
-                
-        child: const search(isTextFieldClicked:false,searchType: 'city',isSelectPlaces: false,)));
-      return false;
+        Navigator.pop(context);
+        return false;
       }, 
       child: Scaffold(
        extendBodyBehindAppBar: true,
