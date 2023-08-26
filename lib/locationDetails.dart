@@ -411,6 +411,7 @@ class _locationDetailsState extends State<locationDetails> {
     final dataSnapshot = await databaseReference.once();
 
     final data = dataSnapshot.snapshot.value as List<dynamic>;
+    
 
     attractionList=data.map((element) { 
 
@@ -418,6 +419,8 @@ class _locationDetailsState extends State<locationDetails> {
 
               if (attractionCity == searchResults[0]['name'] ) {
                 if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
+                  
+                
                   return {
                     'name':element['title'],
                     'id': element['placeId'],
@@ -425,6 +428,8 @@ class _locationDetailsState extends State<locationDetails> {
                     'rating': 3.6, //!= null ? result['rating'].toDouble() : 0.0,
                     'address':element['address'],
                     'type':element['categoryName'],
+
+                    
                   };
                 } else {
                   return {
@@ -432,6 +437,7 @@ class _locationDetailsState extends State<locationDetails> {
                     'photo_reference': 'https://via.placeholder.com/150',
                   };
                 }
+                
               }
 
               
@@ -439,11 +445,29 @@ class _locationDetailsState extends State<locationDetails> {
 
 
       print("attractions:${attractionList.length}");
+
+      favorites =await fechApiData.getFavorites();
       
-      for(var i=0;i<attractionList.length;i++){
-        print("set");
-        isaddAttractionToFavorite.addAll([false]);
-      }
+      bool found;
+
+      attractionList.forEach((e) => {
+         found = false,
+
+         for( var i=0;i<favorites.length;i++){
+
+            if(favorites[i]['placeId'].contains(e['id'])){
+
+              found=true,
+             
+            }
+
+      
+        },
+        isaddAttractionToFavorite.add(found),
+
+      });
+      
+      
 
       print(isaddAttractionToFavorite);
 
