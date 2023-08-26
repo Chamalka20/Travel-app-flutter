@@ -61,7 +61,7 @@ favorites=await fechApiData.getFavorites();
       body: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left:13,bottom: 20,top:25),
+                padding: const EdgeInsets.only(left:13,bottom: 15,top:25),
                 child: Row(
                   children: [
                     Text("Favorites",
@@ -143,17 +143,7 @@ favorites=await fechApiData.getFavorites();
                                   children: [
                                     SizedBox(
                                       width:30,
-                                      child: Text('${index+1}',
-                                        style: GoogleFonts.cabin(
-                                                      // ignore: prefer_const_constructors
-                                                      textStyle: TextStyle(
-                                                      color: const Color.fromARGB(255, 27, 27, 27),
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.w600,
-                                              
-                                                      ) 
-                                                    ),
-                                      ),
+                                      child: Image.asset("assets/images/heartBlack.png",width:20,height:20),
                                     )
                                   ],
                                 ),
