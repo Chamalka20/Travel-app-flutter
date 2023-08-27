@@ -292,7 +292,7 @@ class _locationDetailsState extends State<locationDetails> {
   Future <void> getAboutData ()async {
    
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const apiKey = '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';
+    const apiKey = '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';
 
     String message = 'give details about ${searchResults[0]['name']} and place address is ${searchResults[0]['name']} in Srilanka';
 
@@ -555,7 +555,7 @@ class _locationDetailsState extends State<locationDetails> {
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
-        return false;
+        return true;
       }, 
       child: Scaffold(
        extendBodyBehindAppBar: true,
@@ -1479,7 +1479,11 @@ class _locationDetailsState extends State<locationDetails> {
                                 child: Container(
                                   width:360,
                                   height:130,
-                                  child: const Center(child: CircularProgressIndicator())
+                                  child: Center(
+                                    child: Text("Loading....")
+                                    
+                                    
+                                    )
                                   
                                   ),
                               ),
@@ -1978,6 +1982,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                               ),      
                                                             ),
                                                             //created trip list------------------------------------------------------
+                                                              
 
                                                           ],
                                                         )

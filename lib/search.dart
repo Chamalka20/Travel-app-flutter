@@ -351,14 +351,14 @@ class search extends StatefulWidget {
                   
                                   if(searchType == 'city'){
                   
-                                  Navigator.of(context).pushReplacement(customPageRoutes(
-                    
-                                  child: locationDetails(placeId:placeId,searchType:'city')));
+                                   Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) =>  locationDetails(placeId:placeId,searchType:'city')));
                   
                                 }else if(searchType == 'attraction'){
-                                  Navigator.of(context).pushReplacement(customPageRoutes(
-                    
-                                  child: locationDetails(placeId:placeId,searchType:'attraction')));
+                                   Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) =>  locationDetails(placeId:placeId,searchType:'attraction')));
                   
                   
                                 }

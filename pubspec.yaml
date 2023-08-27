@@ -54,6 +54,8 @@ dependencies:
   cloud_firestore: ^4.8.2
   firebase_auth: ^4.6.3
   uuid: ^3.0.7
+  internet_connection_checker: ^0.0.1+4
+  provider: ^6.0.3
   
 
 

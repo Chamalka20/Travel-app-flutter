@@ -839,6 +839,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                        prefs.setString('trip','');
                                       print('done');
 
+                                      //show message to the user-----------------
+                                      ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(content:Text("Trip edit success")));
+
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
@@ -851,6 +856,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
                                       prefs.setString('trip','');
                                       print('done');
+
+                                      //show message to the user-----------------
+                                      ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(content:Text("Trip was created")));
+
 
                                       Navigator.push(
                                         context,
@@ -1213,6 +1223,10 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                       prefs.setString('trip','');
                                       print('done');
 
+                                      //show message to the user-----------------
+                                      ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(content:Text("Trip edit success")));
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
@@ -1226,6 +1240,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
                                       prefs.setString('trip','');
                                       print('done');
+
+                                      //show message to the user-----------------
+                                      ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(content:Text("Trip was created")));
+
 
                                       Navigator.push(
                                         context,

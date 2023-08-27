@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:colorful_safe_area/colorful_safe_area.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +28,9 @@ class _homeState extends State<home> {
   bool isBackButtonClick;
   String nextPageToken ='';
   var  userdata ={};
+
+  var favorites=[];
+  List<bool> isaddAttractionToFavorite=[];
   
   _homeState(this.isBackButtonClick);
 
@@ -36,6 +40,7 @@ class _homeState extends State<home> {
     //get data list from api-------------------------------
      getData();
      getUserData();
+     getNearByPlaces ();
   }
 
   Future <void> getUserData()async{
@@ -70,8 +75,8 @@ class _homeState extends State<home> {
  void getData () async{
      
     
-    var apiUrl1 = 'https://api.apify.com/v2/actor-tasks/detailed_camel~google-maps-scraper-task/runs?token=';
-    var apiUrl2 ='https://api.apify.com/v2/acts/maxcopell~free-tripadvisor/runs?token=';
+    var apiUrl1 = 'https://api.apify.com/v2/actor-tasks/detailed_camel~google-maps-scraper-task-1/runs?token=';
+    var apiUrl2 ='https://api.apify.com/v2/actor-tasks/detailed_camel~tripadvisor-scraper-task-2/runs?token=';
     final payload1 = {};
     final payload2 ={
     "currency": "USD",
@@ -100,7 +105,7 @@ final payload3 = {
     "includeReviews": true,
     "includeTags": true,
     "language": "en",
-    "locationFullName": "Colombo, Sri Lanka", // Replace with your desired location
+    "locationFullName": "Colombo, Sri Lanka", 
     "maxItems": 39,
     "maxReviews": 20,
     "proxyConfiguration": {
@@ -161,6 +166,88 @@ final payload3 = {
 
     }
     
+  }
+
+  late List attractionList= [];
+  var currentCity;
+
+  Future <void> getNearByPlaces ()async{
+
+    final databaseReference = FirebaseDatabase.instance.ref('places');
+    final dataSnapshot = await databaseReference.once();
+    final data = dataSnapshot.snapshot.value as List<dynamic>;
+    
+    final prefs = await SharedPreferences.getInstance();
+    currentCity = prefs.getString('currentCity');
+
+    attractionList=data.map((element) { 
+
+              final attractionCity = element['city'];
+
+              if (attractionCity == currentCity ) {
+                if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
+                  
+                
+                  return {
+                    'name':element['title'],
+                    'id': element['placeId'],
+                    'photoRef': element['imageUrls'][0],
+                    'rating': 3.6, //!= null ? result['rating'].toDouble() : 0.0,
+                    'address':element['address'],
+                    'type':element['categoryName'],
+
+                    
+                  };
+                } else {
+                  return {
+                    'name': '',
+                    'photo_reference': 'https://via.placeholder.com/150',
+                  };
+                }
+                
+              }
+
+              
+            }).where((element) => element != null).toList();
+
+
+
+        print("attractions:${attractionList.length}");
+
+      favorites =await fechApiData.getFavorites();
+      
+      bool found;
+
+      attractionList.forEach((e) => {
+         found = false,
+
+         for( var i=0;i<favorites.length;i++){
+
+            if(e['id']!=null){
+
+              if(favorites[i]['placeId'].contains(e['id'])){
+
+                found=true,
+              
+              }
+
+            }
+        },
+        isaddAttractionToFavorite.add(found),
+
+      });
+      
+      
+
+      print(isaddAttractionToFavorite);
+
+      setState(() {
+        attractionList;
+
+      });
+
+
+
   }
 
   @override
@@ -709,14 +796,15 @@ final payload3 = {
                           child: ListView.builder(
                             cacheExtent: 9999,
                             scrollDirection: Axis.horizontal, 
-                            itemCount: hotelList.length,
+                            itemCount: attractionList.length,
                             itemBuilder: (context, index) {
-                              final hotel = hotelList[index];
-                              final hotelName = hotel['name'];
-                              final hotelRating = hotel['rating'];
-                              final photoUrl = hotel['image'];
-                              final address = hotel['address'];
-                              final type = hotel['type'];
+                              final attraction = attractionList[index];
+                              final atPlaceId = attraction['id'];
+                              final attractionName = attraction['name'];
+                              final attractionImgUrl = attraction['photoRef'];
+                              final attractionRating = attraction['rating'];
+                              final address = attraction['address'];
+                              final type = attraction['type'];
                               
                                 return GestureDetector(
                                   onTap: ()=>{print("hello")},
@@ -740,7 +828,7 @@ final payload3 = {
                                                   decoration:  BoxDecoration(
                                                     
                                                     image: DecorationImage(
-                                                      image: NetworkImage(photoUrl,),
+                                                      image: NetworkImage(attractionImgUrl,),
                                                       fit: BoxFit.fill,
                                                       
                                                 
@@ -789,7 +877,36 @@ final payload3 = {
                                                             width:37,
                                                             height:37,
                                                             child: GestureDetector(
-                                                              onTap: ()=>{print("hart")},
+                                                              onTap: () async =>{
+
+                                                                favorites =await fechApiData.getFavorites(),
+
+                                                                if (isaddAttractionToFavorite[index] == false) {
+                                                                  
+                                                                  setState(() {
+                                                                    isaddAttractionToFavorite[index] = true;
+                                                                  }),
+                                                                  await fechApiData.addToFavorite(atPlaceId,attractionName,attractionImgUrl,type),
+
+                                                                  //show message to the user-----------------
+                                                                  ScaffoldMessenger.of(context)
+                                                                    .showSnackBar(const SnackBar(content:Text("Add place to the favorites"))),
+
+                                                                } else {
+                                                                  
+                                                                  setState(() {
+                                                                    isaddAttractionToFavorite[index] = false;
+                                                                  }),
+                                                                  //remove favorite form the database-----------------
+                                                                  await fechApiData.removeFavorites(atPlaceId),
+
+                                                                  //show message to the user-----------------
+                                                                    ScaffoldMessenger.of(context)
+                                                                      .showSnackBar(const SnackBar(content:Text("Removed place from the favorites"))),
+                                                                }
+
+
+                                                              },
                                                               child: Card(
                                                                 elevation: 0,
                                                                     color:const Color.fromARGB(200, 240, 238, 238),
@@ -805,7 +922,7 @@ final payload3 = {
                                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                                           crossAxisAlignment: CrossAxisAlignment.center,
                                                                           children: [
-                                                                            Image.asset("assets/images/heart.png",width:18,height:18),
+                                                                            Image.asset(isaddAttractionToFavorite[index]?"assets/images/heartBlack.png":"assets/images/heart.png",width:18,height:18),
                                                                           ],
                                                                         ),
                                                                       ],
@@ -836,7 +953,7 @@ final payload3 = {
                                               height:30,
                                                 child: Padding(
                                                   padding: const EdgeInsets.only(left:6,top:5),
-                                                  child: Text(hotelName,
+                                                  child: Text(attractionName,
                                                   
                                                   overflow: TextOverflow.ellipsis,
                                                   style: GoogleFonts.cabin(
@@ -856,7 +973,7 @@ final payload3 = {
                                             Image.asset("assets/images/star.png",width:14,height:14),
                                             Padding(
                                               padding: const EdgeInsets.only(left:4),
-                                              child: Text("$hotelRating",
+                                              child: Text("$attractionRating",
                                                   style: GoogleFonts.cabin(
                                                 // ignore: prefer_const_constructors
                                                 textStyle: TextStyle(
