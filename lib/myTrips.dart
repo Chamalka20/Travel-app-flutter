@@ -115,11 +115,12 @@ class _mytripsState extends State<mytrips> {
                                       final encodata = json.encode(trips[index]);
                                       prefs.setString('tripdays',encodata );
 
-                                      final tripId = trips[0]['tripId'];
+                                      final tripId = trips[index]['tripId'];
                                       //find database user selectdoc id -----------------------------------------
                                       final tripDocId=await fechApiData.getTripDocId(tripId);
-
                                       await prefs.setString('triDocId',tripDocId );
+
+                                      print("tripid: ${tripId}");
 
                                       Navigator.push(
                                         context,
