@@ -91,10 +91,10 @@ class _mytripsState extends State<mytrips> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left:13,bottom: 20,top:12),
+                padding: const EdgeInsets.only(left:13,bottom: 10,top:12),
                 child: Row(
                   children: [
-                    Text("My Trips",
+                    Text("Plan",
                       style: GoogleFonts.nunito(
                           // ignore: prefer_const_constructors
                           textStyle: TextStyle(
@@ -108,6 +108,26 @@ class _mytripsState extends State<mytrips> {
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(left:13,bottom: 20,top:12),
+                child: Row(
+                  children: [
+                    Text("Ongoing Trips",
+                      style: GoogleFonts.cabin(
+                                  // ignore: prefer_const_constructors
+                                  textStyle: TextStyle(
+                                  color: const Color.fromARGB(255, 27, 27, 27),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                          
+                                  ) 
+                                )
+                    
+                              ),
+                                      
+                            ],
+                ),
+              ),
               Expanded(
                 child:
                   Stack(
@@ -116,10 +136,11 @@ class _mytripsState extends State<mytrips> {
                       ListView.builder(
                         cacheExtent: 9999, 
                         itemCount: trips.length,
+                        scrollDirection: Axis.horizontal, 
                         itemBuilder: (context, index) {
                           return
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 14),
+                              padding: const EdgeInsets.only(bottom: 14,left:8),
                               child: Column(
                                 children: [
                                   GestureDetector(
@@ -140,100 +161,103 @@ class _mytripsState extends State<mytrips> {
                                         context,
                                         MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: true,)));
                                     },
-                                    child: Container(
-                                      width: 340,
-                                      height: 210,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 216, 99, 99),
-                                        borderRadius: BorderRadius.circular(17),
-                                        image: DecorationImage(
-                                        image: NetworkImage(trips[index]['tripCoverPhoto']),
-                                        fit: BoxFit.cover
-                                                    
-                                          ),
-                                      
-                                      ),
-                                      child:Padding(
-                                        padding: const EdgeInsets.only(left:13,top:11),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                  height:25,
-                                                  width:60,
-                                                  child: Card(
-                                                      elevation: 0,
-                                                        color:const Color.fromARGB(200, 240, 238, 238),
-                                                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                        shape: RoundedRectangleBorder(
-                                                                borderRadius: BorderRadius.circular(5.0),
-                                                              ),
-                                                          child: FittedBox(
-                                                                  fit: BoxFit.cover,
-                                                                  child:Padding(
-                                                                    padding: const EdgeInsets.all(10.0),
-                                                                    child: Text('${trips[index]["places"].length} days',
-                                                                      style: GoogleFonts.cabin(
-                                                                        // ignore: prefer_const_constructors
-                                                                        textStyle: TextStyle(
-                                                                        color: Color.fromARGB(255, 95, 95, 95),
-                                                                        fontSize: 12,
-                                                                        fontWeight: FontWeight.bold,
-                                                                                                                                  
-                                                                        ) 
-                                                                      )
-                                                                                                                                    
-                                                                    ),
-                                                                  ), 
-                                                            )
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right:11,),
+                                      child: Container(
+                                        width: 230,
+                                        height: 160,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 216, 99, 99),
+                                          borderRadius: BorderRadius.circular(17),
+                                          image: DecorationImage(
+                                          image: NetworkImage(trips[index]['tripCoverPhoto']),
+                                          fit: BoxFit.cover
                                                       
-                                                  ),
                                             ),
-                                              ],
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(top:95),
-                                              child: Row(
+                                        
+                                        ),
+                                        child:Padding(
+                                          padding: const EdgeInsets.only(left:13,top:11),
+                                          child: Column(
+                                            children: [
+                                              Row(
                                                 children: [
-                                                  
-                                                  Text('${trips[index]['tripName']}',
-                                                        style: GoogleFonts.cabin(
-                                                      // ignore: prefer_const_constructors
-                                                      textStyle: TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255),
-                                                      fontSize: 27,
-                                                      fontWeight: FontWeight.bold,
-                                                                                      
-                                                      ) 
-                                                  
-                                                  ),
-                                                ),
+                                                  SizedBox(
+                                                    height:25,
+                                                    width:60,
+                                                    child: Card(
+                                                        elevation: 0,
+                                                          color:const Color.fromARGB(200, 240, 238, 238),
+                                                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                          shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(5.0),
+                                                                ),
+                                                            child: FittedBox(
+                                                                    fit: BoxFit.cover,
+                                                                    child:Padding(
+                                                                      padding: const EdgeInsets.all(10.0),
+                                                                      child: Text('${trips[index]["places"].length} days',
+                                                                        style: GoogleFonts.cabin(
+                                                                          // ignore: prefer_const_constructors
+                                                                          textStyle: TextStyle(
+                                                                          color: Color.fromARGB(255, 95, 95, 95),
+                                                                          fontSize: 12,
+                                                                          fontWeight: FontWeight.bold,
+                                                                                                                                    
+                                                                          ) 
+                                                                        )
+                                                                                                                                      
+                                                                      ),
+                                                                    ), 
+                                                              )
+                                                        
+                                                    ),
+                                              ),
                                                 ],
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(top:4),
-                                              child: Row(
-                                                children: [
-                                                  
-                                                  Text('${trips[index]['tripDuration']}',
-                                                        style: GoogleFonts.cabin(
-                                                      // ignore: prefer_const_constructors
-                                                      textStyle: TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255),
-                                                      fontSize: 13,
-                                                      fontWeight: FontWeight.bold,
-                                                                                      
-                                                      ) 
-                                                  
+                                              Padding(
+                                                padding: const EdgeInsets.only(top:70),
+                                                child: Row(
+                                                  children: [
+                                                    
+                                                    Text('${trips[index]['tripName']}',
+                                                          style: GoogleFonts.cabin(
+                                                        // ignore: prefer_const_constructors
+                                                        textStyle: TextStyle(
+                                                        color: Color.fromARGB(255, 255, 255, 255),
+                                                        fontSize: 23,
+                                                        fontWeight: FontWeight.bold,
+                                                                                        
+                                                        ) 
+                                                    
+                                                    ),
                                                   ),
+                                                  ],
                                                 ),
-                                                ],
                                               ),
-                                            ),
-                                          ],
-                                      
+                                              Padding(
+                                                padding: const EdgeInsets.only(top:4),
+                                                child: Row(
+                                                  children: [
+                                                    
+                                                    Text('${trips[index]['tripDuration']}',
+                                                          style: GoogleFonts.cabin(
+                                                        // ignore: prefer_const_constructors
+                                                        textStyle: TextStyle(
+                                                        color: Color.fromARGB(255, 255, 255, 255),
+                                                        fontSize: 11,
+                                                        fontWeight: FontWeight.bold,
+                                                                                        
+                                                        ) 
+                                                    
+                                                    ),
+                                                  ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                        
+                                          ),
                                         ),
                                       ),
                                     ),
