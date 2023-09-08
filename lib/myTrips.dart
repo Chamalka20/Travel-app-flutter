@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/createNewTrip.dart';
 import 'package:travelapp/fechApiData.dart';
@@ -19,7 +17,8 @@ class mytrips extends StatefulWidget {
 
 class _mytripsState extends State<mytrips> {
 
-  List trips =[];
+  var trips ;
+  var onGoingTrips;
   var isDataReady = false;
 
    @override
@@ -32,9 +31,23 @@ class _mytripsState extends State<mytrips> {
   Future <void> getTripList ()async{
 
     trips=await fechApiData.getTrips();
+    //get currentDate----------------
+    DateTime currentDate = DateTime.parse( DateFormat("yyyy-MM-dd").format(DateTime.now()));
+    print(currentDate);
 
     setState(() {
       trips;
+    });
+
+    var endDate;
+    onGoingTrips=trips.forEach((data) => {
+    
+      endDate = data['endDate'],
+
+      if(DateTime.parse(endDate).isBefore(currentDate)){
+         print("hellow"),
+      }
+
     });
 
     if(trips == null){
@@ -48,9 +61,10 @@ class _mytripsState extends State<mytrips> {
          setState(() {
           isDataReady= true;
           
-          print(trips[1]);
         });
       }
+
+
 
     
   }

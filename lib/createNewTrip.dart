@@ -450,8 +450,9 @@ class _createNewTripState extends State<createNewTrip> {
                   
                                       if(pickedDate != null ){
                                         print(pickedDate);  
-                                        String formattedDate1 = DateFormat('yyyy/MM/dd').format(pickedDate.start);
-                                        String formattedDate2 = DateFormat('yyyy/MM/dd').format(pickedDate.end); 
+                                        String formattedDate1 = DateFormat('yyyy-MM-dd').format(pickedDate.start);
+                                        String formattedDate2 = DateFormat('yyyy-MM-dd').format(pickedDate.end); 
+                                        
                                         print(pickedDate.duration.inDays); 
                                         daysDuration =pickedDate.duration.inDays;
                                         endDate = formattedDate2;
