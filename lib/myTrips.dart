@@ -390,135 +390,134 @@ class _mytripsState extends State<mytrips> {
                     Stack(
                       children: [
                         onGoingTrips.isNotEmpty?
-                        ListView.builder(
+                        GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 190,
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing:3,
+                            mainAxisSpacing: 10),
                           cacheExtent: 9999, 
                           itemCount: onGoingTrips.length,
                           itemBuilder: (context, index) {
                             return
-                              GridView.count(
-                                shrinkWrap: true,
-                                crossAxisCount: 2,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
+                              GestureDetector(
+                                onTap: () async {
               
-                                      final prefs = await SharedPreferences.getInstance();
-                                      final encodata = json.encode(trips[index]);
-                                      prefs.setString('tripdays',encodata );
+                                  final prefs = await SharedPreferences.getInstance();
+                                  final encodata = json.encode(trips[index]);
+                                  prefs.setString('tripdays',encodata );
               
-                                      final tripId = trips[index]['tripId'];
-                                      //find database user selectdoc id -----------------------------------------
-                                      final tripDocId=await fechApiData.getTripDocId(tripId);
-                                      await prefs.setString('triDocId',tripDocId );
+                                  final tripId = trips[index]['tripId'];
+                                  //find database user selectdoc id -----------------------------------------
+                                  final tripDocId=await fechApiData.getTripDocId(tripId);
+                                  await prefs.setString('triDocId',tripDocId );
               
-                                      print("tripid: ${tripId}");
+                                  print("tripid: ${tripId}");
               
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: true,)));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right:11,),
-                                      child: Container(
-                                        width: 180,
-                                        height: 120,
-                                        decoration: BoxDecoration(
-                                          color: Color.fromARGB(255, 216, 99, 99),
-                                          borderRadius: BorderRadius.circular(17),
-                                          image: DecorationImage(
-                                          image: NetworkImage(trips[index]['tripCoverPhoto']),
-                                          fit: BoxFit.cover
-                                                      
-                                            ),
-                                        
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: true,)));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right:11,left:10),
+                                  child: Container(
+                                    width: 180,
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 216, 99, 99),
+                                      borderRadius: BorderRadius.circular(17),
+                                      image: DecorationImage(
+                                      image: NetworkImage(trips[index]['tripCoverPhoto']),
+                                      fit: BoxFit.cover
+                                                  
                                         ),
-                                        child:Padding(
-                                          padding: const EdgeInsets.only(left:13,top:11),
-                                          child: Column(
+                                    
+                                    ),
+                                    child:Padding(
+                                      padding: const EdgeInsets.only(left:9,top:11),
+                                      child: Column(
+                                        children: [
+                                          Row(
                                             children: [
-                                              Row(
-                                                children: [
-                                                  SizedBox(
-                                                    height:25,
-                                                    width:60,
-                                                    child: Card(
-                                                        elevation: 0,
-                                                          color:const Color.fromARGB(200, 240, 238, 238),
-                                                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                          shape: RoundedRectangleBorder(
-                                                                  borderRadius: BorderRadius.circular(5.0),
-                                                                ),
-                                                            child: FittedBox(
-                                                                    fit: BoxFit.cover,
-                                                                    child:Padding(
-                                                                      padding: const EdgeInsets.all(10.0),
-                                                                      child: Text('${trips[index]["places"].length} days',
-                                                                        style: GoogleFonts.cabin(
-                                                                          // ignore: prefer_const_constructors
-                                                                          textStyle: TextStyle(
-                                                                          color: Color.fromARGB(255, 95, 95, 95),
-                                                                          fontSize: 12,
-                                                                          fontWeight: FontWeight.bold,
-                                                                                                                                    
-                                                                          ) 
-                                                                        )
-                                                                                                                                      
-                                                                      ),
-                                                                    ), 
-                                                              )
-                                                        
-                                                    ),
-                                              ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(top:70),
-                                                child: Row(
-                                                  children: [
+                                              SizedBox(
+                                                height:20,
+                                                width:50,
+                                                child: Card(
+                                                    elevation: 0,
+                                                      color:const Color.fromARGB(200, 240, 238, 238),
+                                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                      shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(5.0),
+                                                            ),
+                                                        child: FittedBox(
+                                                                fit: BoxFit.cover,
+                                                                child:Padding(
+                                                                  padding: const EdgeInsets.all(10.0),
+                                                                  child: Text('${trips[index]["places"].length} days',
+                                                                    style: GoogleFonts.cabin(
+                                                                      // ignore: prefer_const_constructors
+                                                                      textStyle: TextStyle(
+                                                                      color: Color.fromARGB(255, 95, 95, 95),
+                                                                      fontSize: 8,
+                                                                      fontWeight: FontWeight.bold,
+                                                                                                                                
+                                                                      ) 
+                                                                    )
+                                                                                                                                  
+                                                                  ),
+                                                                ), 
+                                                          )
                                                     
-                                                    Text('${trips[index]['tripName']}',
-                                                          style: GoogleFonts.cabin(
-                                                        // ignore: prefer_const_constructors
-                                                        textStyle: TextStyle(
-                                                        color: Color.fromARGB(255, 255, 255, 255),
-                                                        fontSize: 23,
-                                                        fontWeight: FontWeight.bold,
-                                                                                        
-                                                        ) 
-                                                    
-                                                    ),
-                                                  ),
-                                                  ],
                                                 ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(top:4),
-                                                child: Row(
-                                                  children: [
-                                                    
-                                                    Text('${trips[index]['tripDuration']}',
-                                                          style: GoogleFonts.cabin(
-                                                        // ignore: prefer_const_constructors
-                                                        textStyle: TextStyle(
-                                                        color: Color.fromARGB(255, 255, 255, 255),
-                                                        fontSize: 11,
-                                                        fontWeight: FontWeight.bold,
-                                                                                        
-                                                        ) 
-                                                    
-                                                    ),
-                                                  ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                        
                                           ),
-                                        ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top:45),
+                                            child: Row(
+                                              children: [
+                                                
+                                                Text('${trips[index]['tripName']}',
+                                                      style: GoogleFonts.cabin(
+                                                    // ignore: prefer_const_constructors
+                                                    textStyle: TextStyle(
+                                                    color: Color.fromARGB(255, 255, 255, 255),
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                                                    
+                                                    ) 
+                                                
+                                                ),
+                                              ),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top:4),
+                                            child: Row(
+                                              children: [
+                                                
+                                                Text('${trips[index]['tripDuration']}',
+                                                      style: GoogleFonts.cabin(
+                                                    // ignore: prefer_const_constructors
+                                                    textStyle: TextStyle(
+                                                    color: Color.fromARGB(255, 255, 255, 255),
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.bold,
+                                                                                    
+                                                    ) 
+                                                
+                                                ),
+                                              ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                    
                                       ),
                                     ),
                                   ),
-                                ],
+                                ),
                               );
                           
                           }
