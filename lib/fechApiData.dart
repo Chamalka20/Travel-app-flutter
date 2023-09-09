@@ -258,7 +258,7 @@ class fechApiData {
               
             })
         });
-      print(data);
+      
       return data;
 
     }
