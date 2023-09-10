@@ -582,6 +582,7 @@ class _locationDetailsState extends State<locationDetails> {
        
       return
       SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Container(
           width:360,
           
@@ -1227,12 +1228,12 @@ class _locationDetailsState extends State<locationDetails> {
                                   padding: const EdgeInsets.only(left:10.0,top:10),
                                   child: SizedBox(
                                   height: 190,
-                                    child: Expanded(
                                     child: ListView.builder(
                                       cacheExtent: 9999,
                                       scrollDirection: Axis.horizontal, 
                                       itemCount: attractionList.length,
                                       itemBuilder: (context, index) {
+                                        
                                         final attraction = attractionList[index];
                                         final atPlaceId = attraction['id'];
                                         final attractionName = attraction['name'];
@@ -1468,9 +1469,7 @@ class _locationDetailsState extends State<locationDetails> {
                                             ),
                                           ); 
                                       },
-                                    ),  
-                                
-                                  ),
+                                    ),
                                     ),
                                   ),
                               ):
