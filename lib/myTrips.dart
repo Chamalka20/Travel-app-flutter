@@ -519,50 +519,50 @@ class _mytripsState extends State<mytrips> {
                           ),
                         ),
               
-                        // Positioned(
-                        //   top:450,
-                        //   left:95,
-                        //   child: Column(
-                        //     children: [
-                        //       Row(
-                        //         children: [
-                        //           SizedBox(
-                        //             width: 155,
-                        //             height: 45,
-                        //             child: TextButton(
-                        //               onPressed:() async{
+                        Positioned(
+                          top:220,
+                          left:95,
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 155,
+                                    height: 45,
+                                    child: TextButton(
+                                      onPressed:() async{
                                       
               
-                        //                   Navigator.push(
-                        //                   context,
-                        //                   MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: false,)));
+                                          Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: false,)));
                                         
-                        //               },
-                        //               style: ElevatedButton.styleFrom(
-                        //                 backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                        //                 foregroundColor:Color.fromARGB(255, 255, 255, 255),
-                        //                 shape: RoundedRectangleBorder(
-                        //                     borderRadius: BorderRadius.circular(20), 
-                        //                   ),
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                        foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20), 
+                                          ),
                                         
-                        //               ),
-                        //               child: Text('Create a new trip',
-                        //                   style: GoogleFonts.roboto(
-                        //                       fontWeight: FontWeight.bold,
-                        //                       fontSize: 15,
+                                      ),
+                                      child: Text('Create a new trip',
+                                          style: GoogleFonts.roboto(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
                                               
                                       
-                        //                   ),
+                                          ),
                                       
-                        //               ),
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ],
-                        //   ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                           
-                        // )
+                        )
                       ]
                     )
                   
