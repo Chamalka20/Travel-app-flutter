@@ -498,12 +498,12 @@ class search extends StatefulWidget {
                                             if(isEditPlace == true){
                                              Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: true,)));
+                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: true, isAddPlace: false,)));
                                             }else{
 
                                               Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: false,)));
+                                              MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: false, isAddPlace: false,)));
 
                                             }  
                                             

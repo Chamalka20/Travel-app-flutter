@@ -711,7 +711,7 @@ class _createNewTripState extends State<createNewTrip> {
                                                 createTrip ();
                                                 Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true,)),
+                                                MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true, isAddPlace: false,)),
                                                 );
 
 
@@ -720,7 +720,7 @@ class _createNewTripState extends State<createNewTrip> {
                                                 createTrip ();
                                                 Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: false,)),
+                                                MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: false, isAddPlace: false,)),
                                                 );
                                                 
                                               }

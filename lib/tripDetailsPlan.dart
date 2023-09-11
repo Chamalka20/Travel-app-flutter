@@ -17,19 +17,21 @@ class tripDetailsPlan extends StatefulWidget {
 
  bool isSelectPlaces;
  bool isEditPlace;
-
- tripDetailsPlan({required this.isSelectPlaces,required this.isEditPlace, Key? key}) : super(key: key);
+ bool isAddPlace;
+  
+ tripDetailsPlan({required this.isSelectPlaces,required this.isEditPlace,required this.isAddPlace, Key? key}) : super(key: key);
  
   
 
   @override
-  State<tripDetailsPlan> createState() => _tripDetailsPlanState(isSelectPlaces,isEditPlace);
+  State<tripDetailsPlan> createState() => _tripDetailsPlanState(isSelectPlaces,isEditPlace,isAddPlace);
 }
 
 class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
   bool isSelectPlaces;
   bool isEditPlace;
+  bool isAddPlace;
 
   List listTiles = [];
   var day = 1;
@@ -43,7 +45,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   bool isAddDay =false;
   ScrollController scrollController = ScrollController();
   
-  _tripDetailsPlanState(this.isSelectPlaces,this.isEditPlace);
+  _tripDetailsPlanState(this.isSelectPlaces,this.isEditPlace,this.isAddPlace);
 
 
 
@@ -120,6 +122,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
     currentIndex = prefs.getInt('selectDay')!;
     final trip = jsonDecode(data!);
 
+    print(trip);
 
     if(isSelectPlaces!= true){
 

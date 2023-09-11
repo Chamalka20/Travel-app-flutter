@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 import 'package:travelapp/createNewTrip.dart';
 import 'package:travelapp/fechApiData.dart';
+import 'package:travelapp/tripDetailsPlan.dart';
 
 
 class locationDetails extends StatefulWidget {
@@ -206,7 +207,6 @@ class _locationDetailsState extends State<locationDetails> {
 
         });
     
-      print(onGoingTrips.length);
 
     }
 
@@ -2021,7 +2021,9 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                                       
                                                                       final prefs = await SharedPreferences.getInstance();
                                                                       final encodata = json.encode(onGoingTrips[index]);
-                                                                      prefs.setString('tripdays',encodata );
+                                                                      prefs.setString('trip',encodata );
+                                                                      prefs.setInt('selectDay',0 );
+
                                                                                                       
                                                                       final tripId = onGoingTrips[index]['tripId'];
                                                                       //find database user selectdoc id -----------------------------------------
@@ -2031,8 +2033,9 @@ class _locationDetailsState extends State<locationDetails> {
                                                                       print("tripid: ${tripId}");
                                                                                                       
                                                                       Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: true,)));
+                                                                      context,
+                                                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true, isAddPlace: true,)),
+                                                                      );
                                                                     },
                                                                     child: Padding(
                                                                       padding: const EdgeInsets.only(right:6,),
