@@ -391,8 +391,9 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                       
                                       if (index == listTiles.length - 1) {
 
-                                        // add trip days------------------------------
+                                        
                                         return GestureDetector(
+                                          // add trip days------------------------------
                                           onTap: () async {
                                             currentIndex=0;
                                             setState(()  {
