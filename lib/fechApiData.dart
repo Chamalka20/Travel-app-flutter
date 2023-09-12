@@ -231,7 +231,7 @@ class fechApiData {
             "tripDuration":tripDuration,
             "tripDescription":description,
             "tripCoverPhoto":tripCoverPhoto,
-            "duration":duration,
+            "durationCount":duration,
             'endDate':endDate,
             "places":deData,
         
@@ -313,7 +313,7 @@ class fechApiData {
             "tripDuration":tripDuration,
             "tripDescription":description,
             "tripCoverPhoto":tripCoverPhoto,
-            "duration":duration,
+            "durationCount":duration,
             'endDate':endDate,
             "places":deData,
 

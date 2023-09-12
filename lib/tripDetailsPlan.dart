@@ -65,6 +65,11 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
       setTripDetails();
       editTrip();
+
+    }else if(isSelectPlaces == false && isAddPlace ==true){
+      setTripDetails();
+      addPlaceToTrip();
+
     }else{
 
       setTripDetails();
@@ -131,14 +136,26 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     }
     
+    if(isAddPlace != true){
 
-    
-    for(var i=1;i<=trip['tripDays'];i++){
+      for(var i=1;i<=trip['tripDays'];i++){
 
       listTiles.add(i);
 
       
+      }
+
+    }else{
+
+      for(var i=0;i<=int.parse(trip['durationCount']);i++){
+
+      listTiles.add(i);
+
+      
+      }
     }
+    
+    
     print(listTiles);
 
     setState(() {
@@ -276,7 +293,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     }else{
 
-      storeTripDays = jsonDecode(trip['places']);
+      storeTripDays = jsonDecode(trip['places']) ;
       //temperaly store editable data sheared memory------------------------
       final enEditPlaces =jsonEncode(storeTripDays);
       prefs.setString('editPlaces',enEditPlaces);
@@ -285,6 +302,19 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
 
   } 
+//-------------------------------------------------------------------
+  Future <void> addPlaceToTrip()async{
+
+    final prefs = await SharedPreferences.getInstance();
+    final editData = prefs.getString('trip');
+    final trip = jsonDecode(editData!);
+
+     storeTripDays = trip['places'];
+
+
+  }
+
+  //move places---------------------------------------------
 
   Future<void> reorderData(int oldIndex, int newIndex) async {
     setState(() {

@@ -122,7 +122,7 @@ class _createNewTripState extends State<createNewTrip> {
 
       final trip ={
         'tripName':TripNameController.text,
-        'tripDays':daysDuration!=null?daysDuration:int.parse(storeTripDays['duration'])+1,
+        'tripDays':daysDuration!=null?daysDuration:int.parse(storeTripDays['durationCount'])+1,
         'tripDuration':dateinput.text,
         'tripudget':TripBudgetController.text,
         'tripLocation':TripLocationController.text,

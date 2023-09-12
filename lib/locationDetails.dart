@@ -206,7 +206,7 @@ class _locationDetailsState extends State<locationDetails> {
           
 
         });
-    
+   
 
     }
 
@@ -2034,7 +2034,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                                       
                                                                       Navigator.push(
                                                                       context,
-                                                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true, isAddPlace: true,)),
+                                                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: false, isAddPlace: true,)),
                                                                       );
                                                                     },
                                                                     child: Padding(
