@@ -136,9 +136,9 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     }
     
-    if(isAddPlace != true){
+    if(isAddPlace != true ){
 
-      for(var i=1;i<=trip['tripDays'];i++){
+      for(var i=1;i<=int.parse(trip['durationCount']);i++){
 
       listTiles.add(i);
 
@@ -149,7 +149,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
       for(var i=0;i<=int.parse(trip['durationCount']);i++){
 
-      listTiles.add(i);
+        listTiles.add(i);
 
       
       }
@@ -303,7 +303,14 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
   } 
 //-------------------------------------------------------------------
+//user moveing places who selecte day-----------------------------------
   Future <void> addPlaceToTrip()async{
+
+
+    setState(() {
+      isTriphasData =true;
+
+    });
 
     final prefs = await SharedPreferences.getInstance();
     final editData = prefs.getString('trip');
@@ -868,7 +875,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     if(isEditPlace == true){
 
                                       await fechApiData.editTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
+                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
 
                                        prefs.setString('trip','');
                                       print('done');
@@ -886,7 +893,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     }else{
 
                                       await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
+                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
 
                                       prefs.setString('trip','');
                                       print('done');
@@ -1250,9 +1257,9 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     final enTrip = jsonEncode(storeTripDays);
 
                                     if(isEditPlace == true){
-
+                                      print(trip);
                                       await fechApiData.editTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
+                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
 
                                       prefs.setString('trip','');
                                       print('done');
@@ -1270,7 +1277,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     }else{
 
                                       await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['tripDays'].toString(),trip['endDate'],enTrip);
+                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
 
                                       prefs.setString('trip','');
                                       print('done');

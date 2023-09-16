@@ -56,6 +56,8 @@ dependencies:
   uuid: ^3.0.7
   internet_connection_checker: ^0.0.1+4
   provider: ^6.0.3
+  flutter_dotenv: ^5.1.0
+  flutter_config: ^2.0.2
   
 
 
@@ -138,6 +140,7 @@ flutter:
     - assets/images/dry-clean.png
     - assets/images/correct.png
     - assets/images/destination.png
+    - .env
 
 
 

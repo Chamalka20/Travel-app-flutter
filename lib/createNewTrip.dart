@@ -91,10 +91,13 @@ class _createNewTripState extends State<createNewTrip> {
   Future<void> createTrip ()async{
 
     if(isEditTrip != true){
+
+      var durationCount = daysDuration??0;
+      var conDurationCount = durationCount.toString();
     
       final trip ={
         'tripName':TripNameController.text,
-        'tripDays':daysDuration??0,
+        'durationCount':conDurationCount,
         'tripDuration':dateinput.text,
         'tripudget':TripBudgetController.text,
         'tripLocation':TripLocationController.text,
@@ -119,10 +122,12 @@ class _createNewTripState extends State<createNewTrip> {
 
       final places = jsonEncode(storeTripDays['places']);
 
+      var durationCount = daysDuration!=null?daysDuration:int.parse(storeTripDays['durationCount']);
+      var conDurationCount = durationCount.toString();
 
       final trip ={
         'tripName':TripNameController.text,
-        'tripDays':daysDuration!=null?daysDuration:int.parse(storeTripDays['durationCount'])+1,
+        'durationCount':conDurationCount,
         'tripDuration':dateinput.text,
         'tripudget':TripBudgetController.text,
         'tripLocation':TripLocationController.text,
@@ -667,7 +672,7 @@ class _createNewTripState extends State<createNewTrip> {
 
                                                 await fechApiData.editTrip(TripNameController.text,TripBudgetController.text
                                                     ,TripLocationController.text,dateinput.text,TripDescriptionController.text,
-                                                    defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,daysDuration==null? storeTripDays['duration']:daysDuration.toString(),endDate?? storeTripDays['endDate'],places);
+                                                    defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,daysDuration==null? storeTripDays['durationCount']:daysDuration.toString(),endDate?? storeTripDays['endDate'],places);
 
                                                 Navigator.push(
                                                 context,

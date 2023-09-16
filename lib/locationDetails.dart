@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -222,15 +223,14 @@ class _locationDetailsState extends State<locationDetails> {
    
 
     Future<void> findWeather ()async {
-        const String apikey = 'qjo4a0EcZrWJD1tgIkc5XH3-4DbeT5NJSmzGKsfHSLY';
-        const apiUrl = 'https://atlas.microsoft.com/weather/currentConditions/json';
-        final url ='$apiUrl?api-version=1.1&query=${searchResults[0]['location']['lat']},${searchResults[0]['location']['lng']}&unit=metric&subscription-key=$apikey';
 
+        const apiUrl = 'https://atlas.microsoft.com/weather/currentConditions/json';
+        final url ='$apiUrl?api-version=1.1&query=${searchResults[0]['location']['lat']},${searchResults[0]['location']['lng']}&unit=metric&subscription-key=${dotenv.env['azureApiKey']}';
+  
         final response = await http.get(Uri.parse(url));
         
         if (response.statusCode == 200) {
           print("Weather calculate sucsuss:${response.statusCode}");
-
           final responseData = jsonDecode(response.body);
           List<dynamic> results = responseData['results'];
 
@@ -388,9 +388,8 @@ class _locationDetailsState extends State<locationDetails> {
 
     currentCity = prefs.getString('currentCity');
 
-    const String apikey = 'qjo4a0EcZrWJD1tgIkc5XH3-4DbeT5NJSmzGKsfHSLY';
     const String apiUrl = 'https://atlas.microsoft.com/route/directions/json';
-    final url ='$apiUrl?api-version=1.0&query=${currentLocation['lat']},${currentLocation['lng']}:${searchResults[0]['location']['lat']},${searchResults[0]['location']['lng']}&report=effectiveSettings&subscription-key=$apikey';
+    final url ='$apiUrl?api-version=1.0&query=${currentLocation['lat']},${currentLocation['lng']}:${searchResults[0]['location']['lat']},${searchResults[0]['location']['lng']}&report=effectiveSettings&subscription-key=${dotenv.env['azureApiKey']}';
 
     final response = await http.get(Uri.parse(url));
 

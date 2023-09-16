@@ -220,6 +220,8 @@ class fechApiData {
 
       var uuid = const Uuid();
 
+      print("duration:${duration}");
+
       await FirebaseFirestore.instance
       .collection('users').doc(userId).collection('trips').add({
 
