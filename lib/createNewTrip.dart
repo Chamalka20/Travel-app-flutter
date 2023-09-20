@@ -120,7 +120,7 @@ class _createNewTripState extends State<createNewTrip> {
       final endata = prefs.getString('tripdays');
       final storeTripDays =jsonDecode(endata!);
 
-      final places = jsonEncode(storeTripDays['places']);
+      final places = storeTripDays['places'];
 
       var durationCount = daysDuration!=null?daysDuration:int.parse(storeTripDays['durationCount']);
       var conDurationCount = durationCount.toString();

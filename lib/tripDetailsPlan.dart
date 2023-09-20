@@ -62,16 +62,12 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
       getPlacesData() ;
 
     }else if(isSelectPlaces == false && isEditPlace== true) {
-
+      
       setTripDetails();
       editTrip();
 
-    }else if(isSelectPlaces == false && isAddPlace ==true){
-      setTripDetails();
-      addPlaceToTrip();
-
     }else{
-
+     
       setTripDetails();
     }
    
@@ -136,25 +132,14 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     }
     
-    if(isAddPlace != true ){
-
-      for(var i=1;i<=int.parse(trip['durationCount']);i++){
+   
+    for(var i=0;i<=int.parse(trip['durationCount']);i++){
 
       listTiles.add(i);
 
-      
-      }
-
-    }else{
-
-      for(var i=0;i<=int.parse(trip['durationCount']);i++){
-
-        listTiles.add(i);
-
-      
-      }
-    }
     
+    }
+   
     
     print(listTiles);
 
@@ -239,7 +224,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
     final editData = prefs.getString('trip');
     final setectedTripPlaces = prefs.getString('TripPlaceIds');
     final trip = jsonDecode(editData!);
-
+    
      setState(() {
       isTriphasData =true;
 
@@ -293,9 +278,9 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     }else{
 
-      storeTripDays = jsonDecode(trip['places']) ;
+      storeTripDays = trip['places'] ;
       //temperaly store editable data sheared memory------------------------
-      final enEditPlaces =jsonEncode(storeTripDays);
+      final enEditPlaces =jsonEncode(storeTripDays);   
       prefs.setString('editPlaces',enEditPlaces);
 
     }
@@ -303,23 +288,6 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
   } 
 //-------------------------------------------------------------------
-//user moveing places who selecte day-----------------------------------
-  Future <void> addPlaceToTrip()async{
-
-
-    setState(() {
-      isTriphasData =true;
-
-    });
-
-    final prefs = await SharedPreferences.getInstance();
-    final editData = prefs.getString('trip');
-    final trip = jsonDecode(editData!);
-
-     storeTripDays = trip['places'];
-
-
-  }
 
   //move places---------------------------------------------
 
@@ -340,9 +308,181 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
   }
 
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+          title:  Text("Select Day",
+                    style: GoogleFonts.cabin(
+                    // ignore: prefer_const_constructors
+                    textStyle: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                                                  
+                    ) 
+                  )
+                ),
+          content: SizedBox(
+            height:150,
+            child: Column(
+              children: [
+                Expanded(
+                    child: ListView.builder(
+                              cacheExtent: 9999,
+                              scrollDirection: Axis.vertical, 
+                              itemCount: listTiles.length,
+                              itemBuilder: (context, index) {
+                                
+                                if (index == listTiles.length - 1) {
+                
+                                  
+                                  return GestureDetector(
+                                    // add trip days------------------------------
+                                    onTap: ()  {
+
+                                     
+                                      
+                                    },
+                                    child: Container(
+                                        width: 40,
+                                        height:40,
+                                        color:Color.fromARGB(0, 230, 230, 230),
+                                        child: Image.asset('assets/images/add-black.png')
+                                        
+                                        ),
+                                  );
+                                }else{
+                
+                                  return InkWell(
+                                    onTap: ()=>{
+                
+                                        setState(() {
+                
+                                          day =listTiles[index];
+                                          currentIndex = index;
+                                          isSelectPlaces=false;
+                                          isAddPlace = false;
+                                          //when tap the add button scrolling to the center-----------------------------
+                                          
+                                          scrollController.animateTo(
+                                              index * (100),
+                                              duration: const Duration(microseconds: 800),
+                                              curve: Curves.decelerate,
+                                          );
+                                          tripDays;
+                                        }),
+                                        print("${currentIndex+1}"),
+                                      
+
+                                      Navigator.pop(context, true),
+                                      Navigator.pop(context, true),
+                                      
+                                    
+                                    },
+                                    child: Card(
+                                    elevation: 0,
+                                    color:currentIndex==index?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 230, 230, 230),
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                    child:Container(
+                                      width: 100,
+                                      height:30,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Day ${index+1}',
+                                                style: GoogleFonts.cabin(
+                                                          // ignore: prefer_const_constructors
+                                                          textStyle: TextStyle(
+                                                          color: currentIndex==index?Color.fromARGB(255, 255, 255, 255):Color.fromARGB(255, 0, 0, 0),
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.bold,
+                                                                                        
+                                                          ) 
+                                                        )
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      
+                                    )
+                                      
+                                    
+                                    ),
+                                  );
+                
+                                }
+                                  
+                              },
+                            ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+           
+          TextButton(
+            onPressed: () {
+              
+              Navigator.pop(context, true);
+              Navigator.pop(context, true);// Dismisses dialog
+              Navigator.pop(context, true);// Navigates back to previous screen   
+            },
+            child: Text('Go back'),
+          ),
+            
+          ],
+          
+        ),
+    
+    );
+
+      },
+    );
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    //if show popupbox when user add place to the trip-----------------------
+    // ignore: unrelated_type_equality_checks
+    if(isAddPlace == true){
+
+      Future.delayed(Duration.zero, () => _showDialog());
+      return 
+        buildBody();
+    
+    }else{
+
+      return
+        buildBody();
+
+    }
+    
+  }
+
+Widget buildBody() {
+
+  return
+    WillPopScope(
       onWillPop: () async {
          bool confirmExit = await showDialog(
                 context: context,
@@ -363,10 +503,8 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                           final prefs = await SharedPreferences.getInstance();
                           prefs.setString('trip','' );
                           prefs.setString('tripdays','' );
-
-                          Navigator.of(context).pushReplacement(customPageRoutes(
-                    
-                          child: navigationPage(isBackButtonClick:true,autoSelectedIndex: 2,)));  
+                           
+                          Navigator.pop(context, true);  
                         },
                         child: Text('No'),
                       ),
@@ -374,193 +512,197 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                   );
                 },
               );
-      return false;
+      return confirmExit;
       }, 
-      child: Scaffold(
-       appBar: AppBar( 
-       leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () =>{},// Navigator.of(context).pop(),
-        ),
-        toolbarHeight: 180,
-        flexibleSpace: Container(
-          color: Color.fromARGB(255, 250, 250, 250),
-          child: Column(
-            children: [
-               Container(
-                   
-                    color: Color.fromARGB(98, 255, 255, 255),
-                    child:Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top:22,left:10),
-                          child: Row(
+      child: 
+        
+          Scaffold(
+            appBar: AppBar( 
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () =>{},// Navigator.of(context).pop(),
+              ),
+              toolbarHeight: 180,
+              flexibleSpace: Container(
+                color: Color.fromARGB(255, 250, 250, 250),
+                child: Column(
+                  children: [
+                    Container(
+                        
+                          color: Color.fromARGB(98, 255, 255, 255),
+                          child:Column(
                             children: [
-                               
-                                Padding(
-                                  padding: const EdgeInsets.only(left:100,top:35),
-                                  child: Text("Trip Details Plan",
-                                    style: GoogleFonts.cabin(
-                                        // ignore: prefer_const_constructors
-                                        textStyle: TextStyle(
-                                        color: const Color.fromARGB(255, 27, 27, 27),
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                                              
-                                        ) 
-                                      )
-                                  ),
+                              Padding(
+                                padding: const EdgeInsets.only(top:22,left:10),
+                                child: Row(
+                                  children: [
+                                    
+                                      Padding(
+                                        padding: const EdgeInsets.only(left:100,top:35),
+                                        child: Text("Trip Details Plan",
+                                          style: GoogleFonts.cabin(
+                                              // ignore: prefer_const_constructors
+                                              textStyle: TextStyle(
+                                              color: const Color.fromARGB(255, 27, 27, 27),
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                                                    
+                                              ) 
+                                            )
+                                        ),
+                                      ),
+                                    
+                                  ],
                                 ),
-                               
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top:70,left:10,right: 10),
-                          child: SizedBox(
-                            height: 50,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                  child: ListView.builder(
-                                    controller: scrollController,
-                                    cacheExtent: 9999,
-                                    scrollDirection: Axis.horizontal, 
-                                    itemCount: listTiles.length,
-                                    itemBuilder: (context, index) {
-                                      
-                                      if (index == listTiles.length - 1) {
-
-                                        
-                                        return GestureDetector(
-                                          // add trip days------------------------------
-                                          onTap: () async {
-                                            currentIndex=0;
-                                            setState(()  {
-                                              listTiles.add(listTiles.length+1);
-                                              isAddDay =true;
-                                              currentIndex =index;
-                                            });
-
-
-                                            //when tap the add button scrolling to the center-----------------------------
-                                            scrollController.animateTo(scrollController.offset + 130,
-                                              curve: Curves.linear, duration: Duration(milliseconds: 500));
-                                            //change trip days-----------------------------
-                                            final prefs = await SharedPreferences.getInstance();
-                                            final data = prefs.getString('trip');
-                                            final trip = jsonDecode(data!);
-                                            trip['tripDays'] =listTiles.length;
-                                            //Re store temproly -----------------------------------
-                                            final endata = jsonEncode(trip);
-                                            prefs.setString('trip', endata);
-                                            
-                                          },
-                                          child: Container(
-                                              width: 40,
-                                              height:40,
-                                              color:Color.fromARGB(0, 230, 230, 230),
-                                              child: Image.asset('assets/images/add-black.png')
-                                              
-                                              ),
-                                        );
-                                      }else{
-   
-                                        return InkWell(
-                                          onTap: ()=>{
-
-                                            if(isSelectPlaces==true && storeTripDays['${currentIndex}']==null && isAddDay ==false){
-
-                                              null
-                                            }else{
-
-                                              setState(() {
-   
-                                                day =listTiles[index];
-                                                currentIndex = index;
-                                                isSelectPlaces=false;
-                                                tripDays;
-                                              }),
-                                              print("${currentIndex+1}"),
-                                            }
-                                            
-                                           
-                                          },
-                                          child: Card(
-                                          elevation: 0,
-                                          color:currentIndex==index?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 230, 230, 230),
-                                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                                          shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(10.0),
-                                                ),
-                                          child:Container(
-                                            width: 100,
-                                            height:30,
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      'Day ${index+1}',
-                                                      style: GoogleFonts.cabin(
-                                                                // ignore: prefer_const_constructors
-                                                                textStyle: TextStyle(
-                                                                color: currentIndex==index?Color.fromARGB(255, 255, 255, 255):Color.fromARGB(255, 0, 0, 0),
-                                                                fontSize: 14,
-                                                                fontWeight: FontWeight.bold,
-                                                                                              
-                                                                ) 
-                                                               )
-                                                    ),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                            
-                                          )
-                                            
-                                          
-                                          ),
-                                        );
-   
-                                      }
-                                         
-                                    },
-                                  ),  
-                          
-                                  ),
-                                  
-                                ],
                               ),
-                          ),
-                        ),
-                      ],
-                    )
-                  )
-              
-            ],
+                              Padding(
+                                padding: const EdgeInsets.only(top:70,left:10,right: 10),
+                                child: SizedBox(
+                                  height: 50,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                        child: ListView.builder(
+                                          controller: scrollController,
+                                          cacheExtent: 9999,
+                                          scrollDirection: Axis.horizontal, 
+                                          itemCount: listTiles.length,
+                                          itemBuilder: (context, index) {
+                                            
+                                            if (index == listTiles.length - 1) {
+
+                                              
+                                              return GestureDetector(
+                                                // add trip days------------------------------
+                                                onTap: () async {
+                                                  currentIndex=0;
+                                                  setState(()  {
+                                                    listTiles.add(listTiles.length+1);
+                                                    isAddDay =true;
+                                                    currentIndex =index;
+                                                  });
+
+
+                                                  //when tap the add button scrolling to the center-----------------------------
+                                                  scrollController.animateTo(scrollController.offset + 130,
+                                                    curve: Curves.linear, duration: Duration(milliseconds: 500));
+                                                  //change trip days-----------------------------
+                                                  final prefs = await SharedPreferences.getInstance();
+                                                  final data = prefs.getString('trip');
+                                                  final trip = jsonDecode(data!);
+                                                  trip['tripDays'] =listTiles.length;
+                                                  //Re store temproly -----------------------------------
+                                                  final endata = jsonEncode(trip);
+                                                  prefs.setString('trip', endata);
+                                                  
+                                                },
+                                                child: Container(
+                                                    width: 40,
+                                                    height:40,
+                                                    color:Color.fromARGB(0, 230, 230, 230),
+                                                    child: Image.asset('assets/images/add-black.png')
+                                                    
+                                                    ),
+                                              );
+                                            }else{
+        
+                                              return InkWell(
+                                                onTap: ()=>{
+
+                                                  if(isSelectPlaces==true && storeTripDays['${currentIndex}']==null && isAddDay ==false){
+
+                                                    null
+                                                  }else{
+
+                                                    setState(() {
+        
+                                                      day =listTiles[index];
+                                                      currentIndex = index;
+                                                      isSelectPlaces=false;
+                                                      tripDays;
+                                                    }),
+                                                    print("${currentIndex+1}"),
+                                                  }
+                                                  
+                                                
+                                                },
+                                                child: Card(
+                                                elevation: 0,
+                                                color:currentIndex==index?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 230, 230, 230),
+                                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(10.0),
+                                                      ),
+                                                child:Container(
+                                                  width: 100,
+                                                  height:30,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Text(
+                                                            'Day ${index+1}',
+                                                            style: GoogleFonts.cabin(
+                                                                      // ignore: prefer_const_constructors
+                                                                      textStyle: TextStyle(
+                                                                      color: currentIndex==index?Color.fromARGB(255, 255, 255, 255):Color.fromARGB(255, 0, 0, 0),
+                                                                      fontSize: 14,
+                                                                      fontWeight: FontWeight.bold,
+                                                                                                    
+                                                                      ) 
+                                                                    )
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                  
+                                                )
+                                                  
+                                                
+                                                ),
+                                              );
+        
+                                            }
+                                              
+                                          },
+                                        ),  
+                                
+                                        ),
+                                        
+                                      ],
+                                    ),
+                                ),
+                              ),
+                            ],
+                          )
+                        )
+                    
+                  ],
+                ),
+              ),
+            ),
+            
+            body: tripList(),
+            
           ),
-        ),
-      ),
-      body: buildBody(),
-      ),
     );
-  }
+
+}
 
 
-
-
-  Widget buildBody() {
+  Widget tripList() {
 
   final ColorScheme colorScheme = Theme.of(context).colorScheme;
   final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
   final Color evenItemColor = colorScheme.primary.withOpacity(0.15);
 
    if(isSelectPlaces==true && storeTripDays['${currentIndex}']!=null){
+    
    return  
    
       Padding(
@@ -947,197 +1089,239 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
          ),
        );
 }else if(isSelectPlaces==false && storeTripDays['${currentIndex}']!=null){
-    return  
-   
-       Padding(
-         padding: const EdgeInsets.only(top:17),
-         child: Column(
-           children: [
-               Expanded(
-                 child: Stack(
-                   children: [
-                    ReorderableListView(
-                     
-                     padding: const EdgeInsets.symmetric(horizontal: 10,),
-                     onReorder: reorderData,
-                     children: <Widget>[
-                       for (int index = 0; index < storeTripDays['${currentIndex}'].length; index += 1)
-                       Card(
-                         color:const Color.fromARGB(255, 240, 238, 238),
-                         key: ValueKey(index),
-                         shape: RoundedRectangleBorder(
-                           borderRadius: BorderRadius.circular(17.0),
-                         ),
-                         elevation: 2,
-                         child: Container(
-                           height:90,
-                           child: Row(
-                            children: [
-                              Container(
-                                height: 90,
-                                width: 90,
-                                 decoration: BoxDecoration(
-                                  
-                                  borderRadius: BorderRadius.circular(17),
-                                  image: DecorationImage(
-                                    image: NetworkImage(storeTripDays['${currentIndex}'][index]['photo_reference']),
-                                    fit: BoxFit.cover
-                                            
-                                  ),
-                                
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left:6,top:5),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 200,
-                                          child: Text(storeTripDays['${currentIndex}'][index]['name'],
-                                            style: GoogleFonts.cabin(
-                                                  // ignore: prefer_const_constructors
-                                                  textStyle: TextStyle(
-                                                  color: const Color.fromARGB(255, 27, 27, 27),
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w600,
-                                          
-                                                  ) 
-                                                ),
-                                          
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top:35),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      width:30,
-                                      child: Text('${index+1}',
-                                        style: GoogleFonts.cabin(
-                                                      // ignore: prefer_const_constructors
-                                                      textStyle: TextStyle(
-                                                      color: const Color.fromARGB(255, 27, 27, 27),
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.w600,
+
+      return  
+    
+        Padding(
+          padding: const EdgeInsets.only(top:17),
+          child: Column(
+            children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      ReorderableListView(
+                      
+                      padding: const EdgeInsets.symmetric(horizontal: 10,),
+                      onReorder: reorderData,
+                      children: <Widget>[
+                        for (int index = 0; index < storeTripDays['${currentIndex}'].length; index += 1)
+                        Card(
+                          color:const Color.fromARGB(255, 240, 238, 238),
+                          key: ValueKey(index),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(17.0),
+                          ),
+                          elevation: 2,
+                          child: Container(
+                            height:90,
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 90,
+                                  width: 90,
+                                  decoration: BoxDecoration(
+                                    
+                                    borderRadius: BorderRadius.circular(17),
+                                    image: DecorationImage(
+                                      image: NetworkImage(storeTripDays['${currentIndex}'][index]['photo_reference']),
+                                      fit: BoxFit.cover
                                               
-                                                      ) 
-                                                    ),
-                                      ),
-                                    )
-                                  ],
+                                    ),
+                                  
+                                  ),
                                 ),
-                              )
-                            ],
-                           )
-                         )
-                       )
-                     ],
-                   ),
-                   Visibility(
-                    visible: isTriphasData,
-                     child: Positioned(
-                      top:410,
-                      left:20,
-                      child:Row(
-                        children: [
-                          SizedBox(
-                            width:150,
-                            child: TextButton(
-                                onPressed:() async{
-                                      showModalBottomSheet(
-                                    context: context,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(20),
-                                          ),
-                                      ), 
-                                    builder: (BuildContext context) { 
-      
-                                      return
-                                        SizedBox(
-                                        height:200,
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                // get atrractions---------------------------------------------
-                                                GestureDetector(
-                                                  onTap: () async{
+                                Padding(
+                                  padding: const EdgeInsets.only(left:6,top:5),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 200,
+                                            child: Text(storeTripDays['${currentIndex}'][index]['name'],
+                                              style: GoogleFonts.cabin(
+                                                    // ignore: prefer_const_constructors
+                                                    textStyle: TextStyle(
+                                                    color: const Color.fromARGB(255, 27, 27, 27),
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                            
+                                                    ) 
+                                                  ),
+                                            
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top:35),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        width:30,
+                                        child: Text('${index+1}',
+                                          style: GoogleFonts.cabin(
+                                                        // ignore: prefer_const_constructors
+                                                        textStyle: TextStyle(
+                                                        color: const Color.fromARGB(255, 27, 27, 27),
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.w600,
+                                                
+                                                        ) 
+                                                      ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          )
+                        )
+                      ],
+                    ),
+                    Visibility(
+                      visible: isTriphasData,
+                      child: Positioned(
+                        top:410,
+                        left:20,
+                        child:Row(
+                          children: [
+                            SizedBox(
+                              width:150,
+                              child: TextButton(
+                                  onPressed:() async{
+                                        showModalBottomSheet(
+                                      context: context,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20),
+                                            ),
+                                        ), 
+                                      builder: (BuildContext context) { 
+        
+                                        return
+                                          SizedBox(
+                                          height:200,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  // get atrractions---------------------------------------------
+                                                  GestureDetector(
+                                                    onTap: () async{
 
-                                                    final prefs = await SharedPreferences.getInstance();
-                                                    prefs.setInt('selectDay',currentIndex );
-                                                    prefs.setString('searchType','attracrions' );
+                                                      final prefs = await SharedPreferences.getInstance();
+                                                      prefs.setInt('selectDay',currentIndex );
+                                                      prefs.setString('searchType','attracrions' );
 
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'attraction',isSelectPlaces: true,)));
-                                                    
-                                                  },
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    children: [
-                                                      Row(
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'attraction',isSelectPlaces: true,)));
+                                                      
+                                                    },
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Container(
+                                                              width: 70,
+                                                              height:70,
+                                                              decoration: BoxDecoration(
+                                                                color: const Color.fromARGB(255, 240, 238, 238),
+                                                                borderRadius: BorderRadius.circular(45)
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children: [
+                                                                      Image.asset("assets/images/flash.png",width:40,height:40),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              )
+                                                              ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          
+                                                          children: [
+                                                            Text("Attracrions")
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  // get resturents----------------------------------------------------
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      
+                                                      final prefs = await SharedPreferences.getInstance();
+                                                      prefs.setInt('selectDay',currentIndex );
+                                                      prefs.setString('searchType','resturants' );
+
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'restaurant',isSelectPlaces: true,)));
+                                                      
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(right:33,left:33),
+                                                      child: Column(
                                                         children: [
-                                                          Container(
-                                                            width: 70,
-                                                            height:70,
-                                                            decoration: BoxDecoration(
-                                                              color: const Color.fromARGB(255, 240, 238, 238),
-                                                              borderRadius: BorderRadius.circular(45)
-                                                            ),
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                Row(
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                width: 70,
+                                                                height:70,
+                                                                decoration: BoxDecoration(
+                                                                  color: const Color.fromARGB(255, 240, 238, 238),
+                                                                  borderRadius: BorderRadius.circular(45)
+                                                                ),
+                                                                child: Column(
                                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                                   children: [
-                                                                    Image.asset("assets/images/flash.png",width:40,height:40),
+                                                                    Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        SizedBox(child: Image.asset("assets/images/hotel.png",width:40,height:40)),
+                                                                      ],
+                                                                    ),
                                                                   ],
+                                                                )
                                                                 ),
-                                                              ],
-                                                            )
-                                                            ),
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text("Resturants")
+                                                            ],
+                                                          )
                                                         ],
                                                       ),
-                                                      Row(
-                                                        
-                                                        children: [
-                                                          Text("Attracrions")
-                                                        ],
-                                                      )
-                                                    ],
+                                                    ),
                                                   ),
-                                                ),
-                                                // get resturents----------------------------------------------------
-                                                GestureDetector(
-                                                  onTap: () async {
-                                                    
-                                                    final prefs = await SharedPreferences.getInstance();
-                                                    prefs.setInt('selectDay',currentIndex );
-                                                    prefs.setString('searchType','resturants' );
-
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) =>  const search(isTextFieldClicked: true,searchType: 'restaurant',isSelectPlaces: true,)));
-                                                    
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(right:33,left:33),
+                                                  //get your like places----------------------------------------------------------
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      
+                                                    },
                                                     child: Column(
                                                       children: [
                                                         Row(
@@ -1157,7 +1341,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                                     children: [
-                                                                      SizedBox(child: Image.asset("assets/images/hotel.png",width:40,height:40)),
+                                                                      Image.asset("assets/images/heartBlack.png",width:40,height:40),
                                                                     ],
                                                                   ),
                                                                 ],
@@ -1167,145 +1351,33 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                                         ),
                                                         Row(
                                                           children: [
-                                                            Text("Resturants")
+                                                            Text("Your Favorites")
                                                           ],
                                                         )
                                                       ],
                                                     ),
                                                   ),
-                                                ),
-                                                //get your like places----------------------------------------------------------
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    
-                                                  },
-                                                  child: Column(
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          Container(
-                                                            width: 70,
-                                                            height:70,
-                                                            decoration: BoxDecoration(
-                                                              color: const Color.fromARGB(255, 240, 238, 238),
-                                                              borderRadius: BorderRadius.circular(45)
-                                                            ),
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Image.asset("assets/images/heartBlack.png",width:40,height:40),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            )
-                                                            ),
-                                                        ],
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Text("Your Favorites")
-                                                        ],
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        
-                                        );
-      
-                                      }, 
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          
+                                          );
+        
+                                        }, 
+                                      
                                     
-                                  
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color.fromARGB(255, 2, 94, 14),
-                                  foregroundColor:Color.fromARGB(255, 255, 255, 255),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20), 
-                                    ),
-                                  
-                                ),
-                                child: Text('Add places',
-                                    style: GoogleFonts.roboto(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        
-                                
-                                    ),
-                                
-                                ),
-                              ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left:10),
-                            child: SizedBox(
-                              width:150,
-                              child: TextButton(
-                                  onPressed:() async{
-                                    final prefs = await SharedPreferences.getInstance();
-                                    final data = prefs.getString('trip');
-                                    final trip = jsonDecode(data!);
-                                    final enTrip = jsonEncode(storeTripDays);
-
-                                    if(isEditPlace == true){
-                                      print(trip);
-                                      await fechApiData.editTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
-
-                                      prefs.setString('trip','');
-                                      print('done');
-
-                                      //show message to the user-----------------
-                                      ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(content:Text("Trip edit success")));
-
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
-                                      );
-
-
-                                    }else{
-
-                                      await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
-                                      trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
-
-                                      prefs.setString('trip','');
-                                      print('done');
-
-                                      //show message to the user-----------------
-                                      ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(content:Text("Trip was created")));
-
-
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
-                                      );
-
-                                    }
-
-
-                                    
+                                    );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                    backgroundColor: Color.fromARGB(255, 2, 94, 14),
                                     foregroundColor:Color.fromARGB(255, 255, 255, 255),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20), 
                                       ),
                                     
                                   ),
-                                  child: Text(isEditPlace?'Save changes':'Create a trip',
+                                  child: Text('Add places',
                                       style: GoogleFonts.roboto(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
@@ -1316,21 +1388,93 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                   ),
                                 ),
                             ),
-                          ),
-                        ],
-                      ),
-                      
-                      ),
-                   )
-                   ]
-                 ),
-               )
-             
-              
-           ],
-         ),
-       );
+                            Padding(
+                              padding: const EdgeInsets.only(left:10),
+                              child: SizedBox(
+                                width:150,
+                                child: TextButton(
+                                    onPressed:() async{
+                                      final prefs = await SharedPreferences.getInstance();
+                                      final data = prefs.getString('trip');
+                                      final trip = jsonDecode(data!);
+                                      final enTrip = jsonEncode(storeTripDays);
 
+                                      if(isEditPlace == true){
+                                        print(trip);
+                                        await fechApiData.editTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                        trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
+
+                                        prefs.setString('trip','');
+                                        print('done');
+
+                                        //show message to the user-----------------
+                                        ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(content:Text("Trip edit success")));
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+                                        );
+
+
+                                      }else{
+
+                                        await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                        trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
+
+                                        prefs.setString('trip','');
+                                        print('done');
+
+                                        //show message to the user-----------------
+                                        ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(content:Text("Trip was created")));
+
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+                                        );
+
+                                      }
+
+
+                                      
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                      foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20), 
+                                        ),
+                                      
+                                    ),
+                                    child: Text(isEditPlace?'Save changes':'Create a trip',
+                                        style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            
+                                    
+                                        ),
+                                    
+                                    ),
+                                  ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        
+                        ),
+                    )
+                    ]
+                  ),
+                )
+              
+                
+            ],
+          ),
+        );
+
+ 
    }else if(isSelectPlaces==true && storeTripDays['${currentIndex}']==null&& isAddDay ==false){
 
      return const Center(

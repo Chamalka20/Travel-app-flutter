@@ -2033,7 +2033,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                                       
                                                                       Navigator.push(
                                                                       context,
-                                                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: false, isAddPlace: true,)),
+                                                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true, isAddPlace: true,)),
                                                                       );
                                                                     },
                                                                     child: Padding(
