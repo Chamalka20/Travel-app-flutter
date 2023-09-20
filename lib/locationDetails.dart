@@ -2027,8 +2027,12 @@ class _locationDetailsState extends State<locationDetails> {
                                                                       final tripId = onGoingTrips[index]['tripId'];
                                                                       //find database user selectdoc id -----------------------------------------
                                                                       final tripDocId=await fechApiData.getTripDocId(tripId);
+                                                                      //----------------------------------------------------------------------
                                                                       await prefs.setString('triDocId',tripDocId );
-                                                                                                      
+                                                                      await prefs.setString('TripPlaceIds',placeId);
+                                                                      await prefs.setString('searchType','attracrions');
+                                                                      await prefs.setBool('isEditTrip',true);
+
                                                                       print("tripid: ${tripId}");
                                                                                                       
                                                                       Navigator.push(
