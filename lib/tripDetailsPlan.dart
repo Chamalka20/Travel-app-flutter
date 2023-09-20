@@ -120,8 +120,16 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString('trip');
-    currentIndex = prefs.getInt('selectDay')!;
     final trip = jsonDecode(data!);
+
+    currentIndex = prefs.getInt('selectDay')!;
+    //when tap the add button scrolling to the related day-----------------------------
+    scrollController.animateTo(
+        currentIndex * (100),
+        duration: const Duration(microseconds: 800),
+        curve: Curves.decelerate,
+    );
+    
 
     print(trip);
 
@@ -330,7 +338,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                   )
                 ),
           content: SizedBox(
-            height:150,
+            height:200,
             child: Column(
               children: [
                 Expanded(
@@ -369,13 +377,14 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                           currentIndex = index;
                                           isSelectPlaces=false;
                                           isAddPlace = false;
-                                          //when tap the add button scrolling to the center-----------------------------
-                                          
+
+                                          //when tap the add button scrolling to the related day-----------------------------
                                           scrollController.animateTo(
                                               index * (100),
                                               duration: const Duration(microseconds: 800),
                                               curve: Curves.decelerate,
                                           );
+
                                           tripDays;
                                         }),
                                         print("${currentIndex+1}"),
@@ -388,14 +397,13 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                     },
                                     child: Card(
                                     elevation: 0,
-                                    color:currentIndex==index?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 230, 230, 230),
+                                    color:Color.fromARGB(255, 0, 0, 0),
                                     clipBehavior: Clip.antiAliasWithSaveLayer,
                                     shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(10.0),
                                           ),
                                     child:Container(
-                                      width: 100,
-                                      height:30,
+                                      height:60,
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -409,7 +417,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                                 style: GoogleFonts.cabin(
                                                           // ignore: prefer_const_constructors
                                                           textStyle: TextStyle(
-                                                          color: currentIndex==index?Color.fromARGB(255, 255, 255, 255):Color.fromARGB(255, 0, 0, 0),
+                                                          color: Color.fromARGB(255, 255, 255, 255),
                                                           fontSize: 14,
                                                           fontWeight: FontWeight.bold,
                                                                                         
@@ -1016,7 +1024,7 @@ Widget buildBody() {
 
                                     if(isEditPlace == true){
 
-                                      await fechApiData.editTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                      await fechApiData.editTrip(trip['tripName'],trip['tripBudget'],trip['tripLocation'],
                                       trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
 
                                        prefs.setString('trip','');
@@ -1034,7 +1042,7 @@ Widget buildBody() {
 
                                     }else{
 
-                                      await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                      await fechApiData.creatTrip(trip['tripName'],trip['tripBudget'],trip['tripLocation'],
                                       trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
 
                                       prefs.setString('trip','');
@@ -1400,8 +1408,8 @@ Widget buildBody() {
                                       final enTrip = jsonEncode(storeTripDays);
 
                                       if(isEditPlace == true){
-                                        print(trip);
-                                        await fechApiData.editTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                        print(trip['tripudget']);
+                                        await fechApiData.editTrip(trip['tripName'],trip['tripBudget'],trip['tripLocation'],
                                         trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
 
                                         prefs.setString('trip','');
@@ -1419,7 +1427,7 @@ Widget buildBody() {
 
                                       }else{
 
-                                        await fechApiData.creatTrip(trip['tripName'],trip['tripudget'],trip['tripLocation'],
+                                        await fechApiData.creatTrip(trip['tripName'],trip['tripBudget'],trip['tripLocation'],
                                         trip['tripDuration'],trip['tripDescription'],trip['tripCoverPhoto'],trip['durationCount'].toString(),trip['endDate'],enTrip);
 
                                         prefs.setString('trip','');
