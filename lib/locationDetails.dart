@@ -2029,7 +2029,14 @@ class _locationDetailsState extends State<locationDetails> {
                                                                       final tripDocId=await fechApiData.getTripDocId(tripId);
                                                                       //----------------------------------------------------------------------
                                                                       await prefs.setString('triDocId',tripDocId );
-                                                                      await prefs.setString('TripPlaceIds',placeId);
+
+                                                                      List selectedIds =[{
+                                                                                      'day':"" ,
+                                                                                      'places':[placeId],
+                                                                                    }];
+                                                                      final endata = json.encode(selectedIds);
+                                                                      await prefs.setString('TripPlaceIds',endata);
+
                                                                       await prefs.setString('searchType','attracrions');
                                                                       await prefs.setBool('isEditTrip',true);
 

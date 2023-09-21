@@ -52,7 +52,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
    @override
   void initState() {
     super.initState();
-
+    
     if(isSelectPlaces == true && isEditPlace== false) {
 
        getPlacesData() ;
@@ -259,7 +259,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
         }
 
       }).where((element) => element != null).toList();
-
+      print(addPlaces);
       //-----------------------------------------------------------
 
       if(storeTripDays['${currentIndex}'] == null){
@@ -368,14 +368,16 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                   );
                                 }else{
                 
-                                  return InkWell(
-                                    onTap: ()=>{
-                
+                                  return GestureDetector(
+                                    onTap: () async {
+
+                                        final prefs = await SharedPreferences.getInstance();
+                                        prefs.setInt('selectDay',index);
+                                        
                                         setState(() {
-                
+
                                           day =listTiles[index];
-                                          currentIndex = index;
-                                          isSelectPlaces=false;
+                                          isSelectPlaces=true;
                                           isAddPlace = false;
 
                                           //when tap the add button scrolling to the related day-----------------------------
@@ -386,13 +388,13 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                           );
 
                                           tripDays;
-                                        }),
-                                        print("${currentIndex+1}"),
+                                        });
+                                        print("${currentIndex+1}");
                                       
 
-                                      Navigator.pop(context, true),
-                                      Navigator.pop(context, true),
-                                      
+                                      Navigator.pop(context, true);
+                                      Navigator.pop(context, true);
+                                      getPlacesData();
                                     
                                     },
                                     child: Card(
