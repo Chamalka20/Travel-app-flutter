@@ -1,16 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/Home.dart';
 import 'package:travelapp/search.dart';
 import 'package:travelapp/fechApiData.dart';
 
-import 'customPageRoutes.dart';
-import 'myTrips.dart';
 import 'navigationPage.dart';
 
 class tripDetailsPlan extends StatefulWidget {
@@ -42,6 +37,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   var storeTripDays={};
   late List<dynamic>  selectedData ;
   bool isTriphasData =false;
+  bool isDaySlect = false;
   bool isAddDay =false;
   ScrollController scrollController = ScrollController();
   
@@ -143,7 +139,13 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
    
     for(var i=0;i<=int.parse(trip['durationCount']);i++){
 
-      listTiles.add(i);
+      if(listTiles.contains(i)){
+        return;
+      }else{
+
+        listTiles.add(i);
+      }
+      
 
     
     }
@@ -217,10 +219,10 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
   
 
-    setState(() {
-      tripDays;
-      tripPlaces;
-    });
+    // setState(() {
+    //   tripDays;
+    //   tripPlaces;
+    // });
 
      
 
@@ -259,7 +261,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
         }
 
       }).where((element) => element != null).toList();
-      print(addPlaces);
+      
       //-----------------------------------------------------------
 
       if(storeTripDays['${currentIndex}'] == null){
@@ -316,6 +318,8 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
 
   }
 
+//user add place to the trip and pop up message--------------------------------------
+//================================================================================
   void _showDialog() {
     // flutter defined function
     showDialog(
@@ -337,7 +341,9 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                     ) 
                   )
                 ),
-          content: SizedBox(
+          content: 
+          
+          SizedBox(
             height:200,
             child: Column(
               children: [
@@ -354,7 +360,7 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                                   return GestureDetector(
                                     // add trip days------------------------------
                                     onTap: ()  {
-
+            
                                      
                                       
                                     },
@@ -370,28 +376,28 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
                 
                                   return GestureDetector(
                                     onTap: () async {
-
+            
                                         final prefs = await SharedPreferences.getInstance();
                                         prefs.setInt('selectDay',index);
                                         
                                         setState(() {
-
+            
                                           day =listTiles[index];
                                           isSelectPlaces=true;
                                           isAddPlace = false;
-
+            
                                           //when tap the add button scrolling to the related day-----------------------------
                                           scrollController.animateTo(
                                               index * (100),
                                               duration: const Duration(microseconds: 800),
                                               curve: Curves.decelerate,
                                           );
-
+            
                                           tripDays;
                                         });
                                         print("${currentIndex+1}");
                                       
-
+            
                                       Navigator.pop(context, true);
                                       Navigator.pop(context, true);
                                       getPlacesData();
@@ -488,6 +494,8 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
     }
     
   }
+ //==============================================================================
+ //============================================================================== 
 
 Widget buildBody() {
 
