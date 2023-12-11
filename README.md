@@ -8,7 +8,7 @@
 
 ## About The Project
 
-![Screen Shot](https://drive.google.com/file/d/1TGNtkOFRS_UWdvc3GhI79Hz6Lc_0vPC0/uc?export=view)
+![Screen Shot](https://drive.google.com/file/d/1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI/view?usp=drive_link)
 
 Assists travelers in 
 planning trips with destination search, itinerary 
