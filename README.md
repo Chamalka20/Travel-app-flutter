@@ -1,12 +1,56 @@
-<h1 align="center">Hi 👋, I'm Chamalka Jayashan</h1>
-<p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=chamalka20" alt="chamalka20" /></a> </p>
+<br/>
+<p align="center">
+  <h3 align="center">Travel App Flutter</h3>
 
-<h3 align="left">Connect with me:</h3>
-<p align="left">
-<a href="https://linkedin.com/in/https://www.linkedin.com/in/chamalka-gunawardana-62b668245/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="https://www.linkedin.com/in/chamalka-gunawardana-62b668245/" height="30" width="40" /></a>
 </p>
 
-<h3 align="left">Languages and Tools:</h3>
-<p align="left"> <a href="https://developer.android.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/android/android-original-wordmark.svg" alt="android" width="40" height="40"/> </a> <a href="https://www.w3schools.com/cpp/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" alt="cplusplus" width="40" height="40"/> </a> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a> <a href="https://dart.dev" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/dartlang/dartlang-icon.svg" alt="dart" width="40" height="40"/> </a> <a href="https://firebase.google.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="40" height="40"/> </a> <a href="https://flutter.dev" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/flutterio/flutterio-icon.svg" alt="flutter" width="40" height="40"/> </a> <a href="https://git-scm.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="git" width="40" height="40"/> </a> <a href="https://heroku.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/heroku/heroku-icon.svg" alt="heroku" width="40" height="40"/> </a> <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <a href="https://nodejs.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="40" height="40"/> </a> <a href="https://www.photoshop.com/en" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/photoshop/photoshop-line.svg" alt="photoshop" width="40" height="40"/> </a> <a href="https://www.php.net" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/php/php-original.svg" alt="php" width="40" height="40"/> </a> <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="40" height="40"/> </a> <a href="https://www.python.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="python" width="40" height="40"/> </a> <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a> <a href="https://spring.io/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" alt="spring" width="40" height="40"/> </a> </p>
+![Downloads](https://img.shields.io/github/downloads/Chamalka20/Travel-app-flutter/total) ![Contributors](https://img.shields.io/github/contributors/Chamalka20/Travel-app-flutter?color=dark-green) ![Forks](https://img.shields.io/github/forks/Chamalka20/Travel-app-flutter?style=social) ![Issues](https://img.shields.io/github/issues/Chamalka20/Travel-app-flutter) ![License](https://img.shields.io/github/license/Chamalka20/Travel-app-flutter) 
 
-<p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=chamalka20&show_icons=true&locale=en" alt="chamalka20" /></p>
+## About The Project
+
+![Screen Shot](https://drive.google.com/file/d/1TGNtkOFRS_UWdvc3GhI79Hz6Lc_0vPC0/view?usp=sharing)
+
+Assists travelers in 
+planning trips with destination search, itinerary 
+planning, and weather forecasts. Utilized Firebase 
+services for seamless data storage and 
+synchronization.
+
+## Built With
+
+The software system was built using Dart programming language and the Flutter Framework. 
+Other tools used included, Git for version control, Visual Studio Code IDEA for code editingHere are a few examples.
+
+
+
+## Usage
+
+•Trip Planning and Itinerary Creation: Users can plan their trips by selecting destinations, 
+specifying travel dates, and creating detailed itineraries. They can add activities, 
+attractions, and accommodations to their trip plans.
+• Place Management: Users can search for places of interest, view detailed information 
+about them, and add them to their trips or favorites. This feature enables users to 
+discover and organize places they want to visit.
+• Favorites: The app allows users to curate a list of their favorite places, making it easy to 
+keep track of destinations they love or intend to visit in the future. This feature enhances 
+user engagement and personalization.
+7
+• Destination Calculation: The app leverages Microsoft Azure Maps to provide users with 
+accurate and efficient destination calculations. This feature assists travelers in finding the 
+best routes, estimated travel times, and distance between locations within their trip 
+itineraries.
+• Real-time Weather Forecast: "Sri Travel" provides users with real-time weather forecasts 
+for each destination in their trip itinerary. Travelers can stay informed about current and 
+upcoming weather conditions, helping them make informed decisions during their
+journeys.
+• Search and Filters: The app provides robust search functionality, allowing users to find 
+specific places, activities, or accommodations.
+• Google Account Sign-In: Users have the option to sign in to the app using their Google 
+accounts, enhancing convenience and security. This sign-in method simplifies the 
+registration and login process for users who already have Google accounts.
+• Attraction Suggestions: "Sri Travel" utilizes data and algorithms to suggest attractions, 
+activities, and points of interest within each city or destination. These recommendations 
+help users discover hidden gems and popular attractions, enriching their travel 
+experiences.
+
+_
