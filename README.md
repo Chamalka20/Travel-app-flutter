@@ -7,17 +7,22 @@
 ![Downloads](https://img.shields.io/github/downloads/Chamalka20/Travel-app-flutter/total) ![Contributors](https://img.shields.io/github/contributors/Chamalka20/Travel-app-flutter?color=dark-green) ![Forks](https://img.shields.io/github/forks/Chamalka20/Travel-app-flutter?style=social) ![Issues](https://img.shields.io/github/issues/Chamalka20/Travel-app-flutter) ![License](https://img.shields.io/github/license/Chamalka20/Travel-app-flutter) 
 
 ## About The Project
-<div style="display: flex;">
-  <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
-  <img src="https://drive.google.com/uc?export=view&id=1TGNtkOFRS_UWdvc3GhI79Hz6Lc_0vPC0" width="120px" height="250px">
-  <img src="https://drive.google.com/uc?export=view&id=1ofYLVtIuY0U9PeOAY6GZj2D41fJGV1zP" width="120px" height="250px">
-</div>
 
 Assists travelers in 
 planning trips with destination search, itinerary 
 planning, and weather forecasts. Utilized Firebase 
 services for seamless data storage and 
 synchronization.
+
+<div style="display: flex;">
+  <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=1TGNtkOFRS_UWdvc3GhI79Hz6Lc_0vPC0" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=1ofYLVtIuY0U9PeOAY6GZj2D41fJGV1zP" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=1EgH13X9ut5lxBklpI-39jhUQRoyc1e91" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=1F4iLS2x6eBN64COIh1t57wbmtqewqRbx" width="120px" height="250px">
+</div>
+
+
 
 ## Built With
 
