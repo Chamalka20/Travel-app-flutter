@@ -33,21 +33,20 @@ about them, and add them to their trips or favorites. This feature enables users
 discover and organize places they want to visit.<br>
 • Favorites: The app allows users to curate a list of their favorite places, making it easy to 
 keep track of destinations they love or intend to visit in the future. This feature enhances 
-user engagement and personalization.
-7
+user engagement and personalization.<br>
 • Destination Calculation: The app leverages Microsoft Azure Maps to provide users with 
 accurate and efficient destination calculations. This feature assists travelers in finding the 
 best routes, estimated travel times, and distance between locations within their trip 
-itineraries.
+itineraries.<br>
 • Real-time Weather Forecast: "Sri Travel" provides users with real-time weather forecasts 
 for each destination in their trip itinerary. Travelers can stay informed about current and 
 upcoming weather conditions, helping them make informed decisions during their
-journeys.
+journeys.<br>
 • Search and Filters: The app provides robust search functionality, allowing users to find 
-specific places, activities, or accommodations.
+specific places, activities, or accommodations.<br>
 • Google Account Sign-In: Users have the option to sign in to the app using their Google 
 accounts, enhancing convenience and security. This sign-in method simplifies the 
-registration and login process for users who already have Google accounts.
+registration and login process for users who already have Google accounts.<br>
 • Attraction Suggestions: "Sri Travel" utilizes data and algorithms to suggest attractions, 
 activities, and points of interest within each city or destination. These recommendations 
 help users discover hidden gems and popular attractions, enriching their travel 
