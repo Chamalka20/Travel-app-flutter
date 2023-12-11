@@ -9,6 +9,8 @@
 ## About The Project
 
 <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
+<img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
+<img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
 Assists travelers in 
 planning trips with destination search, itinerary 
 planning, and weather forecasts. Utilized Firebase 
