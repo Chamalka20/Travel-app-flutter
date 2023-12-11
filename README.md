@@ -9,7 +9,7 @@
 ## About The Project
 <div style="display: flex;">
   <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
-  <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=1TGNtkOFRS_UWdvc3GhI79Hz6Lc_0vPC0" width="120px" height="250px">
   <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
 </div>
 
