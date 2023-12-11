@@ -8,7 +8,6 @@
 
 ## About The Project
 
-![Screen Shot](https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI)
 <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="50px" height="70px">
 Assists travelers in 
 planning trips with destination search, itinerary 
