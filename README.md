@@ -7,10 +7,12 @@
 ![Downloads](https://img.shields.io/github/downloads/Chamalka20/Travel-app-flutter/total) ![Contributors](https://img.shields.io/github/contributors/Chamalka20/Travel-app-flutter?color=dark-green) ![Forks](https://img.shields.io/github/forks/Chamalka20/Travel-app-flutter?style=social) ![Issues](https://img.shields.io/github/issues/Chamalka20/Travel-app-flutter) ![License](https://img.shields.io/github/license/Chamalka20/Travel-app-flutter) 
 
 ## About The Project
+<div style="display: flex;">
+  <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
+</div>
 
-<img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
-<img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
-<img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
 Assists travelers in 
 planning trips with destination search, itinerary 
 planning, and weather forecasts. Utilized Firebase 
