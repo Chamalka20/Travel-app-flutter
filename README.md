@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-  <h3 align="center">Travel App Flutter</h3>
+  <h2 align="center">Travel App Flutter🌏🏝</h2>
 
 </p>
 
