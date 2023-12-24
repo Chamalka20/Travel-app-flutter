@@ -1947,11 +1947,12 @@ class _locationDetailsState extends State<locationDetails> {
                                                       Expanded(
                                                         child: ListView.builder(
                                                           cacheExtent: 9999, 
-                                                          itemCount: onGoingTrips.length,
+                                                          itemCount: onGoingTrips.length+1,
                                                           scrollDirection: Axis.horizontal, 
                                                           itemBuilder: (context, index) {
-                                              
-                                                            if(index ==onGoingTrips.length*index){
+                                                            
+                                                            if(index ==0){
+                                                              
                                                               return
                                                                  Padding(
                                                                    padding: const EdgeInsets.only(left:7,right:6),
@@ -2019,12 +2020,12 @@ class _locationDetailsState extends State<locationDetails> {
                                                                     onTap: () async {
                                                                                                       
                                                                       final prefs = await SharedPreferences.getInstance();
-                                                                      final encodata = json.encode(onGoingTrips[index]);
+                                                                      final encodata = json.encode(onGoingTrips[index-1]);
                                                                       prefs.setString('trip',encodata );
                                                                       prefs.setInt('selectDay',0 );
 
                                                                                                       
-                                                                      final tripId = onGoingTrips[index]['tripId'];
+                                                                      final tripId = onGoingTrips[index-1]['tripId'];
                                                                       //find database user selectdoc id -----------------------------------------
                                                                       final tripDocId=await fechApiData.getTripDocId(tripId);
                                                                       //----------------------------------------------------------------------
@@ -2056,7 +2057,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                           color: Color.fromARGB(255, 216, 99, 99),
                                                                           borderRadius: BorderRadius.circular(10),
                                                                           image: DecorationImage(
-                                                                          image: NetworkImage(onGoingTrips[index]['tripCoverPhoto']),
+                                                                          image: NetworkImage(onGoingTrips[index-1]['tripCoverPhoto']),
                                                                           fit: BoxFit.cover
                                                                                       
                                                                             ),
@@ -2082,7 +2083,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                                     fit: BoxFit.cover,
                                                                                                     child:Padding(
                                                                                                       padding: const EdgeInsets.all(7.0),
-                                                                                                      child: Text('${onGoingTrips[index]["places"].length} days',
+                                                                                                      child: Text('${onGoingTrips[index-1]["places"].length} days',
                                                                                                         style: GoogleFonts.cabin(
                                                                                                           // ignore: prefer_const_constructors
                                                                                                           textStyle: TextStyle(
@@ -2108,7 +2109,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                                                   children: [
                                                                                     
-                                                                                    Text('${onGoingTrips[index]['tripName']}',
+                                                                                    Text('${onGoingTrips[index-1]['tripName']}',
                                                                                           style: GoogleFonts.cabin(
                                                                                         // ignore: prefer_const_constructors
                                                                                         textStyle: TextStyle(
@@ -2130,7 +2131,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                                                   children: [
                                                                                     
-                                                                                    Text('${onGoingTrips[index]['tripDuration']}',
+                                                                                    Text('${onGoingTrips[index-1]['tripDuration']}',
                                                                                           style: GoogleFonts.cabin(
                                                                                         // ignore: prefer_const_constructors
                                                                                         textStyle: TextStyle(
