@@ -139,6 +139,7 @@ flutter:
     - assets/images/dry-clean.png
     - assets/images/correct.png
     - assets/images/destination.png
+    - assets/images/time-left.png
     - .env
 
 

@@ -294,10 +294,13 @@ class _locationDetailsState extends State<locationDetails> {
             }else if(isDayTime==true && getPhrase=="Sunny"){ 
                weatherIcon = 'assets/images/sunny.png';
 
+            }else{
+              weatherIcon = 'assets/images/time-left.png';
             }
 
           }else{
             print( "no weather data");
+            weatherIcon = 'assets/images/time-left.png';
           }
           
         }else{
@@ -305,6 +308,7 @@ class _locationDetailsState extends State<locationDetails> {
           print("Weather calculate not sucsuss:${response.statusCode}");
 
         }
+        print(weatherIcon);
       }  
   
 
@@ -775,17 +779,17 @@ class _locationDetailsState extends State<locationDetails> {
                                       Visibility(
                                         visible: !isEstablishment,
                                         child: Container(
-                                          margin: const EdgeInsets.only(top:10,left:4 ),
+                                          margin: weatherIcon!=""?const EdgeInsets.only(top:10,left:4 ):const EdgeInsets.only(left:50,top:6 ),
                                           child: Row(
                                             children: [
-                                              Image.asset(weatherIcon,width:35,height:35)
+                                              Image.asset(weatherIcon!=""?weatherIcon:"assets/images/time-left.png",width:35,height:35)
                                             ],
                                           ),
                                         ),
                                       ),
                                       //weather temperature ---------------------------------------
                                       Visibility(
-                                        visible: !isEstablishment,
+                                        visible: !isEstablishment&&temperature!=0,
                                         child: Padding(
                                           padding: const EdgeInsets.only(top:10, left:7),
                                           child: Column(
@@ -805,25 +809,28 @@ class _locationDetailsState extends State<locationDetails> {
                                                   )
                                                 ],
                                               ),
-                                              Row(
-                                                children: [
-                                                  SizedBox(
-                                                    width:35,
-                                                    child: SizedBox(
-                                                      child: Text("${setgetPhrase}",
-                                                        style: GoogleFonts.cabin(
-                                                                  // ignore: prefer_const_constructors
-                                                                  textStyle: TextStyle(
-                                                                  color: const Color.fromARGB(255, 27, 27, 27),
-                                                                  fontSize: 10,
-                                                                  fontWeight: FontWeight.w400,
-                                                                                                
-                                                                  ) 
-                                                                )
+                                              Visibility(
+                                                visible: setgetPhrase!="",
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width:35,
+                                                      child: SizedBox(
+                                                        child: Text("${setgetPhrase}",
+                                                          style: GoogleFonts.cabin(
+                                                                    // ignore: prefer_const_constructors
+                                                                    textStyle: TextStyle(
+                                                                    color: const Color.fromARGB(255, 27, 27, 27),
+                                                                    fontSize: 10,
+                                                                    fontWeight: FontWeight.w400,
+                                                                                                  
+                                                                    ) 
+                                                                  )
+                                                        ),
                                                       ),
-                                                    ),
-                                                  )
-                                                ],
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ],
                                           ),
