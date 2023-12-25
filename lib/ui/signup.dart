@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/fechApiData.dart';
+import 'package:travelapp/ui/fechApiData.dart';
 
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';

@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/createNewTrip.dart';
-import 'package:travelapp/fechApiData.dart';
+import 'package:travelapp/ui/createNewTrip.dart';
+import 'package:travelapp/ui/fechApiData.dart';
 
 class mytrips extends StatefulWidget {
   const mytrips({super.key});

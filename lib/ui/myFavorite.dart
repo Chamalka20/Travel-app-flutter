@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:travelapp/fechApiData.dart';
+import 'package:travelapp/ui/fechApiData.dart';
 
 import 'locationDetails.dart';
 

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:travelapp/fechApiData.dart';
-import 'package:travelapp/search.dart';
-import 'package:travelapp/bottomNavigationBar.dart';
+import 'package:travelapp/ui/fechApiData.dart';
+import 'package:travelapp/ui/search.dart';
+import 'package:travelapp/ui/bottomNavigationBar.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'Home.dart';

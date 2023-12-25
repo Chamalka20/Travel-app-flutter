@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
-import 'package:travelapp/fechApiData.dart';
+import 'package:travelapp/ui/fechApiData.dart';
 
 import 'navigationPage.dart';
 

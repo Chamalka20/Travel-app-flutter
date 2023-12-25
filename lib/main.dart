@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Welcomepage.dart';
-import 'navigationPage.dart';
+import 'ui/Welcomepage.dart';
+import 'ui/navigationPage.dart';
 
 Future<bool> checkLoggedIn() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

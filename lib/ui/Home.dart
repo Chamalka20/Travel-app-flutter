@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/fechApiData.dart';
-import "package:travelapp/fechLastViews.dart";
+import 'package:travelapp/ui/fechApiData.dart';
+import "package:travelapp/ui/fechLastViews.dart";
 
 class home extends StatefulWidget {
 

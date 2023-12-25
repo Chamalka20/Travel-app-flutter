@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart' ;
 import 'package:location/location.dart' ;
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/fechApiData.dart';
+import 'package:travelapp/ui/fechApiData.dart';
 
 import 'Home.dart';
 import 'Welcomepage.dart';

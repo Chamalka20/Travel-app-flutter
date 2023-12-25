@@ -10,9 +10,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
-import 'package:travelapp/createNewTrip.dart';
-import 'package:travelapp/fechApiData.dart';
-import 'package:travelapp/tripDetailsPlan.dart';
+import 'package:travelapp/ui/createNewTrip.dart';
+import 'package:travelapp/ui/fechApiData.dart';
+import 'package:travelapp/ui/tripDetailsPlan.dart';
 
 
 class locationDetails extends StatefulWidget {
