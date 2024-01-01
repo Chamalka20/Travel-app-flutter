@@ -40,7 +40,7 @@ class _homeState extends State<home> {
     //get data list from api-------------------------------
      getData();
      getUserData();
-     getNearByPlaces ();
+     //getNearByPlaces ();
   }
 
   Future <void> getUserData()async{

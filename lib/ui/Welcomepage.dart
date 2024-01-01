@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/ui/fechApiData.dart';
 import 'package:travelapp/ui/signup.dart';
-import 'Google_signin.dart';
+import '../repositories/Google_signin.dart';
 import 'Home.dart';
 import 'customPageRoutes.dart';
 import 'letsStart.dart';
