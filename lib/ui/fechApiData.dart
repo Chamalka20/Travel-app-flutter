@@ -360,6 +360,8 @@ class fechApiData {
     
       });
 
+      print("add favorites");
+
     }
 
     static getFavorites () async{

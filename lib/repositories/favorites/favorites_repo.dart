@@ -25,7 +25,7 @@ class favoritesRepo {
             })
         });
 
-
+      print(data);
       data.forEach((element) {
         
         var attr = Favorite.fromMap(element);

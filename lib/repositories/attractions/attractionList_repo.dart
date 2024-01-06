@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:travelapp/models/atttractions.dart';
 
@@ -10,18 +11,19 @@ class attractionListRepo {
 
   Future<List<Attractions>> getAttractionPlaces()async{
 
-    print("this is repo"+placeName);
+    final query = await FirebaseFirestore.instance
+            .collection('attractions')
+            .where('city', isEqualTo: placeName)
+            .get();
+       
   
-    final databaseReference =  FirebaseDatabase.instance.ref('places');
-    final query = await databaseReference.orderByChild('city').equalTo(placeName).get();
-    final map = query.value as Map<dynamic, dynamic>;
-
     final List<Attractions> list = [];
+
+    for(var i=0;i<query.docs.length;i++){
+      var attracrion = Attractions.fromMap(query.docs[i].data());
+       list.add(attracrion);
+    }
     
-    map.forEach((key, value) {
-      var attracrion = Attractions.fromMap(value);
-      list.add(attracrion);
-    });
 
     
     return list;

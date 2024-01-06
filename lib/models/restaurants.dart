@@ -1,5 +1,4 @@
-
-class Attractions {
+class Restaurants {
   final String id;
   final String name;
   final String photoRef;
@@ -8,7 +7,7 @@ class Attractions {
   final String type;
   
 
-  Attractions({
+  Restaurants({
     required this.id,
     required this.name,
     required this.photoRef,
@@ -17,22 +16,22 @@ class Attractions {
     required this.type,
   });
 
-  factory Attractions.fromMap( dynamic map)  {
+  factory Restaurants.fromMap( dynamic map)  {
 
-      if (map['imageUrls'] != null && map['imageUrls'].isNotEmpty) {
+      if (map['imageUrls'] != null) {
       
-        return Attractions(
+        return Restaurants(
           id: map["placeId"]??'',
           name: map["title"]??'',
           photoRef: map["imageUrls"][0],
           rating: map["rating"]??'',
           address: map["address"]??'',
-          type: map["categoryName"]??'',
+          type: "Restaurants",
         );
 
       }else{
 
-        return Attractions(
+        return Restaurants(
                 name: '',
                 photoRef: 'https://via.placeholder.com/150', 
                 address: '', 

@@ -1,12 +1,11 @@
 import 'dart:async';
+
 import 'package:rxdart/rxdart.dart';
 
-import '../models/atttractions.dart';
-import '../repositories/attractions/attractionList_repo.dart';
+import '../models/restaurants.dart';
+import '../repositories/restaurants/restaurants_repo.dart';
 
-
-
-class attractionListBloc{
+class restaurantsListBloc{
 
  final _stateStreamController= BehaviorSubject<dynamic>();
 
@@ -19,16 +18,16 @@ class attractionListBloc{
   Stream<dynamic> get eventStream => _eventStreamController.stream;
 
  
-  attractionListBloc(){
+  restaurantsListBloc(){
 
    
 
     eventStream.listen((event) async {
-      print('this is attrac_bloc'+event);
-      attractionListRepo repo =  attractionListRepo(placeName:event );
-      final List<Attractions>  attraction= await repo.getAttractionPlaces(); 
+      print('this is rest_bloc'+event);
+      restaurantsRepo repo =  restaurantsRepo(placeName:event );
+      final List<Restaurants>  restaurants =await repo.getRestaurants(); 
      
-      stateStreamSink.add(attraction);
+      stateStreamSink.add(restaurants);
       
 
     });
@@ -38,4 +37,4 @@ class attractionListBloc{
 
 }
 
-final attraBloc = attractionListBloc();
+final restBloc = restaurantsListBloc();
