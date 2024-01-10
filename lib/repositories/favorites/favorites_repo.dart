@@ -25,7 +25,7 @@ class favoritesRepo {
             })
         });
 
-      print(data);
+      
       data.forEach((element) {
         
         var attr = Favorite.fromMap(element);
@@ -38,29 +38,42 @@ class favoritesRepo {
 
   }
 
-  static addToFavorite (String placeId,String placeName,String placePhotoUrl,String placeType)async{
-
+    Future <bool> addToFavorite (String placeId,String placeName,String placePhotoUrl,String placeType)async{
+  
+      bool isDataAdd = false;
       var userId ;
       final prefs = await SharedPreferences.getInstance();
       userId = prefs.getString('userDbId');
 
       var uuid = const Uuid();
 
-      await FirebaseFirestore.instance
-      .collection('users').doc(userId).collection('favorites').add({
+        await FirebaseFirestore.instance
+        .collection('users').doc(userId).collection('favorites').add({
 
-        
-          "placeId":placeId,
-          'placeName':placeName,
-          'placePhotoUrl':placePhotoUrl,
-          'placeType':placeType,
-    
-      });
+          
+            "placeId":placeId,
+            'placeName':placeName,
+            'placePhotoUrl':placePhotoUrl,
+            'placeType':placeType,
+      
+        }).then((value) => {
+          print('add'),
+          isDataAdd = true,
+        }).catchError((error)=>{
+            print('not add'),
+            isDataAdd = false,
+        });
+
+        print(isDataAdd);
+        return isDataAdd;
+     
+
 
   }
 
-  static removeFavorites (placeId) async{
+  Future <bool> removeFavorites (String placeId) async{
 
+      bool isRemove = false;
       var userId;
       var favId;
 
@@ -70,27 +83,29 @@ class favoritesRepo {
     //get spesific id to remove the favorite place-------------------
       await FirebaseFirestore.instance
             .collection('users')
-            .doc(userId).collection('favorites').get()
+            .doc(userId).collection('favorites').where('placeId',isEqualTo: placeId).get()
             .then((QuerySnapshot querySnapshot) {
                 querySnapshot.docs.forEach((doc) {
 
-                  if(doc['placeId']==placeId){
-                  
-                    favId = doc.id;
-                  
-                  }
+                  doc.reference.delete();
+                   print("delete");
+                   isRemove = true;
                 });
                 
-            });
+            }).catchError((error)=>{
+            print('not add'),
+            isRemove = false,
+             });
 
-      //then remove the item from the favorite list-------------
-     FirebaseFirestore.instance
-        .collection('users').doc(userId).collection('favorites').doc(favId).delete()
-          .then((_) => print('Deleted'))
-          .catchError((error) => print('Delete failed: $error'));
+     
+
+      print(isRemove);
+      return isRemove;      
 
     }
 
 
 
 }
+
+final favRepo = favoritesRepo();
