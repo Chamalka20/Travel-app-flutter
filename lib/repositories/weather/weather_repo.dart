@@ -6,16 +6,16 @@ import 'package:http/http.dart' as http;
 
 class weatherRepo{
 
-  final String lat; 
-  final String lng;
+  final double lat; 
+  final double lng;
 
   const weatherRepo({required this.lat,required this.lng});
 
-
-  Future<void> findWeather ()async {
-
+ 
+  Future<List> findWeather ()async {
+  print(lat+lng);
   var setgetPhrase ='';
-  var temperature =0.0;
+  double temperature =0.0;
   var weatherIcon ='';  
 
   const apiUrl = 'https://atlas.microsoft.com/weather/currentConditions/json';
@@ -103,6 +103,11 @@ class weatherRepo{
 
       }
       print(weatherIcon);
+
+      List data=[{"weatherIcon":weatherIcon,"temperature":temperature,"phrase":setgetPhrase}];
+         
+
+      return data;
   }
 
 }

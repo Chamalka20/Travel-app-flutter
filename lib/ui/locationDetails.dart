@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 import 'package:travelapp/ui/createNewTrip.dart';
@@ -17,6 +18,7 @@ import 'package:travelapp/ui/tripDetailsPlan.dart';
 import '../blocs/attractions/attractionList_bloc.dart';
 import '../blocs/attractions/attraction_event.dart';
 import '../blocs/attractions/attraction_state.dart';
+import '../blocs/city/city_bloc.dart';
 import '../blocs/retaurants/restaurant_state.dart';
 import '../blocs/retaurants/restaurantsList_bloc.dart';
 import 'components/placesList.dart';
@@ -199,7 +201,7 @@ class _locationDetailsState extends State<locationDetails> {
       isEs = false;
 
       //findWeather ();
-    
+      
 
     }else{
       isEs = true;
@@ -239,96 +241,6 @@ class _locationDetailsState extends State<locationDetails> {
    }
 
    
-
-    Future<void> findWeather ()async {
-
-        const apiUrl = 'https://atlas.microsoft.com/weather/currentConditions/json';
-        final url ='$apiUrl?api-version=1.1&query=${searchResults[0]['location']['lat']},${searchResults[0]['location']['lng']}&unit=metric&subscription-key=${dotenv.env['azureApiKey']}';
-  
-        final response = await http.get(Uri.parse(url));
-        
-        if (response.statusCode == 200) {
-          print("Weather calculate sucsuss:${response.statusCode}");
-          final responseData = jsonDecode(response.body);
-          List<dynamic> results = responseData['results'];
-
-  
-          if(results.isNotEmpty){
-            String getPhrase = results[0]['phrase']??'';
-            setgetPhrase = getPhrase;
-            bool isDayTime = results[0]['isDayTime']??false;
-            temperature = results[0]['temperature']['value']??0.0;
-            print( "getPhrase:$getPhrase");
-            print( "daytime:$isDayTime");
-            print( "temperature:$temperature");
-
-            //change icon when weather changers---------------------------------
-            if(isDayTime==false && getPhrase=="Cloudy"){
-              weatherIcon = 'assets/images/cloudy.png';
-
-            }else if(isDayTime==false && getPhrase=="Some clouds"){
-              weatherIcon = 'assets/images/PartlyCloudyNightV2.png';
-
-            }else if(isDayTime==false && getPhrase=="Mostly clear"){  
-              weatherIcon = 'assets/images/MostlyClearNight.png';
-
-            }else if(isDayTime==false && getPhrase=="Mostly cloudy"){
-              weatherIcon = 'assets/images/MostlyCloudyNightV2.png';  
-
-            }else if(isDayTime==false && getPhrase=="Partly cloudy"){
-              weatherIcon = 'assets/images/PartlyCloudyNightV2.png';
-
-            }else if(isDayTime==false && getPhrase=="Light rain"){
-              weatherIcon = 'assets/images/N210LightRainShowersV2.png'; 
-
-            }else if(isDayTime==false && getPhrase=="Light rain shower"){  
-              weatherIcon = 'assets/images/N210LightRainShowersV2.png';
-
-            }else if(isDayTime==false && getPhrase=="Rain"){
-              weatherIcon = '';
-            }else if(isDayTime==true && getPhrase=="A shower"){
-              weatherIcon = 'assets/images/Light-rain.png';
-
-              
-            }else if(isDayTime==true && getPhrase=="Light rain"){
-              weatherIcon = 'assets/images/Light-rain.png';
-
-            }else if(isDayTime==true && getPhrase=="Cloudy"){
-              weatherIcon = 'assets/images/cloudy.png';
-
-            }else if(isDayTime==true && getPhrase=="Mostly cloudy"){
-              weatherIcon = 'assets/images/mostly-cloudy.png';
-
-            }else if(isDayTime==true && getPhrase=="Clouds and sun"){
-
-              weatherIcon = 'assets/images/cloudsAndSun.png';
-            }else if(isDayTime==true && getPhrase=="Partly sunny"){
-
-              weatherIcon = 'assets/images/Partly-sunny.png';
-              
-            }else if(isDayTime==true && getPhrase=="Mostly sunny"){ 
-              weatherIcon = 'assets/images/Mostly-Sunny-Day.png';
-
-            }else if(isDayTime==true && getPhrase=="Sunny"){ 
-               weatherIcon = 'assets/images/sunny.png';
-
-            }else{
-              weatherIcon = 'assets/images/time-left.png';
-            }
-
-          }else{
-            print( "no weather data");
-            weatherIcon = 'assets/images/time-left.png';
-          }
-          
-        }else{
-
-          print("Weather calculate not sucsuss:${response.statusCode}");
-
-        }
-        print(weatherIcon);
-      }  
-  
 
 
   Future <void> getAboutData ()async {
@@ -731,66 +643,95 @@ class _locationDetailsState extends State<locationDetails> {
                                      
                                      //weather condion---------------------------------------------
                                      //weather icon------------------------------------
-                                      Visibility(
-                                        visible: !isEstablishment,
-                                        child: Container(
-                                          margin: weatherIcon!=""?const EdgeInsets.only(top:10,left:4 ):const EdgeInsets.only(left:50,top:6 ),
-                                          child: Row(
-                                            children: [
-                                              Image.asset(weatherIcon!=""?weatherIcon:"assets/images/time-left.png",width:35,height:35)
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      //weather temperature ---------------------------------------
-                                      Visibility(
-                                        visible: !isEstablishment&&temperature!=0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top:10, left:7),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text('${temperature} °',
-                                                     style: GoogleFonts.cabin(
-                                                              // ignore: prefer_const_constructors
-                                                              textStyle: TextStyle(
-                                                              color: const Color.fromARGB(255, 27, 27, 27),
-                                                              fontSize: 20,
-                                                              fontWeight: FontWeight.w400,
-                                                                                            
-                                                              ) 
-                                                            )
-                                                  )
-                                                ],
-                                              ),
-                                              Visibility(
-                                                visible: setgetPhrase!="",
-                                                child: Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width:35,
-                                                      child: SizedBox(
-                                                        child: Text("${setgetPhrase}",
-                                                          style: GoogleFonts.cabin(
-                                                                    // ignore: prefer_const_constructors
-                                                                    textStyle: TextStyle(
-                                                                    color: const Color.fromARGB(255, 27, 27, 27),
-                                                                    fontSize: 10,
-                                                                    fontWeight: FontWeight.w400,
-                                                                                                  
-                                                                    ) 
-                                                                  )
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
+                                     FutureBuilder<List>(
+                                       future: cityBloc.getWeather(searchResults[0]['location']['lat'], searchResults[0]['location']['lng']),
+                                       builder: (BuildContext context, AsyncSnapshot<List> snapshot) { 
+
+                                          if(snapshot.hasData){
+
+                                            return
+                                              Container(
+                                                child:Row(
+                                                  children:[
+                                                Visibility(
+                                                  visible: !isEstablishment,
+                                                  child: Container(
+                                                    margin: snapshot.data?[0]["weatherIcon"]!=""?const EdgeInsets.only(top:10,left:4 ):const EdgeInsets.only(left:50,top:6 ),
+                                                    child: Row(
+                                                      children: [
+                                                        Image.asset(snapshot.data?[0]["weatherIcon"],width:35,height:35)
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
+                                                //weather temperature ---------------------------------------
+                                                Visibility(
+                                                  visible: !isEstablishment&& snapshot.data?[0]["temperature"]!=0,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(top:10, left:7),
+                                                    child: Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text('${snapshot.data?[0]["temperature"]} °',
+                                                              style: GoogleFonts.cabin(
+                                                                        // ignore: prefer_const_constructors
+                                                                        textStyle: TextStyle(
+                                                                        color: const Color.fromARGB(255, 27, 27, 27),
+                                                                        fontSize: 20,
+                                                                        fontWeight: FontWeight.w400,
+                                                                                                      
+                                                                        ) 
+                                                                      )
+                                                            )
+                                                          ],
+                                                        ),
+                                                        Visibility(
+                                                          visible: snapshot.data?[0]["phrase"]!="",
+                                                          child: Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                width:35,
+                                                                child: SizedBox(
+                                                                  child: Text("${snapshot.data?[0]["phrase"]}",
+                                                                    style: GoogleFonts.cabin(
+                                                                              // ignore: prefer_const_constructors
+                                                                              textStyle: TextStyle(
+                                                                              color: const Color.fromARGB(255, 27, 27, 27),
+                                                                              fontSize: 10,
+                                                                              fontWeight: FontWeight.w400,
+                                                                                                            
+                                                                              ) 
+                                                                            )
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                                ]
+                                                )
+                                              );
+                                          }else{
+
+                                            return
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 50),
+                                              child: LoadingAnimationWidget.beat(
+                                                  color: Color.fromARGB(255, 129, 129, 129), 
+                                                  size: 35,
+                                                ),
+                                            );
+
+                                          }
+
+                                        },
+                                       
+                                     )
                                     ],
                                     
                                   ),
@@ -1203,349 +1144,13 @@ class _locationDetailsState extends State<locationDetails> {
                                 ),
                               ),
                               //list------------------------------------------------------
-                              // StreamBuilder<dynamic>(
-                              //   stream: attraBloc.stateStream,
-                              //   builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                                 
-                              //     if(snapshot.hasData ){
-                                    
-                              //       attracFavBloc.eventStreamSink.add(checkFavorites(dataList:snapshot.data));
-                              //       return StreamBuilder<dynamic>(
-                              //         stream: attracFavBloc.stateStream,
-                              //         builder: (context,AsyncSnapshot snapshot2) {
-                                        
-                              //           if(snapshot.hasData && snapshot2.hasData){
-                                        
-                              //             return
-                                            Visibility(
-                                              visible: !isEstablishment,
-                                               child: placesList(placeName: searchResults[0]['name'], placeType: 'attraction',)//Padding(
-                                              //   padding: const EdgeInsets.only(left:10.0,top:10),
-                                              //   child: SizedBox(
-                                              //   height: 190,
-                                              //     child: ListView.builder(
-                                              //       cacheExtent: 9999,
-                                              //       scrollDirection: Axis.horizontal, 
-                                              //       itemCount: snapshot.data.length,
-                                              //       itemBuilder: (context, index) {
-                                                      
-                                              //         final attraction = snapshot.data[index];
-                                              //         final atPlaceId = attraction.id;
-                                              //         final attractionName = attraction.name;
-                                              //         final attractionImgUrl = attraction.photoRef;
-                                              //         final attractionRating = attraction.rating;
-                                              //         final address = attraction.address;
-                                              //         final type = attraction.type;
-                                                      
-                                                      
-                                              //           return GestureDetector(
-                                              //             onTap: ()=>{
-                                              //               //dierect place details page again-------------------
-                                          
-                                              //               Navigator.push(
-                                              //                 context,
-                                              //                 MaterialPageRoute(builder: (context) =>  locationDetails(placeId:atPlaceId,searchType: 'attraction',)),
-                                              //               ),
-                                              //             },
-                                              //             child: Card(
-                                              //             elevation: 0,
-                                              //             color:const Color.fromARGB(255, 240, 238, 238),
-                                              //             clipBehavior: Clip.antiAliasWithSaveLayer,
-                                              //             shape: RoundedRectangleBorder(
-                                              //                     borderRadius: BorderRadius.circular(10.0),
-                                              //                   ),
-                                              //             child:Container(
-                                              //               width: 230,
-                                              //               child: Column(
-                                              //                 children: [
-                                              //                   Row(
-                                              //                     children: [
-                                              //                       Container(
-                                              //                         width: 230,
-                                              //                         height: 120,
-                                                                      
-                                              //                             decoration:  BoxDecoration(
-                                                                            
-                                              //                               image: DecorationImage(
-                                              //                                 image: NetworkImage(attractionImgUrl),
-                                              //                                 fit: BoxFit.fill,
-                                                                              
-                                                                        
-                                              //                                   ),
-                                                                            
-                                              //                               ),
-                                              //                         child: Column(
-                                              //                           children: [
-                                              //                             Row(
-                                              //                               children: [
-                                              //                                 SizedBox(
-                                              //                                   height:25,
-                                              //                                   width:60,
-                                              //                                   child: Card(
-                                              //                                       elevation: 0,
-                                              //                                         color:const Color.fromARGB(200, 240, 238, 238),
-                                              //                                         clipBehavior: Clip.antiAliasWithSaveLayer,
-                                              //                                         shape: RoundedRectangleBorder(
-                                              //                                                 borderRadius: BorderRadius.circular(5.0),
-                                              //                                               ),
-                                              //                                           child: FittedBox(
-                                              //                                                   fit: BoxFit.cover,
-                                              //                                                   child:Padding(
-                                              //                                                     padding: const EdgeInsets.all(10.0),
-                                              //                                                     child: Text('${type}',
-                                              //                                                       style: GoogleFonts.cabin(
-                                              //                                                         // ignore: prefer_const_constructors
-                                              //                                                         textStyle: TextStyle(
-                                              //                                                         color: Color.fromARGB(255, 95, 95, 95),
-                                              //                                                         fontSize: 12,
-                                              //                                                         fontWeight: FontWeight.bold,
-                                                                                                                                                                
-                                              //                                                         ) 
-                                              //                                                       )
-                                                                                                                                                                  
-                                              //                                                     ),
-                                              //                                                   ), 
-                                              //                                             )
-                                                                                    
-                                              //                                   ),
-                                              //                                 ),
-                                                        
-                                              //                                 Padding(
-                                              //                                   padding: const EdgeInsets.only(left:119,top:5),
-                                              //                                   child: SizedBox(
-                                              //                                       width:37,
-                                              //                                       height:37,
-                                                                                        
-                                              //                                           child: InkWell(
-                                              //                                             onTap: () =>{
-                                              //                                               //favorites =await fechApiData.getFavorites(),
-                                                                                                                          
-                                              //                                                 if (snapshot2.data[index] == false) {
-                                                                                                
-                                                                                                
-                                              //                                                   attracFavBloc.eventStreamSink.add(addToFavorites(atPlaceId: atPlaceId, placeName: attractionName, placeImgUrl: attractionImgUrl, type: type)),
-                                                                                                
-                                              //                                                   attracFavBloc.stateStream.listen((event) {
-                                                                                                  
-                                              //                                                     if(event == true){
-
-                                                                                                   
-                                              //                                                       setState(() {
-                                              //                                                         snapshot2.data[index] = true;
-                                              //                                                        });
-
-                                              //                                                       ScaffoldMessenger.of(context)
-                                              //                                                       .showSnackBar(const SnackBar(content:Text("Add place from the favorites")));
-
-                                                                                                    
-
-                                                                                                    
-                                                                                                    
-                                              //                                                     }
-                                              //                                                   })                        
-                                                                                                
-                                                                                                                          
-                                              //                                                 } else {
-                                                                                                
-                                                                                                
-                                              //                                                   //remove favorite form the database-----------------
-                                              //                                                   attracFavBloc.eventStreamSink.add(removeFavorite(atPlaceId: atPlaceId)),
-                                                                                                
-                                              //                                                    attracFavBloc.stateStream.listen((event) {
-                                                                                                 
-                                              //                                                     if(event == true){
-
-                                              //                                                      setState(() {
-                                              //                                                        snapshot2.data[index] = false;
-                                              //                                                      });
-                                              //                                                       print("remoooooo");
-                                              //                                                      //show message to the user-----------------
-                                              //                                                       ScaffoldMessenger.of(context)
-                                              //                                                         .showSnackBar(const SnackBar(content:Text("Removed place from the favorites")));
-                                                                                                    
-                                              //                                                     }
-
-
-                                              //                                                    })                         
-                                                                                                
-                                              //                                                 }
-                                                                                            
-                                              //                                               },
-                                                                                          
-                                              //                                                 child:Card(
-                                              //                                                 elevation: 0,
-                                              //                                                     color:const Color.fromARGB(200, 240, 238, 238),
-                                              //                                                     clipBehavior: Clip.antiAliasWithSaveLayer,
-                                              //                                                     shape: RoundedRectangleBorder(
-                                              //                                                             borderRadius: BorderRadius.circular(50.0),
-                                              //                                                           ),
-                                              //                                                     child:Column(
-                                              //                                                       mainAxisAlignment: MainAxisAlignment.center,
-                                              //                                                       crossAxisAlignment: CrossAxisAlignment.center,
-                                              //                                                       children: [
-                                              //                                                         Row(
-                                              //                                                           mainAxisAlignment: MainAxisAlignment.center,
-                                              //                                                           crossAxisAlignment: CrossAxisAlignment.center,
-                                              //                                                           children: [
-                                              //                                                             Image.asset(snapshot2.data[index]?"assets/images/heartBlack.png":"assets/images/heart.png",width:18,height:18),
-                                              //                                                           ],
-                                              //                                                         ),
-                                              //                                                       ],
-                                              //                                                     ),  
-                                                                                                                                                
-                                              //                                               ),
-                                                                                            
-                                                                                            
-                                              //                                             ),
-
-
-                                                                                    
-                                                                                      
-                                              //                                       ),
-                                              //                                       ),
-                                                                              
-                                                                          
-                                                                              
-                                                        
-                                              //                               ],
-                                              //                             ),
-                                              //                           ],
-                                              //                         ), 
-                                                                        
-                                                                      
-                                              //                       ),
-                                                                
-                                                                          
-                                              //                     ],
-                                              //                   ),
-                                              //                   Row(
-                                                                  
-                                              //                     children: [
-                                              //                         SizedBox(
-                                              //                         width: 190,
-                                              //                         height:30,
-                                              //                           child: Padding(
-                                              //                             padding: const EdgeInsets.only(left:6,top:5),
-                                              //                             child: Text(attractionName,
-                                                                          
-                                              //                             overflow: TextOverflow.ellipsis,
-                                              //                             style: GoogleFonts.cabin(
-                                              //                                 // ignore: prefer_const_constructors
-                                              //                                 textStyle: TextStyle(
-                                              //                                 color: const Color.fromARGB(255, 27, 27, 27),
-                                              //                                 fontSize: 14,
-                                              //                                 fontWeight: FontWeight.bold,
-                                                                                                              
-                                              //                                 ) 
-                                              //                               )
-                                                                                                                  
-                                              //                             ),
-                                              //                           ),
-                                              //                         ),
-                                                        
-                                              //                       Image.asset("assets/images/star.png",width:14,height:14),
-                                              //                       Padding(
-                                              //                         padding: const EdgeInsets.only(left:4),
-                                              //                         child: Text("$attractionRating",
-                                              //                             style: GoogleFonts.cabin(
-                                              //                           // ignore: prefer_const_constructors
-                                              //                           textStyle: TextStyle(
-                                              //                           color: const Color.fromARGB(255, 27, 27, 27),
-                                              //                           fontSize: 12,
-                                              //                           fontWeight: FontWeight.bold,
-                                                                                                        
-                                              //                           ) 
-                                              //                         )
-                                                                      
-                                              //                         ),
-                                              //                       ),  
-                                              //                     ],
-                                                                
-                                              //                   ),
-                                              //                   Row(
-                                                                
-                                              //                     children: [
-                                              //                       Padding(
-                                              //                         padding: const EdgeInsets.only(left:4),
-                                              //                         child: Image.asset('assets/images/location.png',width:15,height:15),
-                                              //                       ),
-                                              //                       SizedBox(
-                                              //                         width:200,
-                                              //                         height:7,
-                                              //                         child: Text(address,
-                                              //                             overflow: TextOverflow.ellipsis,
-                                              //                             style: GoogleFonts.cabin(
-                                              //                             // ignore: prefer_const_constructors
-                                              //                             textStyle: TextStyle(
-                                              //                             color: Color.fromARGB(255, 94, 94, 94),
-                                              //                             fontSize: 7,
-                                              //                             fontWeight: FontWeight.bold,
-                                                                                                          
-                                              //                             ) 
-                                              //                           )
-                                                                      
-                                                                      
-                                              //                         ),
-                                              //                       )
-                                              //                     ],
-                                              //                   )
-                                              //                 ],
-                                                                          
-                                                                          
-                                              //               ),
-                                              //             )
-                                                            
-                                                            
-                                                          
-                                              //             ),
-                                              //           ); 
-                                              //       },
-                                              //     ),
-                                              //     ),
-                                              //   ),
-                                            ),
-
-                                //     }else{
-
-                                //         return
-                                //           Visibility(
-                                //             visible: !isEstablishment,
-                                //             child: Container(
-                                //               width:360,
-                                //               height:130,
-                                //               child: Center(
-                                //                 child: Text("Loading....")
-                                      
-                                      
-                                //                 )
-                                    
-                                //               ),
-                                //           );
-
-                                //     }
-                                //       },
-                                //     );
-                                    
-                                //     }else{
-
-                                //       return
-                                //           Visibility(
-                                //             visible: !isEstablishment,
-                                //             child: Container(
-                                //               width:360,
-                                //               height:130,
-                                //               child: Center(
-                                //                 child: Text("Loading....")
-                                      
-                                      
-                                //                 )
-                                    
-                                //               ),
-                                //           );
-
-                                //     }
-                                // }),
+                              
+                              Visibility(
+                                visible: !isEstablishment,
+                                  child: placesList(placeName: searchResults[0]['name'], placeType: 'attraction',)
                                 
+    
+                              ),
                               
                               
                               //show resturents----------------------------------------------
@@ -1570,324 +1175,13 @@ class _locationDetailsState extends State<locationDetails> {
                                 ),
                               ),
                               //resturents list-------------------------------------------------------------
-                              //  StreamBuilder<dynamic>(
-                              //    stream: restBloc.stateStream,
-                              //    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                              //     if(snapshot.hasData && snapshot.data!=null && snapshot.data.isNotEmpty){
-                                    
-                              //       restFavBloc.eventStreamSink.add(checkFavorites(dataList:snapshot.data));
-                              //       return StreamBuilder<dynamic>(
-                              //         stream: restFavBloc.stateStream,
-                              //         builder: (context,AsyncSnapshot snapshot2) {
-                              //           if(snapshot2.hasData){
-                              //             return
-                                            Visibility(
-                                              visible: !isEstablishment,
-                                               child:placesList(placeName: searchResults[0]['name'], placeType: 'resturent',)    
-                                            ),  
+                              
+                              Visibility(
+                                visible: !isEstablishment,
+                                  child:placesList(placeName: searchResults[0]['name'], placeType: 'resturent',)    
+                              ),  
                                                
-                                               //Padding(
-                              //                   padding: const EdgeInsets.only(left:10.0,top:10),
-                              //                   child: SizedBox(
-                              //                   height: 190,
-                              //                     child: Expanded(
-                              //                     child: ListView.builder(
-                              //                       cacheExtent: 9999,
-                              //                       scrollDirection: Axis.horizontal, 
-                              //                       itemCount: snapshot.data.length,
-                              //                       itemBuilder: (context, index) {
-                              //                         final restaurants = snapshot.data[index];
-                              //                         final atPlaceId = restaurants.id;
-                              //                         final restaurantnName = restaurants.name;
-                              //                         final image = restaurants.photoRef;
-                              //                         final restaurantRating = restaurants.rating;
-                              //                         final address = restaurants.address;
-                              //                         final type = restaurants.type;
-                                                      
-                              //                           return GestureDetector(
-                              //                             onTap: ()=>{
-                              //                               //dierect place details page again---------------------
-                              //                               // Navigator.of(context).pushReplacement(customPageRoutes(
-                                                          
-                              //                               // child: locationDetails(placeId:'')))
-                              //                             },
-                              //                             child: Card(
-                              //                             elevation: 0,
-                              //                             color:const Color.fromARGB(255, 240, 238, 238),
-                              //                             clipBehavior: Clip.antiAliasWithSaveLayer,
-                              //                             shape: RoundedRectangleBorder(
-                              //                                     borderRadius: BorderRadius.circular(10.0),
-                              //                                   ),
-                              //                             child:Container(
-                              //                               width: 230,
-                              //                               child: Column(
-                              //                                 children: [
-                              //                                   Row(
-                              //                                     children: [
-                              //                                       Container(
-                              //                                         width: 230,
-                              //                                         height: 120,
-                                                                      
-                              //                                             decoration:  BoxDecoration(
-                                                                            
-                              //                                               image: DecorationImage(
-                              //                                                 image: NetworkImage(image),
-                              //                                                 fit: BoxFit.fill,
-                                                                              
-                                                                        
-                              //                                                   ),
-                                                                            
-                              //                                               ),
-                              //                                         child: Column(
-                              //                                           children: [
-                              //                                             Row(
-                              //                                               children: [
-                              //                                                 SizedBox(
-                              //                                                   height:25,
-                              //                                                   width:60,
-                              //                                                   child: Card(
-                              //                                                       elevation: 0,
-                              //                                                         color:const Color.fromARGB(200, 240, 238, 238),
-                              //                                                         clipBehavior: Clip.antiAliasWithSaveLayer,
-                              //                                                         shape: RoundedRectangleBorder(
-                              //                                                                 borderRadius: BorderRadius.circular(5.0),
-                              //                                                               ),
-                              //                                                           child: FittedBox(
-                              //                                                                   fit: BoxFit.cover,
-                              //                                                                   child:Padding(
-                              //                                                                     padding: const EdgeInsets.all(10.0),
-                              //                                                                     child: Text('${type}',
-                              //                                                                       style: GoogleFonts.cabin(
-                              //                                                                         // ignore: prefer_const_constructors
-                              //                                                                         textStyle: TextStyle(
-                              //                                                                         color: Color.fromARGB(255, 95, 95, 95),
-                              //                                                                         fontSize: 12,
-                              //                                                                         fontWeight: FontWeight.bold,
-                                                                                                                                                                
-                              //                                                                         ) 
-                              //                                                                       )
-                                                                                                                                                                  
-                              //                                                                     ),
-                              //                                                                   ), 
-                              //                                                             )
-                                                                                    
-                              //                                                   ),
-                              //                                                 ),
-                                                        
-                              //                                                 Padding(
-                              //                                                   padding: const EdgeInsets.only(left:119,top:5),
-                              //                                                   child: SizedBox(
-                              //                                                       width:37,
-                              //                                                       height:37,
-                              //                                                       child: InkWell(
-                              //                                                             onTap: () async =>{
-                              //                                                               //favorites =await fechApiData.getFavorites(),
-                                                                                                                          
-                              //                                                                 if (snapshot2.data[index] == false) {
-                                                                                                
-                              //                                                                   setState(() {
-                              //                                                                     snapshot2.data[index] = true;
-                              //                                                                   }),
-                              //                                                                   restFavBloc.eventStreamSink.add(addToFavorites(atPlaceId: atPlaceId, placeName: restaurantnName, placeImgUrl: image, type: type)),
-                                                                                                
-                              //                                                                   restFavBloc.stateStream.listen((event) {
-                                                                                                  
-                              //                                                                     if(event == true){
-                              //                                                                       ScaffoldMessenger.of(context)
-                              //                                                                       .showSnackBar(const SnackBar(content:Text("Add place from the favorites")));
-                                                                                                    
-                              //                                                                     }
-                              //                                                                   })
-                                                                                                                          
-                              //                                                                 } else {
-                                                                                                
-                              //                                                                   setState(() {
-                              //                                                                     snapshot2.data[index] = false;
-                              //                                                                   }),
-                              //                                                                   //remove favorite form the database-----------------
-                              //                                                                   restFavBloc.eventStreamSink.add(removeFavorite(atPlaceId: atPlaceId)),
-                                                                                                
-                              //                                                                    restFavBloc.stateStream.listen((event) {
-                                                                                                  
-                              //                                                                     if(event == true){
-                              //                                                                      //show message to the user-----------------
-                              //                                                                       ScaffoldMessenger.of(context)
-                              //                                                                         .showSnackBar(const SnackBar(content:Text("Removed place from the favorites")));
-                                                                                                    
-                              //                                                                     }
-
-
-                              //                                                                    }) 
-                              //                                                                 }
-                                                                                            
-                              //                                                               },
-                                                                                          
-                              //                                                                 child:Card(
-                              //                                                                 elevation: 0,
-                              //                                                                     color:const Color.fromARGB(200, 240, 238, 238),
-                              //                                                                     clipBehavior: Clip.antiAliasWithSaveLayer,
-                              //                                                                     shape: RoundedRectangleBorder(
-                              //                                                                             borderRadius: BorderRadius.circular(50.0),
-                              //                                                                           ),
-                              //                                                                     child:Column(
-                              //                                                                       mainAxisAlignment: MainAxisAlignment.center,
-                              //                                                                       crossAxisAlignment: CrossAxisAlignment.center,
-                              //                                                                       children: [
-                              //                                                                         Row(
-                              //                                                                           mainAxisAlignment: MainAxisAlignment.center,
-                              //                                                                           crossAxisAlignment: CrossAxisAlignment.center,
-                              //                                                                           children: [
-                              //                                                                             Image.asset(snapshot2.data[index]?"assets/images/heartBlack.png":"assets/images/heart.png",width:18,height:18),
-                              //                                                                           ],
-                              //                                                                         ),
-                              //                                                                       ],
-                              //                                                                     ),  
-                                                                                                                                                
-                              //                                                               ),
-                                                                                            
-                                                                                            
-                              //                                                             ),
-                                                                              
-                              //                                                   ),
-                              //                                                 ),
-                                                        
-                              //                                               ],
-                              //                                             ),
-                              //                                           ],
-                              //                                         ), 
-                                                                        
-                                                                      
-                              //                                       ),
-                                                                
-                                                                          
-                              //                                     ],
-                              //                                   ),
-                              //                                   Row(
-                                                                  
-                              //                                     children: [
-                              //                                         SizedBox(
-                              //                                         width: 190,
-                              //                                         height:30,
-                              //                                           child: Padding(
-                              //                                             padding: const EdgeInsets.only(left:6,top:5),
-                              //                                             child: Text(restaurantnName,
-                                                                          
-                              //                                             overflow: TextOverflow.ellipsis,
-                              //                                             style: GoogleFonts.cabin(
-                              //                                                 // ignore: prefer_const_constructors
-                              //                                                 textStyle: TextStyle(
-                              //                                                 color: const Color.fromARGB(255, 27, 27, 27),
-                              //                                                 fontSize: 14,
-                              //                                                 fontWeight: FontWeight.bold,
-                                                                                                              
-                              //                                                 ) 
-                              //                                               )
-                                                                                                                  
-                              //                                             ),
-                              //                                           ),
-                              //                                         ),
-                                                        
-                              //                                       Image.asset("assets/images/star.png",width:14,height:14),
-                              //                                       Padding(
-                              //                                         padding: const EdgeInsets.only(left:4),
-                              //                                         child: Text("$restaurantRating",
-                              //                                             style: GoogleFonts.cabin(
-                              //                                           // ignore: prefer_const_constructors
-                              //                                           textStyle: TextStyle(
-                              //                                           color: const Color.fromARGB(255, 27, 27, 27),
-                              //                                           fontSize: 12,
-                              //                                           fontWeight: FontWeight.bold,
-                                                                                                        
-                              //                                           ) 
-                              //                                         )
-                                                                      
-                              //                                         ),
-                              //                                       ),  
-                              //                                     ],
-                                                                
-                              //                                   ),
-                              //                                   Row(
-                                                                
-                              //                                     children: [
-                              //                                       Padding(
-                              //                                         padding: const EdgeInsets.only(left:4),
-                              //                                         child: Image.asset('assets/images/location.png',width:15,height:15),
-                              //                                       ),
-                              //                                       SizedBox(
-                              //                                         width:200,
-                              //                                         height:7,
-                              //                                         child: Text(address,
-                              //                                             overflow: TextOverflow.ellipsis,
-                              //                                             style: GoogleFonts.cabin(
-                              //                                             // ignore: prefer_const_constructors
-                              //                                             textStyle: TextStyle(
-                              //                                             color: Color.fromARGB(255, 94, 94, 94),
-                              //                                             fontSize: 7,
-                              //                                             fontWeight: FontWeight.bold,
-                                                                                                          
-                              //                                             ) 
-                              //                                           )
-                                                                      
-                                                                      
-                              //                                         ),
-                              //                                       )
-                              //                                     ],
-                              //                                   )
-                              //                                 ],
-                                                                          
-                                                                          
-                              //                               ),
-                              //                             )
-                                                            
-                                                            
-                                                          
-                              //                             ),
-                              //                           ); 
-                              //                       },
-                              //                     ),  
                                               
-                              //                   ),
-                              //                     ),
-                              //                   ),
-                              //             );
-                              //           }else{
-                              //             return
-                              //               Visibility(
-                              //                 visible: !isEstablishment,
-                              //                 child: const SizedBox(
-                              //                   width:360,
-                              //                   height:130,
-                              //                   child: Center(
-                              //                     child: Text("Loading....")
-                                        
-                                        
-                              //                     )
-                                      
-                              //                   ),
-                              //               );
-                              //           }
-                                        
-                                  
-                              //     });
-                                    
-                              //   }else{
-
-                              //       return
-                              //         Visibility(
-                              //           visible: !isEstablishment,
-                              //           child: const SizedBox(
-                              //             width:360,
-                              //             height:130,
-                              //             child: Center(
-                              //               child: Text("No Restaurants available")
-                                  
-                                  
-                              //               )
-                                
-                              //             ),
-                              //         );
-                              //   }     
-                              // }),
                               //reviews-----------------------------------------------------------------
                               //------------------------------------------------------------------------
                                Visibility(

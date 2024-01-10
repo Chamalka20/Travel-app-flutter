@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../blocs/attractions/attractionList_bloc.dart';
 import '../../blocs/attractions/attraction_event.dart';
@@ -27,8 +28,6 @@ class _placesListState extends State<placesList> {
  //late Future  <Attractions> attractions;
  final String placeName;
  final String placeType;
-
- bool isLoading=false; 
 
   _placesListState(this.placeName,this.placeType);
 
@@ -60,12 +59,6 @@ class _placesListState extends State<placesList> {
             FutureBuilder<List>(
               future:placeType=="attraction"? attraBloc.checkFavorites(snapshot.data):restBloc.checkFavorites(snapshot.data),
               builder: (BuildContext context, AsyncSnapshot<List> snapshot2){
-
-                if (snapshot2.connectionState ==ConnectionState.waiting) {
-                  isLoading=true;
-                }else{
-                  isLoading=false;
-                }
 
                 if(snapshot2.hasData){
 
@@ -345,16 +338,10 @@ class _placesListState extends State<placesList> {
 
                 }else{
                   return
-                      const SizedBox(
-                      width:360,
-                      height:130,
-                      child: Center(
-                        child: Text("Loading...")
-              
-              
-                    )
-        
-                  );
+                    LoadingAnimationWidget.waveDots(
+                      color: Color.fromARGB(255, 129, 129, 129), 
+                      size: 35,
+                    );
 
                 }
 
