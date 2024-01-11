@@ -13,7 +13,7 @@ class weatherRepo{
 
  
   Future<List> findWeather ()async {
-  print(lat+lng);
+  
   var setgetPhrase ='';
   double temperature =0.0;
   var weatherIcon ='';  

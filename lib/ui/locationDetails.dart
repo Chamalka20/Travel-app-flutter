@@ -234,7 +234,7 @@ class _locationDetailsState extends State<locationDetails> {
      isEstablishment =isEs;
      
      getAboutData ();
-     calculateDistance ();
+     //calculateDistance ();
      checkThisFavorite();
             
 
@@ -1075,22 +1075,53 @@ class _locationDetailsState extends State<locationDetails> {
                                 ),
                               ),
                               //---Route----------------------------------------------
-                              Padding(
-                                padding: const EdgeInsets.only(left: 13,top:3),
-                                child: Row(
-                                  children: [
-                                    Text("From ${currentCity}  ▪ ${distance} km   ▪ ${duration}",
-                                      style: GoogleFonts.cabin(
-                                                    textStyle:const TextStyle(
-                                                      color: Color.fromARGB(255, 112, 112, 112),
-                                                      fontSize: 11,
-                                                      fontWeight:FontWeight.w400
-                                                      
-                                                    ),
-                                                  ),
-                                    )
-                                  ],
-                                ),
+                              FutureBuilder<List>(
+                                future:cityBloc.getRoute(searchResults[0]['location']['lat'], searchResults[0]['location']['lng']),
+                                builder: (BuildContext context, AsyncSnapshot<List> snapshot) { 
+
+                                  if(snapshot.hasData){
+
+                                    return
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 13,top:3),
+                                        child: Row(
+                                          children: [
+                                            Text("From ${snapshot.data?[0]["currentCity"]}  ▪ ${snapshot.data?[0]["distance"]} km   ▪ ${snapshot.data?[0]["duration"]}",
+                                              style: GoogleFonts.cabin(
+                                                            textStyle:const TextStyle(
+                                                              color: Color.fromARGB(255, 112, 112, 112),
+                                                              fontSize: 11,
+                                                              fontWeight:FontWeight.w400
+                                                              
+                                                            ),
+                                                          ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+
+
+                                  }else{
+
+                                      return
+                                        Padding(
+                                        padding: const EdgeInsets.only(left: 13,top:3),
+                                        child: Row(
+                                          children: [
+                                            LoadingAnimationWidget.waveDots(
+                                              color: Color.fromARGB(255, 129, 129, 129), 
+                                              size: 11,
+                                            ),
+                                            
+                                          ],
+                                        ),
+                                      );
+                                    
+                                  }
+
+
+                                 },
+                                
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top:9),
