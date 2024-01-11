@@ -313,48 +313,6 @@ class _locationDetailsState extends State<locationDetails> {
   }
 
   //----------------------------------------------------------------
-  //calculate distance between two points---------------------------
-  Future<void> calculateDistance ()async{
-
-    final prefs = await SharedPreferences.getInstance();
-    final getSheardData = prefs.getString('currentLocation');
-    final currentLocation = jsonDecode(getSheardData!) ;
-
-    currentCity = prefs.getString('currentCity');
-
-    const String apiUrl = 'https://atlas.microsoft.com/route/directions/json';
-    final url ='$apiUrl?api-version=1.0&query=${currentLocation['lat']},${currentLocation['lng']}:${searchResults[0]['location']['lat']},${searchResults[0]['location']['lng']}&report=effectiveSettings&subscription-key=${dotenv.env['azureApiKey']}';
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      print("compute route sucssus");
-
-      final data = jsonDecode(response.body);
-      final routes = data['routes'];
-
-      if (routes != null && routes.isNotEmpty) {
-        final firstRoute = routes[0];
-        final summary = firstRoute['summary'];
-
-        if (summary != null && summary.isNotEmpty) {
-
-          final meters = summary['lengthInMeters'] ?? 0;
-          final kilometers = meters / 1000;
-          final convkilometers =kilometers.toStringAsFixed(0);
-
-          distance = convkilometers.toString();
-          
-          duration = summary['travelTimeInSeconds'].toString();
-
-         
-        }
-      }
-    } else {
-      print('Failed to compute route');
-    }
-
-  }
   
   var trips =[];
   var onGoingTrips =[];
