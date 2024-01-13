@@ -6,6 +6,41 @@ import 'package:uuid/uuid.dart';
 class favoritesRepo {
 
 
+  Future<List> isChecktFavorites (ids) async{
+      print(ids);
+      var userId ;
+      var data =[];
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userDbId');
+      List isaddRestaurantToFavorite = [];
+
+      for (var e in ids) {
+        bool found = false;
+
+        if (e.id != null) {
+        QuerySnapshot querySnapshot=  await FirebaseFirestore.instance
+          .collection('users').doc(userId).collection('favorites').where('placeId',isEqualTo: e.id).get();
+
+          if(querySnapshot.docs.isNotEmpty){
+
+            found = true;
+          }else{
+
+            found = false;
+          }
+
+        }
+        isaddRestaurantToFavorite.add(found);
+      }
+
+      
+        
+
+      print(isaddRestaurantToFavorite);
+      return isaddRestaurantToFavorite;
+
+  }
+
   Future<List<Favorite>> getFavorites () async{
 
       var userId ;
@@ -38,25 +73,19 @@ class favoritesRepo {
 
   }
 
-    Future <bool> addToFavorite (String placeId,String placeName,String placePhotoUrl,String placeType)async{
+    Future <bool> addToFavorite (Favorite favorite)async{
   
       bool isDataAdd = false;
       var userId ;
       final prefs = await SharedPreferences.getInstance();
       userId = prefs.getString('userDbId');
-
+              
       var uuid = const Uuid();
 
         await FirebaseFirestore.instance
-        .collection('users').doc(userId).collection('favorites').add({
-
-          
-            "placeId":placeId,
-            'placeName':placeName,
-            'placePhotoUrl':placePhotoUrl,
-            'placeType':placeType,
-      
-        }).then((value) => {
+        .collection('users').doc(userId).collection('favorites').add(
+           favorite.toJson()
+        ).then((value) => {
           print('add'),
           isDataAdd = true,
         }).catchError((error)=>{

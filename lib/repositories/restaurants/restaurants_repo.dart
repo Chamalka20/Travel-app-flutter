@@ -1,15 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../models/restaurants.dart';
+import '../../models/place.dart';
 
 class restaurantsRepo {
 
-  final String placeName; 
+  
 
-  const restaurantsRepo({required this.placeName,});
+  const restaurantsRepo();
+
+  Future<Place> getRestaurantDetailes(placeId)async{
+
+    final  query = await FirebaseFirestore.instance
+            .collection('restaurants')
+            .where('placeId', isEqualTo: placeId)
+            .get();
 
 
-  Future<List<Restaurants>> getRestaurants()async{
+    final Place data =Place.fromMap(query.docs[0].data());
+
+    return data;
+  }
+
+
+  Future<List<Place>> getRestaurants(placeName)async{
 
     print("this is resRepo"+placeName);
   
@@ -19,10 +32,10 @@ class restaurantsRepo {
             .get();
     
 
-    final List<Restaurants> list = [];
+    final List<Place> list = [];
 
     for(var i=0;i<query.docs.length;i++){
-      var restaurants = Restaurants.fromMap(query.docs[i].data());
+      var restaurants = Place.fromMap(query.docs[i].data());
        list.add(restaurants);
     }
 
@@ -34,3 +47,5 @@ class restaurantsRepo {
 
 
 }
+
+final restaurantRepo = restaurantsRepo();

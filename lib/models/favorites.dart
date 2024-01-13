@@ -1,9 +1,9 @@
 class Favorite {
 
-  String placeId;
-  String placeName;
-  String placePhotoUrl;
-  String placeType;
+  final String placeId;
+  final String placeName;
+  final String placePhotoUrl;
+  final String placeType;
 
 
   Favorite({
@@ -12,6 +12,16 @@ class Favorite {
     required this.placePhotoUrl,
     required this.placeType,
   });
+
+
+  toJson ()=>{
+
+    "placeId":placeId,
+    'placeName':placeName,
+    'placePhotoUrl':placePhotoUrl,
+    'placeType':placeType,
+
+  };
 
   
   factory Favorite.fromMap (dynamic map){

@@ -5,8 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'blocs/attractions/attractionList_bloc.dart';
-import 'blocs/retaurants/restaurantsList_bloc.dart';
+import 'blocs/place/placeList_bloc.dart';
 import 'ui/Welcomepage.dart';
 import 'ui/navigationPage.dart';
 
@@ -39,8 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        BlocProvider(create: (context) => attractionListBloc()),
-        BlocProvider(create: (context) => restaurantsListBloc()),
+        BlocProvider(create: (context) => placeListBloc()),
 
       ],child:MaterialApp(
      debugShowCheckedModeBanner: false,

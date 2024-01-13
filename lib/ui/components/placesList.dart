@@ -5,12 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../blocs/attractions/attractionList_bloc.dart';
-import '../../blocs/attractions/attraction_event.dart';
-import '../../blocs/attractions/attraction_state.dart';
-import '../../blocs/retaurants/restaurant_event.dart';
-import '../../blocs/retaurants/restaurantsList_bloc.dart';
-import '../../models/atttractions.dart';
+import '../../blocs/place/placeList_bloc.dart';
+import '../../blocs/place/place_event.dart';
 import '../locationDetails.dart';
 
 class placesList extends StatefulWidget {
@@ -25,7 +21,6 @@ class placesList extends StatefulWidget {
 
 class _placesListState extends State<placesList> {
 
- //late Future  <Attractions> attractions;
  final String placeName;
  final String placeType;
 
@@ -49,7 +44,7 @@ class _placesListState extends State<placesList> {
       child: SizedBox(
       height: 190,
         child:FutureBuilder<List<dynamic>>(
-     future:placeType=="attraction"? attraBloc.getAttractions(placeName):restBloc.getRestaurants(placeName),
+     future: placeBloc.getplaces(placeName,placeType),
      builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot){
 
        if (snapshot.hasData ) {
@@ -57,7 +52,7 @@ class _placesListState extends State<placesList> {
          
          return
             FutureBuilder<List>(
-              future:placeType=="attraction"? attraBloc.checkFavorites(snapshot.data):restBloc.checkFavorites(snapshot.data),
+              future:placeBloc.checkFavorites(snapshot.data),
               builder: (BuildContext context, AsyncSnapshot<List> snapshot2){
 
                 if(snapshot2.hasData){
@@ -163,36 +158,19 @@ class _placesListState extends State<placesList> {
                                                                 if (snapshot2.data?[index] == false) {
 
                                                                   
-                                                                  if(placeType == "attraction"){
-
-                                                                      BlocProvider.of<attractionListBloc>(context).add(attractionAddToFavorites(atPlaceId: atPlaceId,
+                                                                      BlocProvider.of<placeListBloc>(context).add(placeAddToFavorites(atPlaceId: atPlaceId,
                                                                         placeName: attractionName, placeImgUrl: attractionImgUrl, type: type)),
                                                                  
 
-                                                                  }else{
-
-                                                                      BlocProvider.of<restaurantsListBloc>(context).add(restaurantAddToFavorites(atPlaceId: atPlaceId,
-                                                                        placeName: attractionName, placeImgUrl: attractionImgUrl, type: type)),
-
-                                                                  },
-                                                                  
-                                                                  
                                                                   setState(() {
                                                                         snapshot2.data?[index] = true;
                                                                   }),
                                                                                             
                                                                 } else {
                                                                   
-                                                                  
                                                                   //remove favorite form the database-----------------
 
-                                                                  if(placeType == "attraction"){
-
-                                                                    BlocProvider.of<attractionListBloc>(context).add(attractionRemoveFromFavorites(atPlaceId: atPlaceId)),
-
-                                                                  }else{
-                                                                    BlocProvider.of<restaurantsListBloc>(context).add(restaurantRemoveFromFavorites(atPlaceId: atPlaceId)),
-                                                                  },
+                                                                    BlocProvider.of<placeListBloc>(context).add(placeRemoveFromFavorites(atPlaceId: atPlaceId)),
 
                                                                   
                                                                   setState(() {

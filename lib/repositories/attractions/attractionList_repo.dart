@@ -1,15 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:travelapp/models/atttractions.dart';
+
+import '../../models/place.dart';
 
 class attractionListRepo {
 
-  final String placeName; 
 
-  const attractionListRepo({required this.placeName,});
+  const attractionListRepo();
+
+  Future <Place>  getAttractionDetailes(placeId)async{
+
+    final  query = await FirebaseFirestore.instance
+            .collection('attractions')
+            .where('placeId', isEqualTo: placeId)
+            .get();
 
 
-  Future<List<Attractions>> getAttractionPlaces()async{
+    Place data =Place.fromMap(query.docs[0].data());
+    print(data);
+    return data;
+
+  }
+
+  Future<List<Place>> getAttractionPlaces(placeName)async{
 
     final query = await FirebaseFirestore.instance
             .collection('attractions')
@@ -17,10 +29,10 @@ class attractionListRepo {
             .get();
        
   
-    final List<Attractions> list = [];
+    final List<Place> list = [];
 
     for(var i=0;i<query.docs.length;i++){
-      var attracrion = Attractions.fromMap(query.docs[i].data());
+      var attracrion = Place.fromMap(query.docs[i].data());
        list.add(attracrion);
     }
     
@@ -33,3 +45,5 @@ class attractionListRepo {
 
 
 }
+
+final attractionListRep = attractionListRepo();
