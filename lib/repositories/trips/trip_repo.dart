@@ -16,16 +16,16 @@ class trip_repo{
     DateTime currentDate = DateTime.parse( intl.DateFormat("yyyy-MM-dd").format(DateTime.now()));
 
     final query= await FirebaseFirestore.instance
-        .collection('users').doc(userId).collection('trips').where('endDate',isLessThan: currentDate).get();
+        .collection('users').doc(userId).collection('trips').where('endDate',isGreaterThan: currentDate).get();
 
-
+    
     final List<Trip> list = [];
 
     for(var i=0;i<query.docs.length;i++){
       var trip = Trip.fromMap(query.docs[i].data());
        list.add(trip);
     }
-
+    print(list);
     return list;
 
         

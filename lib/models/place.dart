@@ -34,15 +34,17 @@ final String id;
           id: map["placeId"]??'',
           name: map['title'] != null?map["title"]:'',
           photoRef:map['imageUrls'] != null? map["imageUrls"][0]:'https://via.placeholder.com/150',
-          rating:0.0,
+          rating: 0.0,
           address:map['address'] != null? map["address"]:'',
-          type:map['categoryName'] != null? map["categoryName"]:'',
-          phone:'No numbers found',
-          openingHours: [],
-          reviews: [],
+          type:map['searchString']??'',
+          phone: map['phone'] ?? '',
+          openingHours: map['openingHours'] ?? [],
+          reviews: map['reviews'] ?? [],
           latitude: map['location']['lat'] ?? 0.0,
           longitude: map['location']['lng'] ?? 0.0,
         );
+
+        
 
       
   }

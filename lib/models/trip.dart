@@ -43,7 +43,7 @@ class Trip {
 
   
   factory Trip.fromMap (dynamic map){
-
+    
     return Trip(
       tripId: map['tripId'],
       tripName: map['tripName'],
@@ -53,7 +53,7 @@ class Trip {
       tripDescription: map['tripDescription'],
       tripCoverPhoto: map['tripCoverPhoto'],
       durationCount: map['durationCount'],
-      endDate: map['endDate'],
+      endDate: map['endDate'].toString(),
       places: map['places'], 
      );
 

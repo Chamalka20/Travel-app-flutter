@@ -214,7 +214,8 @@ class fechApiData {
             String description,String tripCoverPhoto,String duration,String endDate,String places)async{
 
       var userId ;
-      final deData = jsonDecode(places);
+      final  deData = jsonDecode(places);
+      List data = [deData];
       final prefs = await SharedPreferences.getInstance();
       userId = prefs.getString('userDbId');
 
@@ -234,8 +235,8 @@ class fechApiData {
             "tripDescription":description,
             "tripCoverPhoto":tripCoverPhoto,
             "durationCount":duration,
-            'endDate':endDate,
-            "places":deData,
+            'endDate':DateTime.parse(endDate),
+            "places":data,
         
     
       });

@@ -9,6 +9,7 @@ class attractionListRepo {
 
   Future <Place>  getAttractionDetailes(placeId)async{
 
+    
     final  query = await FirebaseFirestore.instance
             .collection('attractions')
             .where('placeId', isEqualTo: placeId)
@@ -21,8 +22,32 @@ class attractionListRepo {
 
   }
 
+   Future<List<Place>> searchAttractions(input)async{
+
+    final  query =await FirebaseFirestore.instance.collection("attractions")
+                       .orderBy('title')
+                       .startAt([input])
+                       .limit(5)
+                       .get();
+                       
+     
+
+    final List<Place> list = [];
+
+     for(var i=0;i<query.docs.length;i++){
+      var attraction = Place.fromMap(query.docs[i].data());
+       list.add(attraction);
+    }
+
+    
+    return list;
+
+
+  }
+
   Future<List<Place>> getAttractionPlaces(placeName)async{
 
+    print("this is attracRepo"+placeName);
     final query = await FirebaseFirestore.instance
             .collection('attractions')
             .where('city', isEqualTo: placeName)
@@ -35,8 +60,6 @@ class attractionListRepo {
       var attracrion = Place.fromMap(query.docs[i].data());
        list.add(attracrion);
     }
-    
-
     
     return list;
 

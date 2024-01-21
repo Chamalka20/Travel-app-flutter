@@ -103,7 +103,7 @@ class _createNewTripState extends State<createNewTrip> {
         'tripLocation':TripLocationController.text,
         'tripDescription':TripDescriptionController.text,
         'tripCoverPhoto':defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
-        'endDate':endDate,
+        'endDate':endDate.toIso8601String(),
       };
 
       print(trip);
@@ -460,7 +460,7 @@ class _createNewTripState extends State<createNewTrip> {
                                         
                                         print(pickedDate.duration.inDays); 
                                         daysDuration =pickedDate.duration.inDays;
-                                        endDate = formattedDate2;
+                                        endDate = pickedDate.end;
                                         setState(() {
                                           dateinput.text = '${formattedDate1} - ${formattedDate2}';                      //set output date to TextField value. 
                                         });

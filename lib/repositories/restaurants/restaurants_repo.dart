@@ -21,6 +21,29 @@ class restaurantsRepo {
     return data;
   }
 
+  Future<List<Place>> searchRestaurants(input)async{
+
+    final  query =await FirebaseFirestore.instance.collection("restaurants")
+                       .orderBy('title')
+                       .startAt([input])
+                       .limit(5)
+                       .get();
+                       
+     
+
+    final List<Place> list = [];
+
+     for(var i=0;i<query.docs.length;i++){
+      var restaurant = Place.fromMap(query.docs[i].data());
+       list.add(restaurant);
+    }
+
+    
+    return list;
+
+
+  }
+
 
   Future<List<Place>> getRestaurants(placeName)async{
 

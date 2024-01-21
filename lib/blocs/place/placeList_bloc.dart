@@ -38,6 +38,28 @@ class placeListBloc extends Bloc<place_event,place_state>{
 
   }
 
+  Future <List<Place>>  searchPlaces(input,placeType) async {
+    
+    late List<Place> details;
+
+    if(placeType =='city'){
+        
+     details = await cityRep.searchCities(input);
+
+    }else if(placeType =='attraction'){
+
+     details = await attractionListRep.searchAttractions(input);
+
+    }else if(placeType =='restaurant'){
+
+      details = await restaurantRepo.searchRestaurants(input);
+
+    }
+
+    return  details;
+
+  }
+
 
   Future <List<Place>> getplaces(String name,String placeType) async {
 
@@ -53,6 +75,7 @@ class placeListBloc extends Bloc<place_event,place_state>{
 
     }
 
+    print(details);
     return details;
   }
 

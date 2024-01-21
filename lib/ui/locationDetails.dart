@@ -17,6 +17,7 @@ import '../blocs/place/place_event.dart';
 import '../blocs/place/place_state.dart';
 import '../blocs/trip/trip_bloc.dart';
 import '../models/place.dart';
+import '../models/trip.dart';
 import 'components/placesList.dart';
 
 
@@ -45,28 +46,10 @@ class _locationDetailsState extends State<locationDetails> {
   var favorites=[];
   List<bool> isaddAttractionToFavorite=[];
 
-  late final double placelat;
-  late final double placelng;
-  late final String placePhoto;
-  late final String placeName;
+ 
   late final String placeType;
-
-  //var searchResults =[];
-  
-  //var placeOpenTimes =[] ;
-  //List<dynamic> reviews = [];
-  //late bool isNotEmptyReviews =false;
-  //var placeRating =0.0;
-  //late final bool isPlaceOpenNow;
-  //var PlaceAddress ='';
-  //late final String PlacePhotoReference;
-  //var palceNumber ='';
   late  String aboutDetails ='';
-  //late final bool isDataLoading;
-  //var setgetPhrase ='';
-  //var temperature =0.0;
-  //var weatherIcon ='';
-
+ 
   bool showFullText = false;
 
   
@@ -89,193 +72,7 @@ class _locationDetailsState extends State<locationDetails> {
     super.dispose();
   }
 
-  
-  
 
-   Future<void> etplaceDetails () async {
-
-  
-      // searchResults=data.map((element) { 
-
-      //         final Id = element['placeId'];
-
-      //         if (Id != null && Id==placeId) {
-      //           if (element['imageUrls'] != null && element['imageUrls'].isNotEmpty) {
-
-      //             if(element['openingHours']!=null && element['openingHours'].length !=0 ){
-
-      //               var times=element['openingHours'];
-      //               placeOpenTimes = times;
-      //             }
-
-      //             if(element['address']!=null && element['address'].isNotEmpty){
-
-      //               PlaceAddress=element['address'];
-                    
-      //             }
-
-      //             if(element['phone']!=null && element['phone'].isNotEmpty){
-
-      //               palceNumber=element['phone'];
-                    
-      //             }else{
-
-      //               palceNumber ="No numbers found";
-      //             }
-
-      //             if(element['totalScore']!=null ){
-
-      //                 placeRating =  element['totalScore']+0.0;
-                      
-      //             }
-
-      //             if(element['reviews']!=null && element['reviews'].isNotEmpty){
-
-      //                 reviews = element['reviews'];
-      //             }
-
-      //             if(element['openingHours']!=null && element['openingHours'].isNotEmpty){
-
-      //                placeOpenTimes  = element['openingHours'];
-      //             }
-
-      //             return {
-      //               'id':element['placeId'],
-      //               'name': element['title'],
-      //               'photo_reference': element['imageUrls'][0],
-      //               'type':element['searchString'],
-      //               'location':element['location'],
-      //               'address':element['address'],
-
-                    
-
-      //             };
-      //           } else {
-      //             return {
-      //               'name': 'city',
-      //               'photo_reference': 'https://via.placeholder.com/150',
-      //             };
-      //           }
-      //         }
-
-              
-      //       }).where((element) => element != null).toList();
-
-          
-    
-     //check place is establishment or not-------------------------
-    late bool isEs;
-    // if(searchResults[0]['type']=='locality'){
-
-    //   isEs = false;
-
-    //   //findWeather ();
-      
-
-    // }else{
-    //   isEs = true;
-
-
-    // //get trips on database------------------
-    // trips=await fechApiData.getTrips();
-    // //get currentDate----------------
-    // DateTime currentDate = DateTime.parse( intl.DateFormat("yyyy-MM-dd").format(DateTime.now()));
-   
-    // //filter ongoing trips--------------------------------
-    // var endDate;
-
-    // trips.forEach((data) => {
-        
-    //       endDate = data['endDate'],
-
-    //       if(DateTime.parse(endDate).isAfter(currentDate)){
-            
-    //         onGoingTrips.add(data),
-          
-    //       }
-          
-
-    //     });
-   
-
-    // }
-
-     
-     
-     //calculateDistance ();
-    
-            
-
-   }
-
-   
-
-
-  // Future <void> getAboutData ()async {
-   
-  //   const apiUrl = 'https://api.openai.com/v1/chat/completions';
-  //   const apiKey = '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';
-
-  //   String message = 'give details about ${searchResults[0]['name']} and place address is ${searchResults[0]['name']} in Srilanka';
-
-  //   final requestBody = jsonEncode({
-  //     'model': 'gpt-3.5-turbo',
-  //     'messages': [
-  //        {
-  //         'role': 'user',
-  //         'content': '$message',
-  //       },
-        
-  //     ],
-  //   });
-
-  //   final response = await http.post(
-  //     Uri.parse(apiUrl),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $apiKey',
-  //     },
-  //     body:requestBody,
-  //   );
-    
-
-  //    if (response.statusCode == 200) {
-  //       final jsonResponse = json.decode(response.body);
-  //     final generatedText = jsonResponse['choices'][0]['message']['content'] as String?;
-      
-  //     aboutDetails =generatedText ?? "";
-
-  //     setState(() {
-        
-  //       aboutDetails;
-        
-
-  //     });
-
-      
-  //     print("succses");
-     
-  //   } else {
-
-
-     
-  //     print(" not succses ${response.statusCode}");
-  //     aboutDetails = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';//generatedText ?? "";
-  //     setState(() {
-        
-  //       aboutDetails;
-
-
-  //     });
-      
-  //   }
-    
-  // }
-
-  //----------------------------------------------------------------
-  
-  var trips =[];
-  var onGoingTrips =[];
 
 
 
@@ -344,7 +141,7 @@ class _locationDetailsState extends State<locationDetails> {
       FutureBuilder<Place>(
         future:placeBloc.getPlaceDetailes(placeId, searchType),
         builder: (BuildContext context, AsyncSnapshot<Place> placeDetails) { 
-          print(placeDetails.data);
+          
           if(placeDetails.hasData){
             
             return
@@ -397,7 +194,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                               
                                                                                   
                                                         BlocProvider.of<placeListBloc>(context).add(placeAddToFavorites(atPlaceId: placeDetails.data!.id,
-                                                          placeName: placeDetails.data!.name, placeImgUrl: placeDetails.data!.photoRef, type: placeType)),
+                                                          placeName: placeDetails.data!.name, placeImgUrl: placeDetails.data!.photoRef, type: placeDetails.data!.type)),
                                                           
                                                               
                                                           setState(() {
@@ -515,7 +312,7 @@ class _locationDetailsState extends State<locationDetails> {
                                             //weather condion---------------------------------------------
                                             //weather icon------------------------------------
                                             FutureBuilder<List>(
-                                              future:placeBloc.getWeather(placeDetails.data!.latitude, placeDetails.data!.longitude),
+                                              future:searchType=='city'? placeBloc.getWeather(placeDetails.data!.latitude, placeDetails.data!.longitude):null,
                                               builder: (BuildContext context, AsyncSnapshot<List> snapshot) { 
             
                                                   if(snapshot.hasData){
@@ -590,12 +387,15 @@ class _locationDetailsState extends State<locationDetails> {
                                                   }else{
             
                                                     return
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(left: 50),
-                                                      child: LoadingAnimationWidget.beat(
-                                                          color: Color.fromARGB(255, 129, 129, 129), 
-                                                          size: 35,
-                                                        ),
+                                                    Visibility(
+                                                      visible: searchType =='city',
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(left: 50),
+                                                        child: LoadingAnimationWidget.beat(
+                                                            color: Color.fromARGB(255, 129, 129, 129), 
+                                                            size: 35,
+                                                          ),
+                                                      ),
                                                     );
             
                                                   }
@@ -713,7 +513,7 @@ class _locationDetailsState extends State<locationDetails> {
                                       
                                         //open times---------------------------------------------------------------------------------
                                       Visibility(
-                                        visible: placeDetails.data!.openingHours.isNotEmpty?true:false,
+                                        visible: searchType !='city',
                                         child: Padding(
                                             padding: const EdgeInsets.only(left:13,top:5),
                                           child: Row(
@@ -1253,9 +1053,9 @@ class _locationDetailsState extends State<locationDetails> {
                                                       //trip list------------------------------------------------
                                                       FutureBuilder(
                                                         future:tripBlo.getOnGoingTrips(),
-                                                        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) { 
+                                                        builder: (BuildContext context, AsyncSnapshot<List<Trip>> onGoingTrips) { 
             
-                                                          if(snapshot.hasData){
+                                                          if(onGoingTrips.hasData){
             
                                                             return
                                                               Padding(
@@ -1267,7 +1067,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                       Expanded(
                                                                         child: ListView.builder(
                                                                           cacheExtent: 9999, 
-                                                                          itemCount: onGoingTrips.length+1,
+                                                                          itemCount:onGoingTrips.data!.length+1,
                                                                           scrollDirection: Axis.horizontal, 
                                                                           itemBuilder: (context, index) {
                                                                             
@@ -1340,33 +1140,33 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                     onTap: () async {
                                                                                                                       
                                                                                       final prefs = await SharedPreferences.getInstance();
-                                                                                      final encodata = json.encode(onGoingTrips[index-1]);
+                                                                                      final encodata = json.encode(onGoingTrips.data?[index-1]);
                                                                                       prefs.setString('trip',encodata );
                                                                                       prefs.setInt('selectDay',0 );
                                                             
                                                                                                                       
-                                                                                      final tripId = onGoingTrips[index-1]['tripId'];
+                                                                                      final tripId = onGoingTrips.data?[index-1].tripId;
                                                                                       //find database user selectdoc id -----------------------------------------
-                                                                                      final tripDocId=await fechApiData.getTripDocId(tripId);
+                                                                                      //final tripDocId=await fechApiData.getTripDocId(tripId);
                                                                                       //----------------------------------------------------------------------
-                                                                                      await prefs.setString('triDocId',tripDocId );
+                                                                                      // await prefs.setString('triDocId',tripDocId );
                                                             
-                                                                                      List selectedIds =[{
-                                                                                                      'day':"" ,
-                                                                                                      'places':[placeId],
-                                                                                                    }];
-                                                                                      final endata = json.encode(selectedIds);
-                                                                                      await prefs.setString('TripPlaceIds',endata);
+                                                                                      // List selectedIds =[{
+                                                                                      //                 'day':"" ,
+                                                                                      //                 'places':[placeId],
+                                                                                      //               }];
+                                                                                      // final endata = json.encode(selectedIds);
+                                                                                      // await prefs.setString('TripPlaceIds',endata);
                                                             
-                                                                                      await prefs.setString('searchType','attracrions');
-                                                                                      await prefs.setBool('isEditTrip',true);
+                                                                                      // await prefs.setString('searchType','attracrions');
+                                                                                      // await prefs.setBool('isEditTrip',true);
                                                             
-                                                                                      print("tripid: ${tripId}");
+                                                                                      // print("tripid: ${tripId}");
                                                                                                                       
-                                                                                      Navigator.push(
-                                                                                      context,
-                                                                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true, isAddPlace: true,)),
-                                                                                      );
+                                                                                      // Navigator.push(
+                                                                                      // context,
+                                                                                      // MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true, isAddPlace: true,)),
+                                                                                      // );
                                                                                     },
                                                                                     child: Padding(
                                                                                       padding: const EdgeInsets.only(right:6,),
@@ -1377,7 +1177,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                           color: Color.fromARGB(255, 216, 99, 99),
                                                                                           borderRadius: BorderRadius.circular(10),
                                                                                           image: DecorationImage(
-                                                                                          image: NetworkImage(onGoingTrips[index-1]['tripCoverPhoto']),
+                                                                                          image: NetworkImage(onGoingTrips.data![index-1].tripCoverPhoto),
                                                                                           fit: BoxFit.cover
                                                                                                       
                                                                                             ),
@@ -1403,7 +1203,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                                                     fit: BoxFit.cover,
                                                                                                                     child:Padding(
                                                                                                                       padding: const EdgeInsets.all(7.0),
-                                                                                                                      child: Text('${onGoingTrips[index-1]["places"].length} days',
+                                                                                                                      child: Text('${onGoingTrips.data?[index-1].places[0].length} days',
                                                                                                                         style: GoogleFonts.cabin(
                                                                                                                           // ignore: prefer_const_constructors
                                                                                                                           textStyle: TextStyle(
@@ -1429,7 +1229,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                                                                   children: [
                                                                                                     
-                                                                                                    Text('${onGoingTrips[index-1]['tripName']}',
+                                                                                                    Text('${onGoingTrips.data?[index-1].tripName}',
                                                                                                           style: GoogleFonts.cabin(
                                                                                                         // ignore: prefer_const_constructors
                                                                                                         textStyle: TextStyle(
@@ -1451,7 +1251,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                                                                   children: [
                                                                                                     
-                                                                                                    Text('${onGoingTrips[index-1]['tripDuration']}',
+                                                                                                    Text('${onGoingTrips.data?[index-1].durationCount}',
                                                                                                           style: GoogleFonts.cabin(
                                                                                                         // ignore: prefer_const_constructors
                                                                                                         textStyle: TextStyle(

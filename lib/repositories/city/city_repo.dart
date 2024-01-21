@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import '../../models/place.dart';
 
@@ -16,6 +17,29 @@ class cityRepo {
     final Place data = Place.fromMap(query.docs[0].data() );
     
     return data;
+
+  }
+
+   Future<List<Place>> searchCities(input)async{
+
+    final  query =await FirebaseFirestore.instance.collection("cities")
+                       .orderBy('title')
+                       .startAt([input])
+                       .limit(5)
+                       .get();
+                       
+     
+
+    final List<Place> list = [];
+
+     for(var i=0;i<query.docs.length;i++){
+      var city = Place.fromMap(query.docs[i].data());
+       list.add(city);
+    }
+
+    
+    return list;
+
 
   }
 
