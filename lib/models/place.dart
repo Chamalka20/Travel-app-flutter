@@ -27,6 +27,20 @@ final String id;
     required this.longitude,
   });
 
+
+  toJson ()=>{
+
+    'placeId':id,
+    'title':name,
+    'imageUrls':{photoRef},
+    'address':address,
+    'searchString':type,
+    'phone':phone,
+    'openingHours':openingHours,
+    'reviews':reviews,
+    'location':{'lat':latitude,'lng':longitude}
+  };
+
   factory Place.fromMap( dynamic map)  {
 
       

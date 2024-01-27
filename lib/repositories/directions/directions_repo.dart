@@ -46,10 +46,12 @@ class directionsRepo{
           final kilometers = meters / 1000;
           final convkilometers =kilometers.toStringAsFixed(0);
 
-           distance = convkilometers.toString();
+          distance = convkilometers.toString();
           
-           duration = summary['travelTimeInSeconds'].toString();
-
+          var d = Duration(seconds:summary['travelTimeInSeconds']);
+          List<String> parts = d.toString().split(':');
+          duration='${parts[0].padLeft(2, '0')}h ${parts[1].padLeft(2, '0')}m';
+          
          
         }
       }

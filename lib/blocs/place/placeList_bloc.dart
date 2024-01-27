@@ -105,7 +105,14 @@ class placeListBloc extends Bloc<place_event,place_state>{
 
   }
 
- 
+  
+  Future<List<Place>> getUserRecentlySearch() async {
+
+    List<Place> details = await cityRep.getUserRecentlySearch();
+    
+    return details;
+  }
+
   placeListBloc():super(InitialPlaceState()){
 
     on<place_event>((event, emit) async {
@@ -121,6 +128,16 @@ class placeListBloc extends Bloc<place_event,place_state>{
         print("this is removeFavorite");
         bool isRemove =await favRepo.removeFavorites(event.atPlaceId);
         emit(placeRemoveFromFavoriteState(isRemove));
+
+      }else if(event is addUserRecentlySearch){
+
+        if(event.type=='locality'){
+
+         await cityRep.addUserRecentlySearch(Place(id: event.id, name: event.name, photoRef: event.photoRef,
+           rating:0.0, address: event.address, type: event.type, phone: event.phone,
+            openingHours: event.openingHours, reviews: event.reviews, latitude: event.latitude, longitude: event.longitude));
+        }
+        
       }
     },);
    

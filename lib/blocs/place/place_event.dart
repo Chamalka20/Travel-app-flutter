@@ -24,3 +24,32 @@ class placeRemoveFromFavorites extends place_event{
   const placeRemoveFromFavorites({required this.atPlaceId});
 }
 
+class addUserRecentlySearch extends place_event {
+
+  final String id;
+  final String name;
+  final String photoRef;
+  final String address;
+  final String type;
+  final String phone;
+  final List openingHours;
+  final List reviews;
+  final double latitude;
+  final double longitude;
+
+  addUserRecentlySearch({
+    required this.id,
+    required this.name,
+    required this.photoRef,
+    required this.address,
+    required this.type,
+    required this.phone,
+    required this.openingHours,
+    required this.reviews,
+    required this.latitude,
+    required this.longitude,
+  });
+
+  
+}
+

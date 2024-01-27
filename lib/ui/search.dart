@@ -3,12 +3,15 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/ui/tripDetailsPlan.dart';
 
 import '../blocs/place/placeList_bloc.dart';
+import '../blocs/place/place_event.dart';
+import '../models/place.dart';
 import 'locationDetails.dart';
 
 class search extends StatefulWidget {
@@ -33,19 +36,17 @@ class search extends StatefulWidget {
   var inputData="";
   var capitalizedString="";
   String keyboardInput='';
-  //var searchResults=[];
   Timer? _timer;
   List selectedIds =[{
       'day':"" ,
       'places':[],
     }];
   bool isOnLongPress = false;
-
+  late List<Place> RecentlySearchList;
   
   _searchState( this.isTextFieldClicked,this.searchType,this.isSelectPlaces);
 
  
-
    @override
   void initState() {
     super.initState();
@@ -53,31 +54,15 @@ class search extends StatefulWidget {
     
     setState(() {
 
-      isTextFieldClicked;
+      isTextFieldClicked; 
      });
-    _asyncMethod();
+   
      
   }
 
- _asyncMethod() async {
 
-    //get data list from database-------------------------------
-
-   
-   
-
-
-  } 
   
 String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):'';
- Future<void> fetchSearchResults(String input) async {
-
-  // results = await placeBloc.searchPlaces(input,searchType);
-  // print(results.) ; 
-
-  }
-  
-  
  
 
   @override
@@ -155,7 +140,7 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
                              //if text filed is empty do this------------------ 
                             if(value !=''){
                               if (_timer?.isActive ?? false) _timer!.cancel();
-                              _timer = Timer(const Duration(milliseconds: 500), () {
+                              _timer = Timer(const Duration(milliseconds: 1000), () {
 
                                 setState(() {
                                  inputData=value;
@@ -275,6 +260,39 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
                                           Navigator.push(
                                                         context,
                                                         MaterialPageRoute(builder: (context) =>  locationDetails(placeId:placeId,searchType:'city')));
+
+                                          if(RecentlySearchList.isNotEmpty){
+                                            bool contains=false;
+                                            for (var element in RecentlySearchList) { 
+   
+                                              if(element.name.contains(results.data![index].name)){
+
+                                               contains = true;
+                                                
+                                              }else{
+                                                
+                                                
+                                              }
+                                              
+                                            }
+                                            if(contains!=true){
+                                               BlocProvider.of<placeListBloc>(context).add(addUserRecentlySearch(id:results.data![index].id , name: results.data![index].name, address: results.data![index].address,
+                                              openingHours: results.data![index].openingHours, phone: results.data![index].phone, photoRef: results.data![index].photoRef,
+                                              reviews: results.data![index].reviews, type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
+                                            }
+                                            
+                                            
+                                          }else{
+
+                                            BlocProvider.of<placeListBloc>(context).add(addUserRecentlySearch(id:results.data![index].id , name: results.data![index].name, address: results.data![index].address,
+                                            openingHours: results.data![index].openingHours, phone: results.data![index].phone, photoRef: results.data![index].photoRef,
+                                            reviews: results.data![index].reviews, type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
+                                            
+                                          }
+                                          
+
+                                         
+                                                        
                           
                                         }else if(searchType == 'attraction'){
                                           Navigator.push(
@@ -284,11 +302,8 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
                           
                                         }
                           
-                                        }
+                                      }
                           
-                                        
-                                      
-                                        
                                       
                                       },
                                       child: Row(
@@ -480,114 +495,92 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
               visible: !isTextFieldClicked,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                        
-                          child: Card(
-                            elevation: 0,
-                            color:const Color.fromARGB(255, 240, 238, 238),
-                            //clipBehavior: Clip.antiAliasWithSaveLayer,
-                            shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(17.0),
-                                  ),
-                        
-                            child:Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center, 
-                              children: [
-                                SizedBox(
+                child: FutureBuilder<List<Place>>(
+                  future:placeBloc.getUserRecentlySearch(),
+                  builder: (BuildContext context, AsyncSnapshot<List<Place>> recentlySearch) { 
+                    
+                    if(recentlySearch.hasData ){
+                    
+                      RecentlySearchList =recentlySearch.data!;  
+                      return
+                         SizedBox(
+                          height: 300,
+                           child: Expanded(
+                             child: ListView.builder(
+                               scrollDirection: Axis.vertical,
+                               itemCount: recentlySearch.data!.length,
+                               itemBuilder: (context, index) {
                                  
-                                  
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                     
-                                      FittedBox(
-                                        fit: BoxFit.cover,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left:8,right:8,top:8,bottom:8),
-                                          child: Text("Galle",
-                                                style: GoogleFonts.cabin(
-                                            // ignore: prefer_const_constructors
-                                            textStyle: TextStyle(
-                                            color: const Color.fromARGB(255, 27, 27, 27),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                                                          
-                                            ) 
-                                            )
-                                          ),
-                                        ),
-                                      ),          
-                                    ],
-                                  ),
-                                ),
-                                
-                              ],
-                                            
-                                            
-                            )
-                          ),
-                        ),
-                      ],
-                    ),
-                     Row(
-                      children: [
-                        SizedBox(
-                        
-                          child: Card(
-                            elevation: 0,
-                            color:const Color.fromARGB(255, 240, 238, 238),
-                            //clipBehavior: Clip.antiAliasWithSaveLayer,
-                            shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(17.0),
-                                  ),
-                        
-                            child:Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center, 
-                              children: [
-                                SizedBox(
-                                  
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                     
-                                      FittedBox(
-                                        fit: BoxFit.cover,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left:8,right:8,top:8,bottom:8),
-                                          child: Text("Kurunagala",
-                                                style: GoogleFonts.cabin(
-                                            // ignore: prefer_const_constructors
-                                            textStyle: TextStyle(
-                                            color: const Color.fromARGB(255, 27, 27, 27),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                                                          
-                                            ) 
-                                            )
-                                          ),
-                                        ),
-                                      ),          
-                                    ],
-                                  ),
-                                ),
-                                
-                              ],
-                                            
-                                            
-                            )
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                                 return
+                                   Row(
+                                     children: [
+                                       SizedBox(
+                                       
+                                         child: Card(
+                                           elevation: 0,
+                                           color:const Color.fromARGB(255, 240, 238, 238),
+                                           //clipBehavior: Clip.antiAliasWithSaveLayer,
+                                           shape: RoundedRectangleBorder(
+                                                   borderRadius: BorderRadius.circular(17.0),
+                                                 ),
+                                       
+                                           child:Column(
+                                             mainAxisAlignment: MainAxisAlignment.center,
+                                             crossAxisAlignment: CrossAxisAlignment.center, 
+                                             children: [
+                                               SizedBox(
+                                               
+                                                 
+                                                 child: Row(
+                                                   mainAxisAlignment: MainAxisAlignment.center,
+                                                   crossAxisAlignment: CrossAxisAlignment.center,
+                                                   children: [
+                                                   
+                                                     FittedBox(
+                                                       fit: BoxFit.cover,
+                                                       child: Padding(
+                                                         padding: const EdgeInsets.only(left:8,right:8,top:8,bottom:8),
+                                                         child: Text(recentlySearch.data![index].name,
+                                                               style: GoogleFonts.cabin(
+                                                           // ignore: prefer_const_constructors
+                                                           textStyle: TextStyle(
+                                                           color: const Color.fromARGB(255, 27, 27, 27),
+                                                           fontSize: 14,
+                                                           fontWeight: FontWeight.bold,
+                                                                                         
+                                                           ) 
+                                                           )
+                                                         ),
+                                                       ),
+                                                     ),          
+                                                   ],
+                                                 ),
+                                               ),
+                                               
+                                             ],
+                                                           
+                                                           
+                                           )
+                                         ),
+                                       ),
+                                     ],
+                                   );
+                           
+                                },
+                               
+                             ),
+                           ),
+                         );
+
+                    }else{
+
+                      return Container();
+                    }
+
+                     
+
+                   },
+                  
                 ),
               ),
             ),
