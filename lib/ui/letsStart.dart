@@ -192,11 +192,6 @@ class _MyWidgetState extends State<letsStart> {
 
                                   print('Current city: $cityName');
 
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  await prefs.setBool('isLoggedIn', true);
-                                  //add location to the database-----------------------------
-                                  await fechApiData.setUserLocation(cityName);
-
                                   Navigator.of(context).pushReplacement(customPageRoutes(
                 
                                     child: navigationPage(isBackButtonClick:false,autoSelectedIndex: 0,)));
@@ -204,7 +199,6 @@ class _MyWidgetState extends State<letsStart> {
                                   }else{
                                     print('Unable to fetch the current country');
                                   }
-
 
                                   
                                 },

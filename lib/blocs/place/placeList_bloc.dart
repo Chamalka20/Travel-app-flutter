@@ -118,7 +118,7 @@ class placeListBloc extends Bloc<place_event,place_state>{
     on<place_event>((event, emit) async {
       
       if(event is placeAddToFavorites){
-
+    
       print('this is addToFavorites');
       bool isAdd =await favRepo.addToFavorite(Favorite(placeId: event.atPlaceId, placeName: event.placeName, placePhotoUrl: event.placeImgUrl, placeType: event.type,));
       emit(placeAddToFavoriteState(isAdd,));  

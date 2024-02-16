@@ -1,22 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:intl/intl.dart' as intl;
 
 import '../../models/trip.dart';
 
 class trip_repo{
  
-
+  final auth.User? user=auth.FirebaseAuth.instance.currentUser;
 
   Future<List<Trip>>  onGoingTrips () async {
 
-    var userId;
-    final prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString('userDbId');
     DateTime currentDate = DateTime.parse( intl.DateFormat("yyyy-MM-dd").format(DateTime.now()));
 
     final query= await FirebaseFirestore.instance
-        .collection('users').doc(userId).collection('trips').where('endDate',isGreaterThan: currentDate).get();
+        .collection('users').doc(user?.uid).collection('trips').where('endDate',isGreaterThan: currentDate).get();
 
     
     final List<Trip> list = [];

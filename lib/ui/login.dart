@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../blocs/user/user_bloc.dart';
+import '../blocs/user/user_event.dart';
+import '../blocs/user/user_state.dart';
+import '../models/user.dart';
 import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
-import 'package:travelapp/ui/fechApiData.dart';
 
 import 'navigationPage.dart';
 
 class login extends StatefulWidget {
-  const login({super.key});
+  final User userData;
+  const login({required this.userData,super.key});
 
   @override
-  State<login> createState() => _loginState();
+  State<login> createState() => _loginState(userData);
 }
 
 class _loginState extends State<login> {
 
-  var  data ={};
-  final passwordController = TextEditingController();
-   bool showError = false;
+  final User userData;
+  _loginState(this.userData);
 
-  void initState() {
-    super.initState();
-   getUserData(); 
-     
-  }
+  
+  final passwordController = TextEditingController();
+  bool showError = false;
+  String errorDetails='';
+  
 @override
   void dispose(){
     super.dispose();
@@ -33,13 +36,7 @@ class _loginState extends State<login> {
 
   }
 
-  Future <void> getUserData()async{
-    data = await fechApiData.getUserData();
-
-    setState(() {
-      data ;
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +49,37 @@ class _loginState extends State<login> {
 
         return false;
       },
-     child:Scaffold(
+
+      child:MultiBlocListener(
+        listeners:[
+          BlocListener<userBloc, userState>(
+            listener: (context, state) async {
+
+              if(state is singInState){
+
+                if(state.userState[0]['isSignIn'] ==true){
+
+                  showError = false;
+                  Navigator.of(context).pushReplacement(customPageRoutes(
+                    child: navigationPage(isBackButtonClick:false,autoSelectedIndex: 0,)));
+                }else{
+                  
+                  setState(() {
+                    errorDetails= state.userState[0]['AuthException'];
+                    showError = true;
+                  });
+
+                }
+
+              }
+
+           },
+         ),
+
+        ], 
+        child: Scaffold(
         body: SafeArea(
-          child:data!=null? SingleChildScrollView(
+          child:userData!=null? SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
             child: Container(
               height: 700.0, 
@@ -144,7 +169,7 @@ class _loginState extends State<login> {
                                                 height: 45,
                                                 child:  CircleAvatar(
                                                   radius: 40,
-                                                  backgroundImage:data['proPicUrl']!=null? NetworkImage(data['proPicUrl']):NetworkImage("https://via.placeholder.com/150"),
+                                                  backgroundImage:userData.proPicUrl.isNotEmpty? NetworkImage(userData.proPicUrl): const NetworkImage("https://cdn-icons-png.flaticon.com/64/3177/3177440.png"),
                                                   
                                                 ),
                                               ),
@@ -160,7 +185,7 @@ class _loginState extends State<login> {
                                                      padding: const EdgeInsets.only(left:10,top:25),
                                                      child: SizedBox(
                                                       width:100,
-                                                       child: Text("${data['name']}",
+                                                       child: Text(userData.name,
                                                           style: GoogleFonts.poppins(
                                                               textStyle: const TextStyle(
                                                                 color: Color.fromARGB(255, 255, 255, 255),
@@ -180,7 +205,7 @@ class _loginState extends State<login> {
                                                   children: [
                                                        Padding(
                                                          padding: const EdgeInsets.only(left:6),
-                                                         child: Text("${data['email']}",
+                                                         child: Text(userData.email,
                                                           style: GoogleFonts.poppins(
                                                               textStyle: const TextStyle(
                                                                 color: Color.fromARGB(255, 255, 255, 255),
@@ -224,7 +249,7 @@ class _loginState extends State<login> {
                                                       filled: true,
                                                       fillColor: Color.fromARGB(255, 255, 255, 255),
                                                       hintText: 'Password',
-                                                      errorText:showError  ? "Invalid password" : null,
+                                                      errorText:showError  ? errorDetails : null,
                                                       border: const OutlineInputBorder(
                                                         borderSide: BorderSide.none,
                                                       
@@ -249,26 +274,9 @@ class _loginState extends State<login> {
                                                   height: 40, 
                                                  child: TextButton(
                                                     onPressed: ()  async {
-                                                       //check password validation---------------------------------------
-                                                       if(data['password']==passwordController.text){
-                                                       showError = false;
-
-                                                        final prefs = await SharedPreferences.getInstance();
-                                                        await prefs.setBool('isLoggedIn', true);
-                                                        
-
-                                                        Navigator.of(context).pushReplacement(customPageRoutes(
-                
-                                                        child: navigationPage(isBackButtonClick:false,autoSelectedIndex: 0,)));
-                                                       }else{
-
-                                                        setState(() {
-                                                          showError = true;
-                                                        });
-
-                                                    
-                                                       }
-                                                      
+                                                       
+                                                      BlocProvider.of<userBloc>(context).add(signInEvent(userData.email,passwordController.text));
+                                   
                                                     },
                                                     style: ButtonStyle(
                                                       backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 10, 124, 132)),
@@ -328,7 +336,9 @@ class _loginState extends State<login> {
           const Center(
             child: CircularProgressIndicator(),
           )
-        ),
+        ),  
+      )
+      
 
 
 

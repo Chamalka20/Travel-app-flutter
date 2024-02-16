@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 import '../../models/place.dart';
 
 class cityRepo {
+
+  final auth.User? user=auth.FirebaseAuth.instance.currentUser;
 
   Future<Place> getcityDetailes(placeId)async{
 
@@ -45,12 +47,8 @@ class cityRepo {
 
    Future addUserRecentlySearch(Place place)async{
 
-    var userId ;
-    final prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString('userDbId');
-
     await FirebaseFirestore.instance
-      .collection('users').doc(userId).collection('recentlySearch').add(
+      .collection('users').doc(user?.uid).collection('recentlySearch').add(
 
         place.toJson()
     
@@ -60,12 +58,8 @@ class cityRepo {
 
    Future<List<Place>> getUserRecentlySearch() async {
 
-    var userId ;
-    final prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString('userDbId');
-
     final query=await FirebaseFirestore.instance
-                  .collection('users').doc(userId).collection('recentlySearch').get();
+                  .collection('users').doc(user?.uid).collection('recentlySearch').get();
 
 
      final List<Place> list = [];

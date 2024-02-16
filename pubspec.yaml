@@ -50,9 +50,9 @@ dependencies:
   image_picker: ^0.8.9
   firebase_core: ^2.14.0
   firebase_database: ^10.1.0
+  firebase_auth: ^4.16.0
   syncfusion_flutter_maps: ^21.2.10
   cloud_firestore: ^4.8.2
-  firebase_auth: ^4.6.3
   uuid: ^3.0.7
   internet_connection_checker: ^0.0.1+4
   provider: ^6.0.3
@@ -112,7 +112,6 @@ flutter:
     - assets/images/home.png
     - assets/images/map.png
     - assets/images/search.png
-    - assets/images/user.png
     - assets/images/like.png
     - assets/images/homeClick.png
     - assets/images/mapClick.png
@@ -140,7 +139,7 @@ flutter:
     - assets/images/correct.png
     - assets/images/destination.png
     - assets/images/time-left.png
-    - .env
+
 
 
 

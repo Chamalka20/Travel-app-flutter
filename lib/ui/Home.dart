@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/ui/fechApiData.dart';
 import "package:travelapp/ui/fechLastViews.dart";
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import '../blocs/user/user_bloc.dart';
 
 class home extends StatefulWidget {
 
@@ -39,16 +41,7 @@ class _homeState extends State<home> {
      super.initState();
     //get data list from api-------------------------------
      getData();
-     getUserData();
      //getNearByPlaces ();
-  }
-
-  Future <void> getUserData()async{
-    userdata = await fechApiData.getUserData();
-
-    setState(() {
-      userdata ;
-    });
   }
 
 //set categorie list-----------------------------
@@ -285,20 +278,35 @@ final payload3 = {
                   
                   children: [
                     
-                    SizedBox(
-                      width:250,
-                      child: Text("Hi ${userdata['name']}",
-                        style: GoogleFonts.nunito(
-                                    // ignore: prefer_const_constructors
-                                    textStyle: TextStyle(
-                                    color: const Color.fromARGB(255, 27, 27, 27),
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                            
-                                    ) 
-                                  )
+                    FutureBuilder(
+                      future:userBlo.getUserDetails() ,
+                      builder: (BuildContext context, AsyncSnapshot<auth.User?> snapshot) { 
+
+                          if(snapshot.hasData){
+
+                            return
+                              SizedBox(
+                                width:250,
+                                child: Text("Hi ${snapshot.data!.displayName}",
+                                  style: GoogleFonts.nunito(
+                                              // ignore: prefer_const_constructors
+                                              textStyle: TextStyle(
+                                              color: const Color.fromARGB(255, 27, 27, 27),
+                                              fontSize: 26,
+                                              fontWeight: FontWeight.bold,
+                                      
+                                              ) 
+                                            )
+                                
+                                ),
+                              );
+
+                          }else{
+                            return Container();
+                          }
+
+                       },
                       
-                      ),
                     ),
                     
                     

@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/models/favorites.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:uuid/uuid.dart';
 
 class favoritesRepo {
 
+  final auth.User? user=auth.FirebaseAuth.instance.currentUser;
 
   Future<List> isChecktFavorites (ids) async{
-      print(ids);
-      var userId ;
+      
       var data =[];
-      final prefs = await SharedPreferences.getInstance();
-      userId = prefs.getString('userDbId');
       List isaddRestaurantToFavorite = [];
 
       for (var e in ids) {
@@ -19,7 +18,7 @@ class favoritesRepo {
 
         if (e.id != null) {
         QuerySnapshot querySnapshot=  await FirebaseFirestore.instance
-          .collection('users').doc(userId).collection('favorites').where('placeId',isEqualTo: e.id).get();
+          .collection('users').doc(user?.uid).collection('favorites').where('placeId',isEqualTo: e.id).get();
 
           if(querySnapshot.docs.isNotEmpty){
 
@@ -43,14 +42,11 @@ class favoritesRepo {
 
   Future<List<Favorite>> getFavorites () async{
 
-      var userId ;
       var data =[];
-      final prefs = await SharedPreferences.getInstance();
-      userId = prefs.getString('userDbId');
       final List<Favorite> list = [];
 
       await FirebaseFirestore.instance
-        .collection('users').doc(userId).collection('favorites').get().then((QuerySnapshot querySnapshot) => {
+        .collection('users').doc(user?.uid).collection('favorites').get().then((QuerySnapshot querySnapshot) => {
 
            querySnapshot.docs.forEach((doc) {
               
@@ -75,15 +71,11 @@ class favoritesRepo {
 
     Future <bool> addToFavorite (Favorite favorite)async{
   
-      bool isDataAdd = false;
-      var userId ;
-      final prefs = await SharedPreferences.getInstance();
-      userId = prefs.getString('userDbId');
-              
+      bool isDataAdd = false;       
       var uuid = const Uuid();
 
         await FirebaseFirestore.instance
-        .collection('users').doc(userId).collection('favorites').add(
+        .collection('users').doc(user?.uid).collection('favorites').add(
            favorite.toJson()
         ).then((value) => {
           print('add'),
@@ -103,16 +95,12 @@ class favoritesRepo {
   Future <bool> removeFavorites (String placeId) async{
 
       bool isRemove = false;
-      var userId;
       var favId;
-
-      final prefs = await SharedPreferences.getInstance();
-      userId = prefs.getString('userDbId');
 
     //get spesific id to remove the favorite place-------------------
       await FirebaseFirestore.instance
             .collection('users')
-            .doc(userId).collection('favorites').where('placeId',isEqualTo: placeId).get()
+            .doc(user?.uid).collection('favorites').where('placeId',isEqualTo: placeId).get()
             .then((QuerySnapshot querySnapshot) {
                 querySnapshot.docs.forEach((doc) {
 
