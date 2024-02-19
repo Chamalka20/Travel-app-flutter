@@ -105,6 +105,32 @@ class userAuthRepo {
 
   }
 
+  Future<List> resetPassword(email) async {
+
+    String AuthException='';
+    bool isSend=false;
+    List signUpDeatails=[];
+    try{
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      isSend=true;
+    }on auth.FirebaseAuthException catch (e) {
+
+      isSend=false;
+
+      if (e.code == 'invalid-email') {
+        AuthException='invalid email';
+      }
+
+    }catch (e){
+      print(e);
+    }
+
+    signUpDeatails=[{'isSend':isSend,'AuthException':AuthException}];
+
+    return signUpDeatails;
+
+  }
+
   Future<dynamic> signInWithGoogle() async {
 
     try{
@@ -124,6 +150,7 @@ class userAuthRepo {
       print(e);
     }    
   }
+
 
   Future<void> signOut() async {
     

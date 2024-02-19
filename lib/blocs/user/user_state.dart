@@ -30,6 +30,12 @@ class singUpState extends userState{
 
 
 }
+class resetPasswordState extends userState{
+
+  List resetState;
+  resetPasswordState(this.resetState);
+
+}
 
 class signOutState extends userState{
 

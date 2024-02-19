@@ -1,19 +1,14 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/ui/fechApiData.dart';
+import 'package:travelapp/ui/resetPassword.dart';
 import 'package:travelapp/ui/signup.dart';
 import '../blocs/user/user_bloc.dart';
 import '../blocs/user/user_event.dart';
 import '../blocs/user/user_state.dart';
 import 'customPageRoutes.dart';
-import 'letsStart.dart';
 import 'login.dart';
-import 'navigationPage.dart';
 
 class welcomePage extends StatefulWidget {
   const welcomePage({super.key});
@@ -95,6 +90,11 @@ class _welcomePageState extends State<welcomePage> {
                   });
                 }
 
+              }else if(state is resetPasswordState){
+                if(state.resetState[0]['isSend'] == true){
+                  ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content:Text("password reset message sent to the email")));
+                }
               }
           
            },
@@ -482,7 +482,8 @@ class _welcomePageState extends State<welcomePage> {
                                                                     padding: const EdgeInsets.only(left:12.0),
                                                                     child: TextButton(
                                                                         onPressed: () {
-                                                                          // Do something when the button is pressed
+                                                                           Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                                                builder:(context)=> const resetPasswordPage()));
                                                                         },
                                                                         style: ButtonStyle(
                                                                           

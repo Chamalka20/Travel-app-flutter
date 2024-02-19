@@ -46,6 +46,11 @@ class emailVerification extends userEvent{
   emailVerification();
 }
 
+class resetPassword extends userEvent{
+  final String email;
+  resetPassword({required this.email});
+}
+
 class signOutEvent extends userEvent{
 
   signOutEvent();

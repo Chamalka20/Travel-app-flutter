@@ -47,6 +47,11 @@ class userBloc extends Bloc<userEvent,userState>{
 
         await userAuthRep.emailVerification();
 
+      }else if (event is resetPassword){
+
+        List resetState =await userAuthRep.resetPassword(event.email);
+        emit(resetPasswordState(resetState));
+
       }else if(event is signInWithGoogle){
 
         var serStates=await userAuthRep.signInWithGoogle();
