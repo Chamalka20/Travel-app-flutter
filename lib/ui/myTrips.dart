@@ -2,11 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/ui/createNewTrip.dart';
+import 'package:travelapp/ui/createTrip.dart';
 import 'package:travelapp/ui/fechApiData.dart';
+
+import '../blocs/trip/trip_bloc.dart';
+import '../blocs/trip/trip_event.dart';
+import '../models/trip.dart';
 
 class mytrips extends StatefulWidget {
   const mytrips({super.key});
@@ -17,9 +21,8 @@ class mytrips extends StatefulWidget {
 
 class _mytripsState extends State<mytrips> {
 
-  var trips ;
-  var onGoingTrips=[];
-  var pastTrips=[];
+  late List <Trip> onGoingTrips ;
+  late List <Trip> pastTrips ;
   var isDataReady = false;
 
    @override
@@ -31,18 +34,14 @@ class _mytripsState extends State<mytrips> {
 
   Future <void> getTripList ()async{
 
-    trips=await fechApiData.getTrips();
-    //get currentDate----------------
-    DateTime currentDate = DateTime.parse( DateFormat("yyyy-MM-dd").format(DateTime.now()));
-    print(currentDate);
+    onGoingTrips=await tripBlo.getOnGoingTrips();
+    pastTrips=await tripBlo.pastTrips();
 
     setState(() {
-      trips;
+      onGoingTrips;
     });
 
-  
-
-    if(trips == null){
+    if(onGoingTrips == null){
 
         setState(() {
           isDataReady= false;
@@ -55,32 +54,8 @@ class _mytripsState extends State<mytrips> {
           
         });
 
-      //filter ongoing trips and past trips--------------------------------
-      var endDate;
-      trips.forEach((data) => {
-      
-        endDate = data['endDate'],
-
-        if(DateTime.parse(endDate).isAfter(currentDate)){
-          
-          onGoingTrips.add(data),
-        
-        }else{
-
-          pastTrips.add(data),
-
-        }
-        
-
-      });
-
-      print(onGoingTrips.length);
-
     }
 
-
-
-    
   }
 
 
@@ -161,21 +136,10 @@ class _mytripsState extends State<mytrips> {
                                   children: [
                                     GestureDetector(
                                       onTap: () async {
-              
-                                        final prefs = await SharedPreferences.getInstance();
-                                        final encodata = json.encode(onGoingTrips[index]);
-                                        prefs.setString('tripdays',encodata );
-              
-                                        final tripId = onGoingTrips[index]['tripId'];
-                                        //find database user selectdoc id -----------------------------------------
-                                        final tripDocId=await fechApiData.getTripDocId(tripId);
-                                        await prefs.setString('triDocId',tripDocId );
-              
-                                        print("tripid: ${tripId}");
-              
+
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: true,)));
+                                          MaterialPageRoute(builder: (context) => createTrip(placeName:'',placePhotoUrl: '',isEditTrip: true, trip: onGoingTrips[index],)));
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.only(right:11,),
@@ -186,7 +150,7 @@ class _mytripsState extends State<mytrips> {
                                             color: Color.fromARGB(255, 216, 99, 99),
                                             borderRadius: BorderRadius.circular(17),
                                             image: DecorationImage(
-                                            image: NetworkImage(onGoingTrips[index]['tripCoverPhoto']),
+                                            image: NetworkImage(onGoingTrips[index].tripCoverPhoto),
                                             fit: BoxFit.cover
                                                         
                                               ),
@@ -212,7 +176,7 @@ class _mytripsState extends State<mytrips> {
                                                                       fit: BoxFit.cover,
                                                                       child:Padding(
                                                                         padding: const EdgeInsets.all(10.0),
-                                                                        child: Text('${onGoingTrips[index]["places"].length} days',
+                                                                        child: Text('${onGoingTrips[index].places.length} days',
                                                                           style: GoogleFonts.cabin(
                                                                             // ignore: prefer_const_constructors
                                                                             textStyle: TextStyle(
@@ -236,7 +200,7 @@ class _mytripsState extends State<mytrips> {
                                                   child: Row(
                                                     children: [
                                                       
-                                                      Text('${onGoingTrips[index]['tripName']}',
+                                                      Text('${onGoingTrips[index].tripName}',
                                                             style: GoogleFonts.cabin(
                                                           // ignore: prefer_const_constructors
                                                           textStyle: TextStyle(
@@ -256,7 +220,7 @@ class _mytripsState extends State<mytrips> {
                                                   child: Row(
                                                     children: [
                                                       
-                                                      Text('${onGoingTrips[index]['tripDuration']}',
+                                                      Text(onGoingTrips[index].tripDuration,
                                                             style: GoogleFonts.cabin(
                                                           // ignore: prefer_const_constructors
                                                           textStyle: TextStyle(
@@ -310,7 +274,7 @@ class _mytripsState extends State<mytrips> {
                                               fontWeight: FontWeight.bold,
                                                                             
                                               ) 
-                                              )
+                                          )
                                     )
                                   ],
                                 )
@@ -365,20 +329,7 @@ class _mytripsState extends State<mytrips> {
                               GestureDetector(
                                 onTap: () async {
               
-                                  final prefs = await SharedPreferences.getInstance();
-                                  final encodata = json.encode(pastTrips[index]);
-                                  prefs.setString('tripdays',encodata );
-              
-                                  final tripId = trips[index]['tripId'];
-                                  //find database user selectdoc id -----------------------------------------
-                                  final tripDocId=await fechApiData.getTripDocId(tripId);
-                                  await prefs.setString('triDocId',tripDocId );
-              
-                                  print("tripid: ${tripId}");
-              
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: true,)));
+                                 
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(right:11,left:10),
@@ -389,7 +340,7 @@ class _mytripsState extends State<mytrips> {
                                       color: Color.fromARGB(255, 216, 99, 99),
                                       borderRadius: BorderRadius.circular(17),
                                       image: DecorationImage(
-                                      image: NetworkImage(pastTrips[index]['tripCoverPhoto']),
+                                      image: NetworkImage(pastTrips[index].tripCoverPhoto),
                                       fit: BoxFit.cover
                                                   
                                         ),
@@ -415,7 +366,7 @@ class _mytripsState extends State<mytrips> {
                                                                 fit: BoxFit.cover,
                                                                 child:Padding(
                                                                   padding: const EdgeInsets.all(10.0),
-                                                                  child: Text('${pastTrips[index]["places"].length} days',
+                                                                  child: Text('${pastTrips[index].places.length} days',
                                                                     style: GoogleFonts.cabin(
                                                                       // ignore: prefer_const_constructors
                                                                       textStyle: TextStyle(
@@ -439,7 +390,7 @@ class _mytripsState extends State<mytrips> {
                                             child: Row(
                                               children: [
                                                 
-                                                Text('${pastTrips[index]['tripName']}',
+                                                Text(pastTrips[index].tripName,
                                                       style: GoogleFonts.cabin(
                                                     // ignore: prefer_const_constructors
                                                     textStyle: TextStyle(
@@ -459,7 +410,7 @@ class _mytripsState extends State<mytrips> {
                                             child: Row(
                                               children: [
                                                 
-                                                Text('${pastTrips[index]['tripDuration']}',
+                                                Text(pastTrips[index].tripDuration,
                                                       style: GoogleFonts.cabin(
                                                     // ignore: prefer_const_constructors
                                                     textStyle: TextStyle(
@@ -531,16 +482,18 @@ class _mytripsState extends State<mytrips> {
                                     height: 45,
                                     child: TextButton(
                                       onPressed:() async{
-                                      
-              
-                                          Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl: '',isEditTrip: false,)));
+                                        
+                                        Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) =>  createTrip(placeName:'',
+                                              placePhotoUrl:'',isEditTrip: false, trip:Trip(tripId: '', tripName: '', tripBudget:'', tripLocation: ''
+                                              , tripDescription: '', tripCoverPhoto: '',tripDuration: '', durationCount: 0,startDate: DateTime(00), endDate: DateTime(00), places: {}) ,)),
+                                        );
                                         
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                                        foregroundColor:Color.fromARGB(255, 255, 255, 255),
+                                        foregroundColor:Color.fromARGB(255, 253, 90, 90),
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(20), 
                                           ),

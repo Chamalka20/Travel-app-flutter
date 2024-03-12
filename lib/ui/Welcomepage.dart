@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,22 +21,58 @@ class welcomePage extends StatefulWidget {
 
 class _welcomePageState extends State<welcomePage> {
 
+
   final emailController = TextEditingController();
   bool isEmailEmpty =false;
   List curruntEmails=[];
   bool showError = false;
   var userId ='';
+  late userBloc userbloc;
+  late StreamSubscription mSub;
+
+  @override
+  void initState() {
+       super.initState();
+       userbloc = BlocProvider.of<userBloc>(context);
+       mSub = userbloc.stream.listen((state) {
+          if(state is resetPasswordState && state.resetState[0]['isSend'] == true){
+
+            ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(content: Text("password reset message sent to the email")));
+            
+            print("hhhhhhh");
+                  
+          }else if(state is checkEmailAlreadyExistState){
+
+            if(state.userState[0]['isFound'] ==true){
+              
+              showError =false;
+              Navigator.of(context).pushReplacement(customPageRoutes(
+                        child:login(userData: state.userState[0]['userDetails'])));
+            }else{
+              setState(() {
+                showError=true;
+              });
+            }
+          }
+       
+       });
+       
+    }
+    
+   
 
   @override
   void dispose(){
-    super.dispose();
-    emailController.dispose();
-    
 
+    emailController.dispose();
+    super.dispose();
+        
   }
 
   @override
   Widget build(BuildContext context) {
+
     return  WillPopScope(
       onWillPop: () async {
         bool confirmExit = await showDialog(
@@ -72,36 +110,9 @@ class _welcomePageState extends State<welcomePage> {
         FocusScope.of(context).unfocus();
         
       },
-        child:MultiBlocListener(
-          listeners: [
-             BlocListener<userBloc, userState>(
-            listener: (context, state) async {
-
-              if(state is checkEmailAlreadyExistState){
-
-                if(state.userState[0]['isFound'] ==true){
-                  
-                  showError =false;
-                  Navigator.of(context).pushReplacement(customPageRoutes(
-                            child:login(userData: state.userState[0]['userDetails'])));
-                }else{
-                  setState(() {
-                    showError=true;
-                  });
-                }
-
-              }else if(state is resetPasswordState){
-                if(state.resetState[0]['isSend'] == true){
-                  ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content:Text("password reset message sent to the email")));
-                }
-              }
-          
-           },
-         ),
-          ],
-          child: Scaffold(
-              body:SafeArea(
+        child:Scaffold(
+            body:
+                  SafeArea(
                   child: SingleChildScrollView(
                     physics: const NeverScrollableScrollPhysics(),
                     child:Container(
@@ -112,9 +123,9 @@ class _welcomePageState extends State<welcomePage> {
                           image: AssetImage('assets/images/app bac.jpg'),
                           fit:BoxFit.cover,
                           alignment: Alignment.center,
-        
+                    
                         ),
-        
+                    
                       ),
                     
                     // ignore: prefer_const_constructors
@@ -179,10 +190,10 @@ class _welcomePageState extends State<welcomePage> {
                                                                           
                                                 ),
                                               ),
-        
-        
+                    
+                    
                                             ],
-        
+                    
                                       ),
                                       Row(
                                           children: [
@@ -206,10 +217,10 @@ class _welcomePageState extends State<welcomePage> {
                                                     ),
                                                   ),
                                               )
-        
-        
+                    
+                    
                                           ],
-        
+                    
                                         
                                       ), 
                                       
@@ -219,7 +230,7 @@ class _welcomePageState extends State<welcomePage> {
                                               
                                               margin: const EdgeInsets.only(left: 35.0),
                                                 
-        
+                    
                                                 child: Container(
                                                   // ignore: prefer_const_constructors
                                                   width: 300,
@@ -270,10 +281,10 @@ class _welcomePageState extends State<welcomePage> {
                                                                       ),
                                                                     ),
                                                                   ),
-        
-        
+                    
+                    
                                                               ],
-        
+                    
                                                             ),
                                                             Row(
                                                                   children: [
@@ -284,17 +295,17 @@ class _welcomePageState extends State<welcomePage> {
                                                                           height: 40,
                                                                           child: TextButton(
                                                                             onPressed: () async{
-        
+                    
                                                                               if(emailController.text.isNotEmpty){
                                                                                 BlocProvider.of<userBloc>(context).add(readUserEmailEvent(emailController.text));
                                                                                 
-      
+                  
                                                                               }else{
                                                                                 setState(() {
                                                                         
                                                                                   isEmailEmpty=true;
                                                                                 });
-        
+                    
                                                                               }
                                                                                 
                                                                             
@@ -307,7 +318,7 @@ class _welcomePageState extends State<welcomePage> {
                                                                                 style: GoogleFonts.roboto(
                                                                                     fontWeight: FontWeight.bold,
                                                                                     fontSize: 15,
-        
+                    
                                                                                 ),
                                                                             
                                                                             ),
@@ -334,10 +345,10 @@ class _welcomePageState extends State<welcomePage> {
                                                                     
                                                                     ),
                                                                 ],
-        
-        
+                    
+                    
                                                             ),
-        
+                    
                                                               Row(
                                                                   children: [
                                                                     Padding(
@@ -349,8 +360,8 @@ class _welcomePageState extends State<welcomePage> {
                                                                             
                                                                             onPressed: () {
                                                                               
-        
-        
+                    
+                    
                                                                             },
                                                                             style: ButtonStyle(
                                                                               backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 231, 231, 231)),
@@ -482,8 +493,12 @@ class _welcomePageState extends State<welcomePage> {
                                                                     padding: const EdgeInsets.only(left:12.0),
                                                                     child: TextButton(
                                                                         onPressed: () {
-                                                                           Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                                                                builder:(context)=> const resetPasswordPage()));
+                                                                           Navigator.of(context).push(
+                                                                            MaterialPageRoute(
+                                                                              builder:(_)=> resetPasswordPage()
+                                                                              
+                                                                            )
+                                                                          );
                                                                         },
                                                                         style: ButtonStyle(
                                                                           
@@ -498,20 +513,20 @@ class _welcomePageState extends State<welcomePage> {
                                                                         
                                                                       ),
                                                                   ),
-        
-        
+                    
+                    
                                                                 ],  
-        
-        
+                    
+                    
                                                             ),
-        
-        
+                    
+                    
                                                         ],
                                                   
                                                   
                                                     ),
                                                   ), 
-        
+                    
                                                 ),
                                                 
                                               
@@ -519,29 +534,30 @@ class _welcomePageState extends State<welcomePage> {
                                             
                                             
                                         ], 
-        
+                    
                                       ),
                                       
                                     ],
-        
+                    
                                                       
                             
-        
+                    
                             ),
                             
-        
-        
+                    
+                    
                           )
                             
                             
                         ),
                   )
                 )
-              )
-            ),
-        ) 
-        )
-    );
+                  )
+                  )
+       )
+              );
+           
+
    
   }
 

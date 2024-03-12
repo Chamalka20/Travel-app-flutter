@@ -1,16 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelapp/blocs/trip/trip_event.dart';
 import 'package:travelapp/ui/tripDetailsPlan.dart';
 
 import '../blocs/place/placeList_bloc.dart';
 import '../blocs/place/place_event.dart';
+import '../blocs/trip/trip_bloc.dart';
 import '../models/place.dart';
 import 'locationDetails.dart';
 
@@ -144,6 +143,7 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
 
                                 setState(() {
                                  inputData=value;
+                                 print(inputData);
                                 });
 
                               });
@@ -425,23 +425,23 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
                                                 height: 45,
                                                 child: TextButton(
                                                   onPressed:() async{
-                                                    //temporally store trip places---------------------------
-                                                    final prefs = await SharedPreferences.getInstance();
-                                                    final data = json.encode(selectedIds);
-                                                    prefs.setString('TripPlaceIds',data );
-                                                    final isEditPlace =prefs.getBool('isEditTrip');
-                      
-                                                    if(isEditPlace == true){
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: true, isAddPlace: false,)));
-                                                    }else{
+                                                    
+                                                    // if(isSelectPlaces == true){
+
+                                                    //   BlocProvider.of<tripBloc>(context).add(addTripPalcesEvent(isEditTrip:true, placesIds: selectedIds, tripId: ''));
+
+                                                    //   Navigator.push(
+                                                    //     context,
+                                                    //     MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: true, isAddPlace: false,)));
+                                                    // }else{
+
+                                                    //   BlocProvider.of<tripBloc>(context).add(addTripPalcesEvent(isEditTrip:false, placesIds: [], tripId: ''));
                   
-                                                      Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: false, isAddPlace: false,)));
+                                                    //   Navigator.push(
+                                                    //   context,
+                                                    //   MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: true,isEditPlace: false, isAddPlace: false,)));
                   
-                                                    }  
+                                                    // }  
                                                     
                                                   },
                                                   style: ElevatedButton.styleFrom(

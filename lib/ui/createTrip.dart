@@ -1,151 +1,162 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/ui/navigationPage.dart';
 import 'package:travelapp/ui/tripDetailsPlan.dart';
 import 'package:travelapp/ui/fechApiData.dart';
+import 'package:uuid/uuid.dart';
+
+import '../blocs/trip/trip_bloc.dart';
+import '../blocs/trip/trip_event.dart';
+import '../blocs/trip/trip_state.dart';
+import '../models/place.dart';
+import '../models/trip.dart';
 
 
-class createNewTrip extends StatefulWidget {
+class createTrip extends StatefulWidget {
 
   final String placeName;
   final String placePhotoUrl;
   final isEditTrip;
-
-  const createNewTrip({super.key, required this.placeName,required this.placePhotoUrl,required this.isEditTrip }) ;
+  final Trip trip;
+  createTrip({super.key, required this.placeName,required this.placePhotoUrl,required this.isEditTrip,required this.trip}) ;
 
   @override
-  State<createNewTrip> createState() => _createNewTripState(placeName,placePhotoUrl,isEditTrip);
+  State<createTrip> createState() => _createNewTripState(placeName,placePhotoUrl,isEditTrip,trip);
 }
 
-class _createNewTripState extends State<createNewTrip> {
+class _createNewTripState extends State<createTrip> {
   var isDataReady =false;
   final String placeName;
   final bool isEditTrip;
   late final String backGroundPlacePhotoUrl;
-  late final defultBacPhotoUrl;
+  late String defultBacPhotoUrl;
   late final String planTrips = '5';
   late  String tripName ='';
   var daysDuration;
   var endDate;
-
+  var startDate;
+  final Trip trip;
+  late Trip newTrip;
   TextEditingController dateinput = TextEditingController(); 
   final TripNameController = TextEditingController();
   final TripBudgetController = TextEditingController();
   final TripLocationController = TextEditingController();
   final TripDescriptionController = TextEditingController();
 
-  _createNewTripState(this.placeName,this.backGroundPlacePhotoUrl,this.isEditTrip);
+  _createNewTripState(this.placeName,this.backGroundPlacePhotoUrl,this.isEditTrip, this.trip);
 
   
   @override
   void initState(){
      super.initState();
-    //get data list from api-------------------------------
+    
     getBackGroundImage ();
-
     if(isEditTrip ==true){
       editTrip();
 
     }
-  
-   
     
   }
 
   @override
   void dispose(){
+   
     super.dispose();
     TripNameController.dispose();
     TripBudgetController.dispose();
     TripLocationController.dispose();
     TripDescriptionController.dispose();
+    
   }
 
   Future<void> editTrip()async{
 
-    final prefs = await SharedPreferences.getInstance();
-    final endata = prefs.getString('tripdays');
-    final storeTripDays =jsonDecode(endata!);
+    TripNameController.text =trip.tripName;
+    tripName =trip.tripName;
 
-    TripNameController.text =storeTripDays['tripName'];
-    tripName =storeTripDays['tripName'];
-
-    defultBacPhotoUrl =storeTripDays['tripCoverPhoto'];
-
-    dateinput.text =storeTripDays['tripDuration'];
-    TripBudgetController.text =storeTripDays['tripBudget'];
-    TripLocationController.text =storeTripDays['tripLocation'];
-    TripDescriptionController.text =storeTripDays['tripDescription'];
+    defultBacPhotoUrl =trip.tripCoverPhoto;
+    dateinput.text=trip.tripDuration;
+    TripBudgetController.text =trip.tripBudget;
+    TripLocationController.text =trip.tripLocation;
+    TripDescriptionController.text =trip.tripDescription;
   
   }
 
+  
   Future<void> createTrip ()async{
 
     if(isEditTrip != true){
 
       var durationCount = daysDuration??0;
-      var conDurationCount = durationCount.toString();
-    
-      final trip ={
-        'tripName':TripNameController.text,
-        'durationCount':conDurationCount,
-        'tripDuration':dateinput.text,
-        'tripBudget':TripBudgetController.text,
-        'tripLocation':TripLocationController.text,
-        'tripDescription':TripDescriptionController.text,
-        'tripCoverPhoto':defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
-        'endDate':endDate.toIso8601String(),
-      };
+      var conDurationCount = durationCount;
 
-      print(trip);
+     var uuid = const Uuid();
 
-    //temporaly store trip data -------------------------
-      final prefs = await SharedPreferences.getInstance();
-      final data = json.encode(trip);
-      prefs.setString('trip',data );
-      prefs.setInt('selectDay',0 );
-
+      newTrip=Trip(
+          tripId: uuid.v1(),
+          tripName: TripNameController.text,
+          tripBudget: TripBudgetController.text,
+          tripLocation: TripLocationController.text,
+          tripDescription: TripDescriptionController.text,
+          tripCoverPhoto: defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
+          tripDuration: dateinput.text,
+          durationCount:conDurationCount,
+          startDate: startDate, 
+          endDate: endDate, 
+          places: {},
+        ); 
+          
+          
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:(context)=> tripDetailsPlan(isEditPlace: false, isAddPlace: false,
+             trip: newTrip,place: Place(address: '', latitude: 0.0, name: '', id: '', longitude:0.0,
+              openingHours: [], phone: '', photoRef: '', rating: 0.0, reviews: [], type: ''),)
+            
+          )
+        );
+          
+           
     }else{
 
-      final prefs = await SharedPreferences.getInstance();
-      final endata = prefs.getString('tripdays');
-      final storeTripDays =jsonDecode(endata!);
-
-      final places = storeTripDays['places'];
-
-      var durationCount = daysDuration!=null?daysDuration:int.parse(storeTripDays['durationCount']);
-      var conDurationCount = durationCount.toString();
-
-      final trip ={
-        'tripName':TripNameController.text,
-        'durationCount':conDurationCount,
-        'tripDuration':dateinput.text,
-        'tripBudget':TripBudgetController.text,
-        'tripLocation':TripLocationController.text,
-        'tripDescription':TripDescriptionController.text,
-        'tripCoverPhoto':defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
-        'endDate':endDate!=null?endDate:storeTripDays['endDate'],
-        'places':places,
-      };
-
-      print(trip);
-
-    //temporaly store trip data -------------------------
+      var durationCount = daysDuration??0;
+      var conDurationCount = durationCount;
       
-      final data = json.encode(trip);
-      prefs.setString('trip',data );
-      prefs.setInt('selectDay',0 );
+      newTrip=Trip(
+          tripId: trip.tripId,
+          tripName: TripNameController.text,
+          tripBudget: TripBudgetController.text,
+          tripLocation: TripLocationController.text,
+          tripDescription: TripDescriptionController.text,
+          tripCoverPhoto: defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,
+          tripDuration:'${DateFormat('yyyy-MM-dd').format(startDate??trip.startDate)} - ${DateFormat('yyyy-MM-dd').format(endDate??trip.endDate)}' ,
+          durationCount:conDurationCount!=0? conDurationCount:trip.durationCount,
+          startDate: startDate??trip.startDate, 
+          endDate:endDate??trip.endDate, 
+          places: trip.places,
+        );
+        
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:(context)=> tripDetailsPlan(isEditPlace: true, isAddPlace: false,
+             trip: newTrip,place: Place(address: '', latitude: 0.0, name: '', id: '', longitude:0.0,
+              openingHours: [], phone: '', photoRef: '', rating: 0.0, reviews: [], type: ''),)
+            
+          )
+        );
 
-
+     
     }
 
 
@@ -154,7 +165,7 @@ class _createNewTripState extends State<createNewTrip> {
 
 
   //get background image with phone gallary---------------------------------------
-   Future<void> getBackGroundImagewithPhone (ImageSource media)async{
+    Future<void> getBackGroundImagewithPhone (ImageSource media)async{
     
     final ImagePicker picker = ImagePicker();
 
@@ -166,71 +177,71 @@ class _createNewTripState extends State<createNewTrip> {
 
     print(files!.path);
 
-
    }
 
 
-  Future<void> getBackGroundImage ()async{
+  Future<String> getBackGroundImage ()async{
     
+    final tripCount=await tripBlo.countTotalTrips(); 
+    final image = await tripBlo.getRandomImage(tripCount);
+    
+    if(placeName!="" && backGroundPlacePhotoUrl!="" && isEditTrip ==false){
 
-    const apiUrl = 'https://api.pexels.com/v1/search';
-    const apiKey = 'xJ7YjKPafnbAqRwAXOw3ambPcpyW2t7NQxKl9l5o1KIn32ZCftaR2LQp';
-    final url ='$apiUrl?query=Landscape&per_page=20&orientation=landscape&size=medium';
+      defultBacPhotoUrl =  backGroundPlacePhotoUrl ; 
+      tripName =  placeName;     
+    }else if(isEditTrip ==false){
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-       
-        'Authorization': apiKey,
-      },
-      
-    );
+      defultBacPhotoUrl = image;
 
-    if (response.statusCode == 200) {
-
-      final tripCount=await fechApiData.countTotalTrips();
-      print('photo url get susses');
-      
-      final data = jsonDecode(response.body);
-      final photoUrl = data['photos'][tripCount]['src']['medium']??'https://www.pexels.com/photo/mountain-covered-snow-under-star-572897/';
-
-      if(placeName!="" && backGroundPlacePhotoUrl!="" && isEditTrip ==false){
-
-          defultBacPhotoUrl =  backGroundPlacePhotoUrl ; //set your choose location photo
-          tripName =  placeName;     
-      }else if(isEditTrip ==false){
-
-        defultBacPhotoUrl = photoUrl;
-
-      }
-
-      if(defultBacPhotoUrl == null){
-
-        setState(() {
-          isDataReady= false;
-        });
-        
-      }else{
-         setState(() {
-          isDataReady= true;
-        });
-      }
-      
-
-    }else{
-      print('photo url get faild${response.statusCode}');
     }
-
-    setState(() {
-      defultBacPhotoUrl;
-    });
+      
+    return defultBacPhotoUrl;
 
   } 
+
+  dateTimeRangePicker() async {
+      DateTimeRange? pickedDate = await showDateRangePicker(
+          context: context,
+          firstDate: DateTime(DateTime.now().year ,DateTime.now().month,DateTime.now().day+1),
+          lastDate: DateTime(DateTime.now().year + 5),
+          initialDateRange:isEditTrip? DateTimeRange(
+            end:endDate?? trip.endDate,
+            start:startDate?? trip.startDate,
+          ):null,
+          currentDate: DateTime.now(),
+          builder: (context, child) {
+            return Column(
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 400.0,
+                  ),
+                  child: child,
+                )
+              ],
+            );
+          });
+
+       if(pickedDate != null ){
+          print(pickedDate);  
+          String formattedDate1 = DateFormat('yyyy-MM-dd').format(pickedDate.start);
+          String formattedDate2 = DateFormat('yyyy-MM-dd').format(pickedDate.end); 
+          
+          print(pickedDate.duration.inDays); 
+          daysDuration =pickedDate.duration.inDays;
+          endDate = pickedDate.end;
+          startDate=pickedDate.start;
+          setState(() {
+            dateinput.text = '${formattedDate1} - ${formattedDate2}';                      //set output date to TextField value. 
+          });
+      }else{
+          print("Date is not selected");
+      }   
+      
+    }
   
   @override
   Widget build(BuildContext context) {
-
-    if(isDataReady == true){
 
     return WillPopScope(
       onWillPop: () async {
@@ -254,7 +265,7 @@ class _createNewTripState extends State<createNewTrip> {
               ),
             elevation: 0,
             backgroundColor: Color.fromARGB(0, 20, 12, 12),
-      
+            
             
           ),
             body:LimitedBox(
@@ -271,106 +282,128 @@ class _createNewTripState extends State<createNewTrip> {
                       children: [
                         Row(
                           children: [
-                            Container(
-                              width:360,
-                              height: 250,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                image: NetworkImage(defultBacPhotoUrl),
-                                fit: BoxFit.cover
-                                            
-                                  ),
-                              
-                              ),
-                              child: Container(
-                                width:360,
-                                child: Column(
-                                                      
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top:40),
+                            FutureBuilder(
+                              future: getBackGroundImage(),
+                              builder: (context, snapshotImage) {
+                                if(snapshotImage.hasData){
+
+                                  return Container(
+                                    width:360,
+                                    height: 250,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                      image: NetworkImage('${snapshotImage.data}'),
+                                      fit: BoxFit.cover
+                                                  
+                                        ),
+                                    
+                                    ),
+                                    child: Container(
+                                      width:360,
                                       child: Column(
+                                                            
                                         children: [
-                                          Row(
-                                            
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(left:130),
-                                                child: SizedBox(
-                                                  width:150,
-                                                  child: Text("Informations Trip",
-                                                    style: GoogleFonts.cabin(
-                                                        // ignore: prefer_const_constructors
-                                                        textStyle: TextStyle(
-                                                        color: Color.fromARGB(255, 255, 255, 255),
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                                                        
-                                                        ) 
-                                                      )
-                                                  ),
-                                                ),
-                                              ),
-                                              //uplode image from phone gallery------------------------------------------
-                                              Padding(
-                                                padding: const EdgeInsets.only(),
-                                                child: Row(
+                                          Padding(
+                                            padding: const EdgeInsets.only(top:40),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  
                                                   children: [
                                                     Padding(
-                                                      padding: const EdgeInsets.only(left:20),
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          getBackGroundImagewithPhone (ImageSource.gallery);
-                                                        },
-                                                        child: Container(
-                                                          width:35,
-                                                          height:35,
-                                                          decoration: BoxDecoration(
-                                                            color: Color.fromARGB(100, 255, 255, 255),
-                                                            borderRadius: BorderRadius.circular(45)
-                                                          ),
-                                                          child:const Icon(
-                                                            Icons.camera_alt_outlined,
-                                                            color: Color.fromARGB(255, 153, 152, 152),
-                                                            
-                                                            ),
+                                                      padding: const EdgeInsets.only(left:130),
+                                                      child: SizedBox(
+                                                        width:150,
+                                                        child: Text("Informations Trip",
+                                                          style: GoogleFonts.cabin(
+                                                              // ignore: prefer_const_constructors
+                                                              textStyle: TextStyle(
+                                                              color: Color.fromARGB(255, 255, 255, 255),
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.bold,
+                                                                                              
+                                                              ) 
+                                                            )
                                                         ),
                                                       ),
-                                                    )
+                                                    ),
+                                                    //uplode image from phone gallery------------------------------------------
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(),
+                                                      child: Row(
+                                                        children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(left:20),
+                                                            child: GestureDetector(
+                                                              onTap: () {
+                                                                getBackGroundImagewithPhone (ImageSource.gallery);
+                                                              },
+                                                              child: Container(
+                                                                width:35,
+                                                                height:35,
+                                                                decoration: BoxDecoration(
+                                                                  color: Color.fromARGB(100, 255, 255, 255),
+                                                                  borderRadius: BorderRadius.circular(45)
+                                                                ),
+                                                                child:const Icon(
+                                                                  Icons.camera_alt_outlined,
+                                                                  color: Color.fromARGB(255, 153, 152, 152),
+                                                                  
+                                                                  ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ],
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    
-                                    Padding(
-                                      padding: const EdgeInsets.only(top:120,left:13),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width:310,
-                                            child: Text(tripName.isNotEmpty?tripName:"My Trip",
-                                              overflow: TextOverflow.ellipsis,
-                                               style: GoogleFonts.cabin(
-                                                    // ignore: prefer_const_constructors
-                                                    textStyle: TextStyle(
-                                                    color: Color(0xFFEEE6E6),
-                                                    fontSize: 33,
-                                                    fontWeight: FontWeight.bold,
-                                                                                    
-                                                    ) 
-                                                  )
+                                          
+                                          Padding(
+                                            padding: const EdgeInsets.only(top:120,left:13),
+                                            child: Row(
+                                              children: [
+                                                SizedBox(
+                                                  width:310,
+                                                  child: Text(tripName.isNotEmpty?tripName:"My Trip",
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: GoogleFonts.cabin(
+                                                          // ignore: prefer_const_constructors
+                                                          textStyle: TextStyle(
+                                                          color: Color(0xFFEEE6E6),
+                                                          fontSize: 33,
+                                                          fontWeight: FontWeight.bold,
+                                                                                          
+                                                          ) 
+                                                        )
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           )
                                         ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
+                                    ),
+                                  );
+
+                                }else{
+
+                                  return
+                                    SizedBox(
+                                      width:360,
+                                      height: 250,
+                                      child: LoadingAnimationWidget.beat(
+                                        color: Color.fromARGB(255, 129, 129, 129), 
+                                        size: 25,
+                                      ),
+                                    );
+
+                                }
+                                
+                              }
                             ),
                     
                             
@@ -444,29 +477,7 @@ class _createNewTripState extends State<createNewTrip> {
                                     controller: dateinput,
                                     readOnly: true,
                                     onTap: () async {
-                  
-                                       DateTimeRange? pickedDate = await showDateRangePicker(
-                                          context: context,
-                                          currentDate: DateTime.now(),
-                                          firstDate: DateTime(2000),
-                                          lastDate: DateTime(2101)
-                                      );
-                  
-                  
-                                      if(pickedDate != null ){
-                                        print(pickedDate);  
-                                        String formattedDate1 = DateFormat('yyyy-MM-dd').format(pickedDate.start);
-                                        String formattedDate2 = DateFormat('yyyy-MM-dd').format(pickedDate.end); 
-                                        
-                                        print(pickedDate.duration.inDays); 
-                                        daysDuration =pickedDate.duration.inDays;
-                                        endDate = pickedDate.end;
-                                        setState(() {
-                                          dateinput.text = '${formattedDate1} - ${formattedDate2}';                      //set output date to TextField value. 
-                                        });
-                                      }else{
-                                          print("Date is not selected");
-                                      }
+                                      dateTimeRangePicker();
                                         
                                     },
                                     //get keyboard input value-------------
@@ -661,19 +672,19 @@ class _createNewTripState extends State<createNewTrip> {
                                             height: 45,
                                             child: TextButton(
                                               onPressed: () async {
-
+        
                                                 //save user edit details--------------------------------------
                                                 final prefs = await SharedPreferences.getInstance();
                                                 final endata = prefs.getString('tripdays');
                                                 final storeTripDays =jsonDecode(endata!);
-
+        
                                                 final places = jsonEncode(storeTripDays['places']);
                                                 
-
+        
                                                 await fechApiData.editTrip(TripNameController.text,TripBudgetController.text
                                                     ,TripLocationController.text,dateinput.text,TripDescriptionController.text,
                                                     defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,daysDuration==null? storeTripDays['durationCount']:daysDuration.toString(),endDate?? storeTripDays['endDate'],places);
-
+        
                                                 Navigator.push(
                                                 context,
                                                 MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
@@ -708,30 +719,9 @@ class _createNewTripState extends State<createNewTrip> {
                                           height: 45,
                                           child: TextButton(
                                             onPressed: () async {
-                                              final prefs = await SharedPreferences.getInstance();
-
-                                              if(isEditTrip ==true){
-                                                 
-                                                prefs.setBool('isEditTrip',true);
-                                                createTrip ();
-                                                Navigator.push(
-                                                context,
-                                                MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true, isAddPlace: false,)),
-                                                );
-
-
-                                              }else{
-                                                prefs.setBool('isEditTrip',false);
-                                                createTrip ();
-                                                Navigator.push(
-                                                context,
-                                                MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: false, isAddPlace: false,)),
-                                                );
-                                                
-                                              }
-
-                                              
-                                              
+                                             
+                                              createTrip ();
+                                                                       
                                             },
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Color.fromARGB(255, 0, 0, 0),
@@ -757,7 +747,7 @@ class _createNewTripState extends State<createNewTrip> {
                                 ),
                               ],
                             ),
-
+        
                           ],
                         )
                       ],
@@ -775,11 +765,5 @@ class _createNewTripState extends State<createNewTrip> {
       ),
     );
 
-    }else{
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-
-    }
   }
 }

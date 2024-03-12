@@ -5,11 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart' as intl;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
-import 'package:travelapp/ui/createNewTrip.dart';
+import 'package:travelapp/blocs/trip/trip_event.dart';
+import 'package:travelapp/ui/createTrip.dart';
+import 'package:travelapp/ui/tripDetailsPlan.dart';
 import '../blocs/place/placeList_bloc.dart';
 import '../blocs/place/place_event.dart';
 import '../blocs/place/place_state.dart';
@@ -47,7 +48,7 @@ class _locationDetailsState extends State<locationDetails> {
  
   late final String placeType;
   late  String aboutDetails ='';
- 
+  late Place place;
   bool showFullText = false;
 
   
@@ -141,7 +142,7 @@ class _locationDetailsState extends State<locationDetails> {
         builder: (BuildContext context, AsyncSnapshot<Place> placeDetails) { 
           
           if(placeDetails.hasData){
-            
+            place=placeDetails.data!;
             return
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -1054,7 +1055,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                         builder: (BuildContext context, AsyncSnapshot<List<Trip>> onGoingTrips) { 
             
                                                           if(onGoingTrips.hasData){
-            
+                                                            
                                                             return
                                                               Padding(
                                                                 padding: const EdgeInsets.only(top:9),
@@ -1088,7 +1089,10 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                     //dierect place details page again---------------------
                                                                                       Navigator.push(
                                                                                       context,
-                                                                                      MaterialPageRoute(builder: (context) => const createNewTrip(placeName:'',placePhotoUrl:'',isEditTrip: false,)),
+                                                                                      MaterialPageRoute(builder: (context) =>  createTrip(placeName:'',placePhotoUrl:'',isEditTrip: false,
+                                                                                       trip:Trip(tripId: '', tripName: '', tripBudget:'', tripLocation: '', tripDuration: '', tripDescription: '',
+                                                                                        tripCoverPhoto: '', durationCount:0,startDate: DateTime(00), endDate: DateTime(00), places: {}),
+                                                                                      )),
                                                                                     ),
                                                                                   },
                                                                                     child:Column(
@@ -1130,41 +1134,20 @@ class _locationDetailsState extends State<locationDetails> {
                                                               
                                                               
                                                                             }else{
-                                                              
+                                                                              
                                                                               return
                                                                                 Padding(
                                                                                   padding: const EdgeInsets.only(left:6),
                                                                                   child: GestureDetector(
                                                                                     onTap: () async {
-                                                                                                                      
-                                                                                      final prefs = await SharedPreferences.getInstance();
-                                                                                      final encodata = json.encode(onGoingTrips.data?[index-1]);
-                                                                                      prefs.setString('trip',encodata );
-                                                                                      prefs.setInt('selectDay',0 );
-                                                            
-                                                                                                                      
-                                                                                      final tripId = onGoingTrips.data?[index-1].tripId;
-                                                                                      //find database user selectdoc id -----------------------------------------
-                                                                                      //final tripDocId=await fechApiData.getTripDocId(tripId);
-                                                                                      //----------------------------------------------------------------------
-                                                                                      // await prefs.setString('triDocId',tripDocId );
-                                                            
-                                                                                      // List selectedIds =[{
-                                                                                      //                 'day':"" ,
-                                                                                      //                 'places':[placeId],
-                                                                                      //               }];
-                                                                                      // final endata = json.encode(selectedIds);
-                                                                                      // await prefs.setString('TripPlaceIds',endata);
-                                                            
-                                                                                      // await prefs.setString('searchType','attracrions');
-                                                                                      // await prefs.setBool('isEditTrip',true);
-                                                            
-                                                                                      // print("tripid: ${tripId}");
-                                                                                                                      
-                                                                                      // Navigator.push(
-                                                                                      // context,
-                                                                                      // MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isSelectPlaces: false,isEditPlace: true, isAddPlace: true,)),
-                                                                                      // );
+
+                                                                                                   
+                                                                                      Navigator.push(
+                                                                                      context,
+                                                                                      MaterialPageRoute(builder: (context) =>  tripDetailsPlan(isEditPlace: true,
+                                                                                       isAddPlace: true, trip:onGoingTrips.data![index-1],place:place,)
+                                                                                       ),
+                                                                                      );
                                                                                     },
                                                                                     child: Padding(
                                                                                       padding: const EdgeInsets.only(right:6,),
@@ -1201,7 +1184,7 @@ class _locationDetailsState extends State<locationDetails> {
                                                                                                                     fit: BoxFit.cover,
                                                                                                                     child:Padding(
                                                                                                                       padding: const EdgeInsets.all(7.0),
-                                                                                                                      child: Text('${onGoingTrips.data?[index-1].places[0].length} days',
+                                                                                                                      child: Text('${onGoingTrips.data?[index-1].durationCount} days',
                                                                                                                         style: GoogleFonts.cabin(
                                                                                                                           // ignore: prefer_const_constructors
                                                                                                                           textStyle: TextStyle(
@@ -1311,7 +1294,9 @@ class _locationDetailsState extends State<locationDetails> {
                                             //derect trip plan page---------------------------------
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) =>  createNewTrip(placeName:placeDetails.data!.name,placePhotoUrl:placeDetails.data!.photoRef,isEditTrip: false,)),
+                                              MaterialPageRoute(builder: (context) =>  createTrip(placeName:placeDetails.data!.name,
+                                              placePhotoUrl:placeDetails.data!.photoRef,isEditTrip: false, trip:Trip(tripId: '', tripName: '', tripBudget:'', tripLocation: '',
+                                               tripDuration: '', tripDescription: '', tripCoverPhoto: '', durationCount: 0,startDate: DateTime(00), endDate:DateTime(00), places: {}) ,)),
                                             );
                                             
                                           },

@@ -47,7 +47,7 @@ class attractionListRepo {
 
   Future<List<Place>> getAttractionPlaces(placeName)async{
 
-    print("this is attracRepo"+placeName);
+    
     final query = await FirebaseFirestore.instance
             .collection('attractions')
             .where('city', isEqualTo: placeName)

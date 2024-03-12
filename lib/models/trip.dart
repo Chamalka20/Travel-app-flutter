@@ -1,25 +1,31 @@
+import 'dart:convert';
+
+import 'package:travelapp/models/place.dart';
+
 class Trip {
 
-  String tripId;
-  String tripName;
-  String tripBudget;
-  String tripLocation;
-  String tripDuration;
-  String tripDescription;
-  String tripCoverPhoto;
-  String durationCount;
-  String endDate;
-  List places;
+  final String tripId;
+  final String tripName;
+  final String tripBudget;
+  final String tripLocation;
+  final String tripDescription;
+  final String tripCoverPhoto;
+  final String tripDuration;
+  final int durationCount;
+  DateTime startDate;
+  DateTime endDate;
+  var places={};
   
   Trip({
     required this.tripId,
     required this.tripName,
     required this.tripBudget,
     required this.tripLocation,
-    required this.tripDuration,
     required this.tripDescription,
     required this.tripCoverPhoto,
+    required this.tripDuration,
     required this.durationCount,
+    required this.startDate,
     required this.endDate,
     required this.places,
   });
@@ -31,14 +37,13 @@ class Trip {
     'tripName':tripName,
     'tripBudget':tripBudget,
     'tripLocation':tripLocation,
-    'tripDuration':tripDuration,
     'tripDescription':tripDescription,
     'tripCoverPhoto':tripCoverPhoto,
+    'tripDuration':tripDuration,
     'durationCount':durationCount,
+    'startDate':startDate,
     'endDate':endDate,
-    'places':places,
-
-
+    'places':places
   };
 
   
@@ -49,11 +54,12 @@ class Trip {
       tripName: map['tripName'],
       tripBudget: map['tripBudget'],
       tripLocation: map['tripLocation'],
-      tripDuration: map['tripDuration'],
       tripDescription: map['tripDescription'],
       tripCoverPhoto: map['tripCoverPhoto'],
+      tripDuration: map['tripDuration'],
       durationCount: map['durationCount'],
-      endDate: map['endDate'].toString(),
+      startDate: map['startDate'].toDate(),
+      endDate: map['endDate'].toDate(),
       places: map['places'], 
      );
 

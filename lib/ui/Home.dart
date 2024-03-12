@@ -40,7 +40,7 @@ class _homeState extends State<home> {
   void initState(){
      super.initState();
     //get data list from api-------------------------------
-     getData();
+    // getData();
      //getNearByPlaces ();
   }
 

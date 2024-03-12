@@ -28,11 +28,11 @@ final String id;
   });
 
 
-  toJson ()=>{
+  Map<String, dynamic> toJson ()=>{
 
     'placeId':id,
     'title':name,
-    'imageUrls':{photoRef},
+    'imageUrls':photoRef,
     'address':address,
     'searchString':type,
     'phone':phone,

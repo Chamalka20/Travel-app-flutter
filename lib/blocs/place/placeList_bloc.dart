@@ -66,7 +66,7 @@ class placeListBloc extends Bloc<place_event,place_state>{
     late List<Place> details;
 
     if(placeType =='attraction'){
-
+      
      details = await attractionListRep.getAttractionPlaces(name);
 
     }else if(placeType =='restaurant'){
@@ -75,7 +75,7 @@ class placeListBloc extends Bloc<place_event,place_state>{
 
     }
 
-    print(details);
+
     return details;
   }
 

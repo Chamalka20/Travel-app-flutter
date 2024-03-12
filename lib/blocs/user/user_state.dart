@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 abstract class userState {
-
-
+  
 }
 
 class InitialUserState extends userState{
