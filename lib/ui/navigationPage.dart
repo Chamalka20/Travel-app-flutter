@@ -159,9 +159,11 @@ class _navigationPageState extends State<navigationPage> {
         
             }else{
               
-                Navigator.of(context).pushReplacement(customPageRoutes(
-                    
-                child: navigationPage(isBackButtonClick:true,autoSelectedIndex: 0,)));  
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 0,)
+                ),
+          );  
         
           
               

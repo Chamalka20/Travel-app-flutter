@@ -625,8 +625,10 @@ Widget buildBody(BuildContext parentContext) {
               .showSnackBar(const SnackBar(content: Text("Something went wrong")));
 
         }else if(state is tripCreatingSuccessState){
-          Navigator.of(context).push(
-           MaterialPageRoute(builder: (context) => const mytrips()),);
+           Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),
+          );
         }
 
       },
