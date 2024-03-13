@@ -207,16 +207,32 @@ class _createNewTripState extends State<createTrip> {
           initialDateRange:isEditTrip? DateTimeRange(
             end:endDate?? trip.endDate,
             start:startDate?? trip.startDate,
+          ):endDate!=null&&startDate!=null? DateTimeRange(
+            end:endDate,
+            start:startDate,
           ):null,
           currentDate: DateTime.now(),
           builder: (context, child) {
             return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: 400.0,
+                  constraints: const BoxConstraints(
+                    maxWidth: 300,
+                    maxHeight: 500
                   ),
-                  child: child,
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: const ColorScheme.light(
+                        primary: Color.fromARGB(255, 0, 0, 0), 
+                        onPrimary: Color.fromARGB(255, 255, 255, 255), 
+                        onSurface: Colors.blueAccent, 
+                      ),
+                      
+                    ),
+                    
+                    child: child!,
+                  ),
                 )
               ],
             );
