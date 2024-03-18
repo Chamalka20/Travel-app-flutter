@@ -71,23 +71,7 @@ class _homeState extends State<home> {
     var apiUrl1 = 'https://api.apify.com/v2/actor-tasks/detailed_camel~google-maps-scraper-task-1/runs?token=';
     var apiUrl2 ='https://api.apify.com/v2/actor-tasks/detailed_camel~tripadvisor-scraper-task-2/runs?token=';
     final payload1 = {};
-    final payload2 ={
-    "currency": "USD",
-    "debugLog": false,
-    "includeAttractions": true,
-    "includeHotels": false,
-    "includeRestaurants": true,
-    "includeReviews": false,
-    "includeTags": true,
-    "language": "en",
-    "locationFullName": "Hambantota, Sri Lanka",
-    "maxItems": 20,
-    "maxReviews": 20,
-    "proxyConfiguration": {
-        "useApifyProxy": true
-    },
-    "scrapeReviewerInfo": false
-};
+    
 
 final payload3 = {
     "currency": "USD",
@@ -209,29 +193,6 @@ final payload3 = {
 
       favorites =await fechApiData.getFavorites();
       
-      bool found;
-
-      attractionList.forEach((e) => {
-         found = false,
-
-         for( var i=0;i<favorites.length;i++){
-
-            if(e['id']!=null){
-
-              if(favorites[i]['placeId'].contains(e['id'])){
-
-                found=true,
-              
-              }
-
-            }
-        },
-        isaddAttractionToFavorite.add(found),
-
-      });
-      
-      
-
       print(isaddAttractionToFavorite);
 
       setState(() {

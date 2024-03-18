@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/models/favorites.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:uuid/uuid.dart';
 
 class favoritesRepo {
 
@@ -10,7 +8,6 @@ class favoritesRepo {
 
   Future<List> isChecktFavorites (ids) async{
       
-      var data =[];
       List isaddRestaurantToFavorite = [];
 
       for (var e in ids) {
@@ -72,7 +69,6 @@ class favoritesRepo {
     Future <bool> addToFavorite (Favorite favorite)async{
   
       bool isDataAdd = false;       
-      var uuid = const Uuid();
 
         await FirebaseFirestore.instance
         .collection('users').doc(user?.uid).collection('favorites').add(
@@ -95,8 +91,7 @@ class favoritesRepo {
   Future <bool> removeFavorites (String placeId) async{
 
       bool isRemove = false;
-      var favId;
-
+     
     //get spesific id to remove the favorite place-------------------
       await FirebaseFirestore.instance
             .collection('users')
@@ -109,6 +104,7 @@ class favoritesRepo {
                    isRemove = true;
                 });
                 
+            // ignore: invalid_return_type_for_catch_error
             }).catchError((error)=>{
             print('not add'),
             isRemove = false,

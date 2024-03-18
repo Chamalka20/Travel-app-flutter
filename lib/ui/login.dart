@@ -79,6 +79,7 @@ class _loginState extends State<login> {
         ], 
         child: Scaffold(
         body: SafeArea(
+          // ignore: unnecessary_null_comparison
           child:userData!=null? SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
             child: Container(

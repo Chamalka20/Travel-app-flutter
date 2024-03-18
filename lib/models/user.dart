@@ -13,7 +13,6 @@ class User {
   });
 
 
-  @override
   toJson()=>{
     'uid':uid,
     'displayName':name,

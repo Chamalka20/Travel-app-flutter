@@ -72,12 +72,11 @@ class userAuthRepo {
   
   Future <List> signIn(email,password) async {
 
-    late auth.UserCredential userCredential;
     bool isSignIn=true;
     String AuthException='';
     List signInDeatails=[];
     try {
-       userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password
       );

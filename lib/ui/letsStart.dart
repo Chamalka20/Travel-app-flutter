@@ -10,10 +10,6 @@ import 'package:google_fonts/google_fonts.dart' ;
 import 'package:location/location.dart' ;
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/ui/fechApiData.dart';
-
-import 'Home.dart';
-import 'Welcomepage.dart';
 import 'customPageRoutes.dart';
 import 'navigationPage.dart';
 
@@ -45,6 +41,7 @@ Future<String?> getLocation() async {
 
   // Get the current location
   _locationData = await location.getLocation();
+  // ignore: unnecessary_null_comparison
   if (_locationData == null) {
     return null;
   }
@@ -65,7 +62,6 @@ Future<String?> getLocation() async {
     return null;
   }
 
-  String country = placemarks.first.country ?? '';
   String cityName = placemarks.first.locality ?? '';
   prefs.setString('currentCity', cityName );
   

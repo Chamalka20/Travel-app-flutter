@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:travelapp/models/place.dart';
-
 class Trip {
 
   final String tripId;

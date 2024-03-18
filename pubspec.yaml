@@ -40,7 +40,11 @@ dependencies:
   shared_preferences: ^2.1.0
   google_sign_in: ^6.1.0
   lottie: ^1.1.0
-  location: ^4.3.0
+  location: 
+    git:
+      url: https://github.com/781flyingdutchman/flutterlocation.git
+      ref: V4
+      path: packages/location
   geocoding: ^2.0.0
   http: ^0.13.4
   flutter_keyboard_visibility: ^5.4.1

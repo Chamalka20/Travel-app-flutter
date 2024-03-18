@@ -3,9 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -15,10 +13,7 @@ import 'package:travelapp/ui/navigationPage.dart';
 import 'package:travelapp/ui/tripDetailsPlan.dart';
 import 'package:travelapp/ui/fechApiData.dart';
 import 'package:uuid/uuid.dart';
-
 import '../blocs/trip/trip_bloc.dart';
-import '../blocs/trip/trip_event.dart';
-import '../blocs/trip/trip_state.dart';
 import '../models/place.dart';
 import '../models/trip.dart';
 

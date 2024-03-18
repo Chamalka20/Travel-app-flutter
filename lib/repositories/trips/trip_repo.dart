@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:intl/intl.dart' as intl;
-
-import '../../models/place.dart';
 import '../../models/trip.dart';
 
 class trip_repo{
@@ -12,13 +10,12 @@ class trip_repo{
 
   Future<bool> createTrip (Trip trip) async {
 
-    late String newTripId;
-    bool isError=false;
+       bool isError=false;
     try{
     await FirebaseFirestore.instance
         .collection('users').doc(user?.uid).collection('trips').add(
            trip.toJson()
-        ).then((trip) => newTripId=trip.id);
+        );
     }catch(e){
       isError=true;
     }

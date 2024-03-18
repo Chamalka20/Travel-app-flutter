@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
-import 'package:travelapp/blocs/trip/trip_event.dart';
 import 'package:travelapp/ui/createTrip.dart';
 import 'package:travelapp/ui/tripDetailsPlan.dart';
 import '../blocs/place/placeList_bloc.dart';

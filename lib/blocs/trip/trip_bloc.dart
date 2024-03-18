@@ -1,12 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travelapp/blocs/trip/trip_event.dart';
 import 'package:travelapp/blocs/trip/trip_state.dart';
-
-import '../../models/place.dart';
 import '../../models/trip.dart';
 import '../../repositories/randomImages/randomImages_repo.dart';
 import '../../repositories/trips/trip_repo.dart';
-import 'package:uuid/uuid.dart';
 
 class tripBloc extends Bloc<trip_event,tripState> {
 
@@ -42,11 +39,10 @@ class tripBloc extends Bloc<trip_event,tripState> {
   tripBloc():super(InitialTripState()){
 
     var tempStoreTripPlaces={};
-    Place place;
 
     on<getSelectTrip>((event, emit) async {
         
-      Trip trip=await tripRepo.getSelectTrip(event.tripId);
+      await tripRepo.getSelectTrip(event.tripId);
 
     });
 

@@ -4,12 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:travelapp/blocs/trip/trip_event.dart';
-import 'package:travelapp/ui/tripDetailsPlan.dart';
-
 import '../blocs/place/placeList_bloc.dart';
 import '../blocs/place/place_event.dart';
-import '../blocs/trip/trip_bloc.dart';
 import '../models/place.dart';
 import 'locationDetails.dart';
 
@@ -503,10 +499,11 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
                     
                       RecentlySearchList =recentlySearch.data!;  
                       return
-                         SizedBox(
-                          height: 300,
-                           child: Expanded(
+                         Expanded(
+                           child: SingleChildScrollView(
                              child: ListView.builder(
+                               shrinkWrap: true,
+                               physics: const ScrollPhysics(),
                                scrollDirection: Axis.vertical,
                                itemCount: recentlySearch.data!.length,
                                itemBuilder: (context, index) {
@@ -570,7 +567,7 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
                                        ),
                                      ],
                                    );
-                           
+                                                        
                                 },
                                
                              ),

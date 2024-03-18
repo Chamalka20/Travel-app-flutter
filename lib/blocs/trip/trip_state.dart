@@ -1,4 +1,3 @@
-import '../../models/place.dart';
 import '../../models/trip.dart';
 
 abstract class tripState{

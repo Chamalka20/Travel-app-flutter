@@ -1,18 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:travelapp/ui/fechApiData.dart';
 import 'package:travelapp/ui/search.dart';
 import 'package:travelapp/ui/bottomNavigationBar.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-
 import 'Home.dart';
-import 'customPageRoutes.dart';
 import 'myAccount.dart';
 import 'myFavorite.dart';
 import 'myTrips.dart';
 
+// ignore: must_be_immutable
 class navigationPage extends StatefulWidget {
 
  final   bool isBackButtonClick; 
@@ -129,7 +126,7 @@ class _navigationPageState extends State<navigationPage> {
           onWillPop: () async {
             
             if(_selectedIndex==0){
-                bool confirmExit = await showDialog(
+              await showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(

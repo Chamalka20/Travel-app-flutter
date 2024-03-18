@@ -1,15 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/ui/createTrip.dart';
-import 'package:travelapp/ui/fechApiData.dart';
-
 import '../blocs/trip/trip_bloc.dart';
-import '../blocs/trip/trip_event.dart';
 import '../models/trip.dart';
 
 class mytrips extends StatefulWidget {
@@ -41,6 +34,7 @@ class _mytripsState extends State<mytrips> {
       onGoingTrips;
     });
 
+    // ignore: unnecessary_null_comparison
     if(onGoingTrips == null){
 
         setState(() {

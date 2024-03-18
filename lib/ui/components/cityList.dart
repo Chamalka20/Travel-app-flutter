@@ -2,15 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
 import '../../blocs/place/placeList_bloc.dart';
-import '../../blocs/place/place_event.dart';
 import '../../models/place.dart';
-import '../../models/trip.dart';
 
 typedef Callback = void Function(List val);
 

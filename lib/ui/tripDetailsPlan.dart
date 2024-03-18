@@ -1,14 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/ui/search.dart';
-import 'package:travelapp/ui/fechApiData.dart';
-
 import '../blocs/trip/trip_bloc.dart';
 import '../blocs/trip/trip_event.dart';
 import '../blocs/trip/trip_state.dart';
@@ -16,9 +10,9 @@ import '../models/place.dart';
 import '../models/trip.dart';
 import 'components/emptyTripPlaces.dart';
 import 'components/modalBottomSheetButton.dart';
-import 'myTrips.dart';
 import 'navigationPage.dart';
 
+// ignore: must_be_immutable
 class tripDetailsPlan extends StatefulWidget {
 
  bool isEditPlace;
@@ -41,7 +35,6 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
   var newEndDate;
   var newDurationCount;
   var day = 1;
-  Timer? _timer;
   bool isTextFieldClicked= false;
   String  inputData='';
   List dailogBoxState=[{
@@ -465,7 +458,7 @@ Widget buildBody(BuildContext parentContext) {
                                 ),
                                ),
                                Padding(
-                                 padding: const EdgeInsets.only(top:10,left:10,right: 10),
+                                 padding: const EdgeInsets.only(top:9,left:10,right: 10),
                                  child: SizedBox(
                                    height: 50,
                                      child: Row(
@@ -612,10 +605,6 @@ Widget buildBody(BuildContext parentContext) {
 
 
   Widget tripList(BuildContext parentContext) {
-
-  final ColorScheme colorScheme = Theme.of(context).colorScheme;
-  final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
-  final Color evenItemColor = colorScheme.primary.withOpacity(0.15);
 
     return
     BlocConsumer<tripBloc,tripState>( 

@@ -1,6 +1,3 @@
-
-import 'dart:collection';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travelapp/blocs/user/user_event.dart';
 import 'package:travelapp/blocs/user/user_state.dart';
@@ -54,7 +51,7 @@ class userBloc extends Bloc<userEvent,userState>{
 
       }else if(event is signInWithGoogle){
 
-        var serStates=await userAuthRep.signInWithGoogle();
+        await userAuthRep.signInWithGoogle();
 
       }else if(event is signOutEvent){
 
