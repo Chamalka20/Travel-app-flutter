@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/place.dart';
+import '../../models/review.dart';
 
 class restaurantsRepo {
 
@@ -67,6 +68,74 @@ class restaurantsRepo {
 
   }
 
+  Future<List<Review>> getReviews (placeId) async {
+
+   // ignore: prefer_typing_uninitialized_variables
+    var result;
+    final List<Review> reviewslist = [];
+
+    try{
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('restaurants')
+          .where('placeId', isEqualTo: placeId)
+          .get();
+      
+        for (var ele in querySnapshot.docs) {
+          result= await ele.reference.collection('reviews').get(); 
+        }
+
+  
+
+
+      for(var i=0;i<result.docs.length;i++){
+        var review = Review.fromMap(result.docs[i].data());
+        reviewslist.add(review);
+      }
+
+    }catch(e){
+      print(e);
+    }
+
+    return reviewslist;
+  }
+
+  Future<void> addReview (placeId,Review review) async{
+
+    try {
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('restaurants')
+          .where('placeId', isEqualTo: placeId)
+          .get();
+
+      for (var ele in querySnapshot.docs) {
+        await ele.reference.collection('reviews').doc(review.reviewId).set(review.toJson());
+      }
+
+    } catch (e) {
+      print(e);
+    }
+    
+  }
+
+   Future<void> deleteReview (placeId,reviewId) async{
+
+    try {
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('restaurants')
+          .where('placeId', isEqualTo: placeId)
+          .get();
+
+      for (var ele in querySnapshot.docs) {
+        await ele.reference.collection('reviews').doc(reviewId).delete();
+      }
+
+    } catch (e) {
+      print(e);
+    }
+    
+  }
 
 
 }

@@ -1,3 +1,6 @@
+
+import 'package:travelapp/models/review.dart';
+
 abstract class place_event {
 
  const place_event();
@@ -33,7 +36,6 @@ class addUserRecentlySearch extends place_event {
   final String type;
   final String phone;
   final List openingHours;
-  final List reviews;
   final double latitude;
   final double longitude;
 
@@ -45,11 +47,26 @@ class addUserRecentlySearch extends place_event {
     required this.type,
     required this.phone,
     required this.openingHours,
-    required this.reviews,
     required this.latitude,
     required this.longitude,
   });
 
   
+}
+class addReviewEvent extends place_event{
+
+  final Review review;
+  final String placeType;
+  final String placeId;
+  addReviewEvent(this.review,this.placeType,this.placeId);
+}
+
+class deleteReviewEvent extends place_event{
+  final reviewId;
+  final placeId;
+  final placeType;
+
+  deleteReviewEvent(this.placeId,this.reviewId,this.placeType);
+
 }
 

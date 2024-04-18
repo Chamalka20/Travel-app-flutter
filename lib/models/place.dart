@@ -9,7 +9,6 @@ final String id;
   final String type;
   final String phone;
   final List openingHours;
-  final List reviews;
   final double latitude;
   final double longitude;
 
@@ -22,7 +21,6 @@ final String id;
     required this.type,
     required this.phone,
     required this.openingHours,
-    required this.reviews,
     required this.latitude,
     required this.longitude,
   });
@@ -37,7 +35,6 @@ final String id;
     'searchString':type,
     'phone':phone,
     'openingHours':openingHours,
-    'reviews':reviews,
     'location':{'lat':latitude,'lng':longitude}
   };
 
@@ -53,7 +50,6 @@ final String id;
           type:map['searchString']??'',
           phone: map['phone'] ?? '',
           openingHours: map['openingHours'] ?? [],
-          reviews: map['reviews'] ?? [],
           latitude: map['location']['lat'] ?? 0.0,
           longitude: map['location']['lng'] ?? 0.0,
         );

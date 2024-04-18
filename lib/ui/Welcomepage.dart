@@ -40,7 +40,7 @@ class _welcomePageState extends State<welcomePage> {
             ScaffoldMessenger.of(context)
                       .showSnackBar(const SnackBar(content: Text("password reset message sent to the email")));
             
-            print("hhhhhhh");
+            
                   
           }else if(state is checkEmailAlreadyExistState){
 

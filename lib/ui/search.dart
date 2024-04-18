@@ -7,7 +7,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../blocs/place/placeList_bloc.dart';
 import '../blocs/place/place_event.dart';
 import '../models/place.dart';
-import 'locationDetails.dart';
+import 'placeDeatailsScreen/locationDetails.dart';
 
 class search extends StatefulWidget {
 
@@ -274,7 +274,7 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
                                             if(contains!=true){
                                                BlocProvider.of<placeListBloc>(context).add(addUserRecentlySearch(id:results.data![index].id , name: results.data![index].name, address: results.data![index].address,
                                               openingHours: results.data![index].openingHours, phone: results.data![index].phone, photoRef: results.data![index].photoRef,
-                                              reviews: results.data![index].reviews, type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
+                                              type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
                                             }
                                             
                                             
@@ -282,7 +282,7 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
 
                                             BlocProvider.of<placeListBloc>(context).add(addUserRecentlySearch(id:results.data![index].id , name: results.data![index].name, address: results.data![index].address,
                                             openingHours: results.data![index].openingHours, phone: results.data![index].phone, photoRef: results.data![index].photoRef,
-                                            reviews: results.data![index].reviews, type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
+                                            type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
                                             
                                           }
                                           

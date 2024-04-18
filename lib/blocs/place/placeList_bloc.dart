@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travelapp/models/favorites.dart';
+import 'package:travelapp/models/review.dart';
 
 import '../../models/place.dart';
 import '../../repositories/attractions/attractionList_repo.dart';
@@ -105,12 +106,25 @@ class placeListBloc extends Bloc<place_event,place_state>{
 
   }
 
-  
   Future<List<Place>> getUserRecentlySearch() async {
 
     List<Place> details = await cityRep.getUserRecentlySearch();
     
     return details;
+  }
+
+  Future<List<Review>> getReviewList(placeType,placeId) async {
+
+    late List<Review> reviewList;
+
+    if(placeType =='attraction') {
+      reviewList =await attractionListRep.getReviews(placeId);
+    }else if (placeType =='restaurant'){
+      reviewList = await restaurantRepo.getReviews(placeId);
+    }
+
+    return reviewList;
+    
   }
 
   placeListBloc():super(InitialPlaceState()){
@@ -135,10 +149,29 @@ class placeListBloc extends Bloc<place_event,place_state>{
 
          await cityRep.addUserRecentlySearch(Place(id: event.id, name: event.name, photoRef: event.photoRef,
            rating:0.0, address: event.address, type: event.type, phone: event.phone,
-            openingHours: event.openingHours, reviews: event.reviews, latitude: event.latitude, longitude: event.longitude));
+            openingHours: event.openingHours, latitude: event.latitude, longitude: event.longitude));
         }
         
+      }else if(event is addReviewEvent){
+        if(event.placeType =='attraction') {
+          await attractionListRep.addReview(event.placeId,event.review);
+        }else if(event.placeType =='restaurant'){
+          await restaurantRepo.addReview(event.placeId,event.review);
+        }
+      }else if (event is deleteReviewEvent){
+
+        if(event.placeType =='attraction') {
+          await attractionListRep.deleteReview(event.placeId, event.reviewId);
+        }else if(event.placeType =='restaurant'){
+          await restaurantRepo.deleteReview(event.placeId, event.reviewId);
+        }
+
       }
+
+
+
+
+
     },);
    
    

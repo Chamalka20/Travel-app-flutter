@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-
 import '../../blocs/place/placeList_bloc.dart';
 import '../../blocs/place/place_event.dart';
-import '../locationDetails.dart';
+import 'locationDetails.dart';
 
 class placesList extends StatefulWidget {
 
@@ -209,7 +207,6 @@ class _placesListState extends State<placesList> {
                                                             ),
 
 
-                                                      
                                                         
                                                       ),
                                                       ),
@@ -255,7 +252,7 @@ class _placesListState extends State<placesList> {
                           
                                       Image.asset("assets/images/star.png",width:14,height:14),
                                       Padding(
-                                        padding: const EdgeInsets.only(left:4),
+                                        padding: const EdgeInsets.only(left:3),
                                         child: Text("$attractionRating",
                                             style: GoogleFonts.cabin(
                                           // ignore: prefer_const_constructors
@@ -281,7 +278,7 @@ class _placesListState extends State<placesList> {
                                       ),
                                       SizedBox(
                                         width:200,
-                                        height:7,
+                                        height:10,
                                         child: Text(address!,
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.cabin(
@@ -315,9 +312,48 @@ class _placesListState extends State<placesList> {
 
                 }else{
                   return
-                    LoadingAnimationWidget.waveDots(
-                      color: Color.fromARGB(255, 129, 129, 129), 
-                      size: 35,
+                   ListView.builder(
+                      scrollDirection: Axis.horizontal, 
+                      itemCount: 5,
+                      physics:const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        
+                          return Card(
+                          elevation: 0,
+                          color:Color.fromARGB(255, 255, 255, 255),
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                          child:Container(
+                            width: 230,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 230,
+                                      height: 180,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                    ),
+                                
+                                          
+                                  ],
+                                ),
+                                
+                               ],
+                                          
+                                          
+                            ),
+                          )
+                            
+                            
+                          
+                          ); 
+                      },
                     );
 
                 }
@@ -343,16 +379,49 @@ class _placesListState extends State<placesList> {
        }else{
 
           return
-           const SizedBox(
-                   width:360,
-                   height:130,
-                   child: Center(
-                     child: Text("Loading..")
-           
-           
-                 )
-     
-               );
+           ListView.builder(
+                      scrollDirection: Axis.horizontal, 
+                      itemCount: 5,
+                      physics:const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        
+                          return Card(
+                          elevation: 0,
+                          color:Color.fromARGB(255, 255, 255, 255),
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                          child:Container(
+                            width: 230,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 230,
+                                      height: 180,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                    ),
+                                
+                                          
+                                  ],
+                                ),
+                                
+                               ],
+                                          
+                                          
+                            ),
+                          )
+                            
+                            
+                          
+                          ); 
+                      },
+                    );
        }
      }
 
