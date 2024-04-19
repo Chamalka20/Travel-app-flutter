@@ -3,7 +3,7 @@ class Review {
   final String? userId;
   final String reviewId;
   final String name;
-  final String publishAt;
+  final DateTime publishAt;
   final String reviewerPhotoUrl;
   final String text;
 
@@ -31,7 +31,7 @@ class Review {
       userId:map["userId"],
       reviewId:map["reviewId"]??"etetret",
       name:map["name"],
-      publishAt:map["publishAt"],
+      publishAt:map["publishAt"].toDate(),
       reviewerPhotoUrl:map["reviewerPhotoUrl"],
       text:map["text"]
     );

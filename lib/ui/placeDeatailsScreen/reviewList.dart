@@ -10,6 +10,8 @@ import 'package:travelapp/models/review.dart';
 import 'package:travelapp/repositories/user/userAuth_repo.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../timeAgoSinceDate.dart';
+
 // ignore: must_be_immutable
 class reviewList extends StatefulWidget {
 
@@ -32,6 +34,7 @@ class _reviewListState extends State<reviewList> {
   late String proPic;
   late String? userId;
   late Future<List<Review>> reviews;
+  
   _reviewListState(this.placeId,this.searchType,this.methodFromParent);
   
   void addReview (){
@@ -42,7 +45,7 @@ class _reviewListState extends State<reviewList> {
         userId: userId,
         reviewId: uuid.v1(),
         name: userName,
-        publishAt: DateTime.now().toString(), 
+        publishAt: DateTime.now(), 
         reviewerPhotoUrl: proPic, 
         text: reviewTextController.text
       );
@@ -115,6 +118,7 @@ class _reviewListState extends State<reviewList> {
                   future: reviews,
                   builder: (BuildContext context,snapshot) { 
                     if(snapshot.hasData) {
+                      snapshot.data?.sort((a, b) => a.publishAt.compareTo(b.publishAt));
                       return
                         ListView.builder(
                         itemCount: snapshot.data?.length,
@@ -164,7 +168,7 @@ class _reviewListState extends State<reviewList> {
                                                           ),
                                                         ),
                                                       ),
-                                                      Text(snapshot.data![index].publishAt,
+                                                      Text(TimeAgoSince.timeAgoSinceDate(snapshot.data![index].publishAt),
                                                         style: GoogleFonts.cabin(
                                                           textStyle: const TextStyle(
                                                             color: Color.fromARGB(255, 112, 112, 112),
@@ -206,14 +210,13 @@ class _reviewListState extends State<reviewList> {
                                       
                                       BlocProvider.of<placeListBloc>(context).add(deleteReviewEvent(placeId
                                       ,snapshot.data![index].reviewId,searchType));
-                                      
                                       getReviews();
                                     },
                                     child: Text("Delete",
                                       style: GoogleFonts.cabin(
                                         textStyle: const TextStyle(
                                           color: Color.fromARGB(255, 250, 3, 3),
-                                          fontSize: 10,
+                                          fontSize: 14,
                                         ),
                                       ),
                                     ),
@@ -228,7 +231,7 @@ class _reviewListState extends State<reviewList> {
                     }else{
                       return
                         ListView.builder(
-                        itemCount: 6,
+                        itemCount: 8,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 10.0,right: 10,left: 10),
@@ -249,8 +252,8 @@ class _reviewListState extends State<reviewList> {
                                             width: 35,
                                             height: 35,
                                             decoration: BoxDecoration(
-                                              color: Color.fromARGB(255, 0, 0, 0),
-                                              borderRadius: BorderRadius.circular(13)
+                                              color: Color.fromARGB(255, 207, 207, 207),
+                                              borderRadius: BorderRadius.circular(20)
                                             ),
                                           ),
                                         ),
@@ -261,24 +264,17 @@ class _reviewListState extends State<reviewList> {
                                               Row(
                                                 children: [
                                                   SizedBox(
-                                                    width: 200,
+                                                    width: 100,
                                                     child:  Container(
                                                         width: 100,
                                                         height: 11,
                                                         decoration: BoxDecoration(
-                                                          color: Colors.black,
+                                                          color: Color.fromARGB(255, 207, 207, 207),
                                                           borderRadius: BorderRadius.circular(16),
                                                         ),
                                                       ),
                                                     ),
-                                                   Container(
-                                                    width: 100,
-                                                    height: 9,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.black,
-                                                      borderRadius: BorderRadius.circular(16),
-                                                    ),
-                                                ),
+                                                   
                                                 ],
                                               ),
                                             ],
@@ -287,7 +283,7 @@ class _reviewListState extends State<reviewList> {
                                       ],
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 13),
+                                      padding: const EdgeInsets.only(left: 10),
                                       child: SizedBox(
                                         width: 250,
                                         child: 
@@ -295,7 +291,7 @@ class _reviewListState extends State<reviewList> {
                                             width: 100,
                                             height: 11,
                                             decoration: BoxDecoration(
-                                              color: Colors.black,
+                                              color: Color.fromARGB(255, 207, 207, 207),
                                               borderRadius: BorderRadius.circular(16),
                                             ),
                                           ),
@@ -307,7 +303,7 @@ class _reviewListState extends State<reviewList> {
                             ),
                           );
                         },
-                      );
+                       );
 
                     }
                     
