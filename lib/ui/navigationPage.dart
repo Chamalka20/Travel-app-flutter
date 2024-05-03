@@ -5,9 +5,9 @@ import 'package:travelapp/ui/search.dart';
 import 'package:travelapp/ui/bottomNavigationBar.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'Home.dart';
-import 'myAccount.dart';
 import 'myFavorite.dart';
 import 'myTrips.dart';
+import 'profile/myAccount.dart';
 
 // ignore: must_be_immutable
 class navigationPage extends StatefulWidget {

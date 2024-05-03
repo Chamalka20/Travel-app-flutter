@@ -9,7 +9,6 @@ class favoritesRepo {
   Future<List> isChecktFavorites (ids) async{
       
       List isaddRestaurantToFavorite = [];
-
       for (var e in ids) {
         bool found = false;
 

@@ -149,21 +149,21 @@ class placeListBloc extends Bloc<place_event,place_state>{
 
          await cityRep.addUserRecentlySearch(Place(id: event.id, name: event.name, photoRef: event.photoRef,
            rating:0.0, address: event.address, type: event.type, phone: event.phone,
-            openingHours: event.openingHours, latitude: event.latitude, longitude: event.longitude));
+            openingHours: event.openingHours, latitude: event.latitude, longitude: event.longitude, reviews: []));
         }
         
       }else if(event is addReviewEvent){
         if(event.placeType =='attraction') {
-          await attractionListRep.addReview(event.placeId,event.review);
+          await attractionListRep.addReview(event.placeId,event.reviews);
         }else if(event.placeType =='restaurant'){
-          await restaurantRepo.addReview(event.placeId,event.review);
+          await restaurantRepo.addReview(event.placeId,event.reviews);
         }
       }else if (event is deleteReviewEvent){
 
         if(event.placeType =='attraction') {
-          await attractionListRep.deleteReview(event.placeId, event.reviewId);
+          await attractionListRep.deleteReview(event.reviews,event.placeId);
         }else if(event.placeType =='restaurant'){
-          await restaurantRepo.deleteReview(event.placeId, event.reviewId);
+          await restaurantRepo.deleteReview(event.reviews,event.placeId);
         }
 
       }

@@ -1,86 +1,71 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:travelapp/blocs/place/placeList_bloc.dart';
-import 'package:travelapp/blocs/place/place_event.dart';
 import 'package:travelapp/models/review.dart';
-import 'package:travelapp/repositories/user/userAuth_repo.dart';
-import 'package:uuid/uuid.dart';
-
+import '../../repositories/user/userAuth_repo.dart';
 import '../../timeAgoSinceDate.dart';
 
+typedef CallbackReviewText = void Function(String val);
+typedef CallbackDeleteReview = void Function(List val);
 // ignore: must_be_immutable
 class reviewList extends StatefulWidget {
-
-  final placeId;
-  final searchType;
-  final Function() methodFromParent;
-  reviewList({super.key,required this.placeId,required this.searchType,required this.methodFromParent});
+  final currentReviews;
+  final Function() mFPAddReview;
+  CallbackReviewText reviewText;
+  CallbackDeleteReview deleteReviews;
+  reviewList({super.key,required this.currentReviews,required this.mFPAddReview,
+  required this.reviewText,required this.deleteReviews});
 
   @override
-  State<reviewList> createState() => _reviewListState(placeId,searchType,methodFromParent);
+  State<reviewList> createState() => _reviewListState(currentReviews,mFPAddReview,reviewText,deleteReviews);
 }
 
 class _reviewListState extends State<reviewList> {
 
-  final placeId;
-  final searchType;
-  final Function() methodFromParent;
+  List currentReviews;
+  CallbackReviewText reviewText;
+  CallbackDeleteReview deleteReviews;
+  final Function() mFPAddReview;
   final reviewTextController = TextEditingController();
   late String userName;
   late String proPic;
   late String? userId;
   late Future<List<Review>> reviews;
   
-  _reviewListState(this.placeId,this.searchType,this.methodFromParent);
+  _reviewListState(this.currentReviews,this.mFPAddReview,this.reviewText,this.deleteReviews);
   
-  void addReview (){
-
-    if(reviewTextController.text.isNotEmpty){
-      var uuid = const Uuid();
-      final Review newReview = Review (
-        userId: userId,
-        reviewId: uuid.v1(),
-        name: userName,
-        publishAt: DateTime.now(), 
-        reviewerPhotoUrl: proPic, 
-        text: reviewTextController.text
-      );
-
-      BlocProvider.of<placeListBloc>(context).add(addReviewEvent(newReview, searchType, placeId));
-
-    }
-
-  }
-
-  void getReviews () {
-    
-   reviews = placeBloc.getReviewList(searchType, placeId);
-   setState(() {
-     reviews;
-   });
-
-  }
-
+  
   @override
   void initState() {
 
     userAuthRep.onAuthStateChanged.listen((user) {
+    setState(() {
       userId = user!.uid;
-      userName=user.displayName??"";
-      proPic= user.photoURL??"https://cdn-icons-png.flaticon.com/64/3177/3177440.png";
-
+      userName = user.displayName ?? "";
+      proPic = user.photoURL ?? "https://cdn-icons-png.flaticon.com/64/3177/3177440.png";
     });
-    
+  });
+
     super.initState();
 
-    getReviews ();
-     
   }
 
+  bool isValidTimestamp(dynamic timestamp) {
+    if (timestamp is Timestamp) {
+      return true;
+    } else if (timestamp is String) {
+      try {
+        return true;
+      } catch (e) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+}
   
   @override
   Widget build(BuildContext context) {
@@ -114,203 +99,119 @@ class _reviewListState extends State<reviewList> {
               ),
               Container(
                 height: 547, 
-                child: FutureBuilder <List<Review>>(
-                  future: reviews,
-                  builder: (BuildContext context,snapshot) { 
-                    if(snapshot.hasData) {
-                      snapshot.data?.sort((a, b) => a.publishAt.compareTo(b.publishAt));
-                      return
-                        ListView.builder(
-                        itemCount: snapshot.data?.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0,right: 10,left: 10),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 240, 238, 238),
-                                    borderRadius: BorderRadius.circular(13)
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10, bottom: 10),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(top: 13),
-                                              child: Container(
-                                                width: 35,
-                                                height: 35,
-                                                child: CircleAvatar(
-                                                  radius: 40,
-                                                  backgroundImage: NetworkImage(snapshot.data
-                                                    ![index].reviewerPhotoUrl),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 7, top: 10),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 200,
-                                                        child: Text(snapshot.data![index].name,
-                                                          style: GoogleFonts.cabin(
-                                                            textStyle: const TextStyle(
-                                                              color: Color.fromARGB(255, 0, 0, 0),
-                                                              fontSize: 14,
-                                                              fontWeight: FontWeight.bold
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Text(TimeAgoSince.timeAgoSinceDate(snapshot.data![index].publishAt),
-                                                        style: GoogleFonts.cabin(
-                                                          textStyle: const TextStyle(
-                                                            color: Color.fromARGB(255, 112, 112, 112),
-                                                            fontSize: 9,
-                                                            fontWeight: FontWeight.bold
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 13),
-                                          child: SizedBox(
-                                            width: 250,
-                                            child: Text(snapshot.data![index].text,
-                                              style: GoogleFonts.cabin(
-                                                textStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 112, 112, 112),
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w400
-                                                ),
-                                              ),
-                                            ),
+                child: 
+                  
+                  ListView.builder(
+                  itemCount: widget.currentReviews.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0,right: 10,left: 10),
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 240, 238, 238),
+                              borderRadius: BorderRadius.circular(13)
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10, bottom: 10),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 13),
+                                        child: Container(
+                                          width: 35,
+                                          height: 35,
+                                          child: CircleAvatar(
+                                            radius: 40,
+                                            backgroundImage: NetworkImage(widget.currentReviews
+                                              [index]["reviewerPhotoUrl"]),
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ),
-                                Visibility(
-                                  visible: userId == snapshot.data![index].userId,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      
-                                      BlocProvider.of<placeListBloc>(context).add(deleteReviewEvent(placeId
-                                      ,snapshot.data![index].reviewId,searchType));
-                                      getReviews();
-                                    },
-                                    child: Text("Delete",
-                                      style: GoogleFonts.cabin(
-                                        textStyle: const TextStyle(
-                                          color: Color.fromARGB(255, 250, 3, 3),
-                                          fontSize: 14,
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      );
-
-                    }else{
-                      return
-                        ListView.builder(
-                        itemCount: 8,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0,right: 10,left: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 240, 238, 238),
-                                borderRadius: BorderRadius.circular(13)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10, bottom: 10),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 13),
-                                          child: Container(
-                                            width: 35,
-                                            height: 35,
-                                            decoration: BoxDecoration(
-                                              color: Color.fromARGB(255, 207, 207, 207),
-                                              borderRadius: BorderRadius.circular(20)
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 7, top: 10),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  SizedBox(
-                                                    width: 100,
-                                                    child:  Container(
-                                                        width: 100,
-                                                        height: 11,
-                                                        decoration: BoxDecoration(
-                                                          color: Color.fromARGB(255, 207, 207, 207),
-                                                          borderRadius: BorderRadius.circular(16),
-                                                        ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 7, top: 10),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 200,
+                                                  child: Text(widget.currentReviews[index]["name"],
+                                                    style: GoogleFonts.cabin(
+                                                      textStyle: const TextStyle(
+                                                        color: Color.fromARGB(255, 0, 0, 0),
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.bold
                                                       ),
                                                     ),
-                                                   
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: SizedBox(
-                                        width: 250,
-                                        child: 
-                                         Container(
-                                            width: 100,
-                                            height: 11,
-                                            decoration: BoxDecoration(
-                                              color: Color.fromARGB(255, 207, 207, 207),
-                                              borderRadius: BorderRadius.circular(16),
+                                                  ),
+                                                ),
+                                                Text(TimeAgoSince.timeAgoSinceDate(isValidTimestamp(widget.currentReviews[index]["publishAt"])?
+                                                 widget.currentReviews[index]["publishAt"].toDate():widget.currentReviews[index]["publishAt"]),
+                                                  style: GoogleFonts.cabin(
+                                                    textStyle: const TextStyle(
+                                                      color: Color.fromARGB(255, 112, 112, 112),
+                                                      fontSize: 9,
+                                                      fontWeight: FontWeight.bold
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 13),
+                                    child: SizedBox(
+                                      width: 250,
+                                      child: Text(widget.currentReviews[index]["text"],
+                                        style: GoogleFonts.cabin(
+                                          textStyle: const TextStyle(
+                                            color: Color.fromARGB(255, 112, 112, 112),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400
                                           ),
+                                        ),
                                       ),
-                                    )
-                                  ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ),
+                          Visibility(
+                            visible: userId == widget.currentReviews[index]["userId"],
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                   currentReviews.removeWhere((element) =>
+                                 element["reviewId"]==widget.currentReviews[index]["reviewId"]);
+                                });
+                               deleteReviews(currentReviews);
+                                
+                              },
+                              child: Text("Delete",
+                                style: GoogleFonts.cabin(
+                                  textStyle: const TextStyle(
+                                    color: Color.fromARGB(255, 250, 3, 3),
+                                    fontSize: 14,
+                                  ),
                                 ),
-                              )
+                              ),
                             ),
-                          );
-                        },
-                       );
-
-                    }
-                    
-                      
+                          )
+                        ],
+                      ),
+                    );
                   },
-                  
                 ),
+
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20,bottom:5,left:4), 
@@ -350,9 +251,15 @@ class _reviewListState extends State<reviewList> {
                       padding: const EdgeInsets.only(left:5),
                       child: GestureDetector(
                         onTap: (){
-                          addReview ();
-                          getReviews ();
-                          methodFromParent.call();
+                          if(reviewTextController.text.isNotEmpty){
+                            reviewText(reviewTextController.text);
+                            mFPAddReview.call();
+                            setState(() {
+                              currentReviews;
+                            });
+                            reviewTextController.text="";
+                          }
+                          
                         },
                         child: SizedBox(
                           width:34,

@@ -1,3 +1,5 @@
+import '../../models/user.dart';
+
 abstract class userEvent{
 
   
@@ -54,4 +56,11 @@ class resetPassword extends userEvent{
 class signOutEvent extends userEvent{
 
   signOutEvent();
+}
+
+class editProfile extends userEvent{
+
+  User user;
+  editProfile(this.user);
+
 }

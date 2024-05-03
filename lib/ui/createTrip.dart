@@ -117,7 +117,7 @@ class _createNewTripState extends State<createTrip> {
           MaterialPageRoute(
             builder:(context)=> tripDetailsPlan(isEditPlace: false, isAddPlace: false,
              trip: newTrip,place: Place(address: '', latitude: 0.0, name: '', id: '', longitude:0.0,
-              openingHours: [], phone: '', photoRef: '', rating: 0.0, type: ''),)
+              openingHours: [], phone: '', photoRef: '', rating: 0.0, type: '', reviews: []),)
             
           )
         );
@@ -146,7 +146,7 @@ class _createNewTripState extends State<createTrip> {
           MaterialPageRoute(
             builder:(context)=> tripDetailsPlan(isEditPlace: true, isAddPlace: false,
              trip: newTrip,place: Place(address: '', latitude: 0.0, name: '', id: '', longitude:0.0,
-              openingHours: [], phone: '', photoRef: '', rating: 0.0, type: ''),)
+              openingHours: [], phone: '', photoRef: '', rating: 0.0, type: '', reviews: []),)
             
           )
         );

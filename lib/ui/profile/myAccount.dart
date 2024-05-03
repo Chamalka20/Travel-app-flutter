@@ -3,9 +3,11 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import '../blocs/user/user_bloc.dart';
-import '../blocs/user/user_event.dart';
-import 'Welcomepage.dart';
+import '../../blocs/user/user_bloc.dart';
+import '../../blocs/user/user_event.dart';
+import '../Welcomepage.dart';
+import 'editProfile.dart';
+
 
 class myAccount extends StatefulWidget {
   const myAccount({super.key});
@@ -15,6 +17,9 @@ class myAccount extends StatefulWidget {
 }
 
 class _myAccountState extends State<myAccount> {
+
+  late auth.User user;
+
   void initState() {
     super.initState();
      
@@ -72,11 +77,13 @@ class _myAccountState extends State<myAccount> {
                     builder: (context,AsyncSnapshot<auth.User?> snapshot) {
                       
                       if(snapshot.hasData){
-            
+                        user=snapshot.data!;
                         return
                          GestureDetector(
                             onTap: () {
-                              
+                              Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => EditProfile(user: user,)));
                             },
                             child: Row(
                               children: [
@@ -87,7 +94,8 @@ class _myAccountState extends State<myAccount> {
                                   height: 45,
                                   child:  CircleAvatar(
                                     radius: 40,
-                                    backgroundImage:snapshot.data?.photoURL!=null? NetworkImage("${snapshot.data?.photoURL}"):const NetworkImage("https://cdn-icons-png.flaticon.com/64/3177/3177440.png"),
+                                    backgroundImage:snapshot.data?.photoURL!=null? NetworkImage("${snapshot.data?.photoURL}")
+                                    :const NetworkImage("https://cdn-icons-png.flaticon.com/64/3177/3177440.png"),
                                     
                                   ),
                                 ),
@@ -135,7 +143,7 @@ class _myAccountState extends State<myAccount> {
                                                                                                 
                                                 ),
                                                                                       
-                                                                        ),
+                                                ),
                                               ),
                                             ),
                             

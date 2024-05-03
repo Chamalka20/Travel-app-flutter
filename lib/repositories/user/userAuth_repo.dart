@@ -130,6 +130,19 @@ class userAuthRepo {
 
   }
 
+  Future<void> updateProfile(User user) async {
+
+    try{
+      _firebaseAuth.currentUser?.updateDisplayName(user.name);
+      //update user activity
+      await FirebaseFirestore.instance
+          .collection('attractions').doc().collection("reviews");
+    }catch(e){
+      print(e);
+    }
+
+  }
+
   Future<dynamic> signInWithGoogle() async {
 
     try{

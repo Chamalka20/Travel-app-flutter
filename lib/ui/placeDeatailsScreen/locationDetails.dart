@@ -11,12 +11,14 @@ import 'package:travelapp/ui/createTrip.dart';
 import 'package:travelapp/ui/placeDeatailsScreen/placeCoverImage.dart';
 import 'package:travelapp/ui/placeDeatailsScreen/placeDescreption.dart';
 import 'package:travelapp/ui/tripDetailsPlan.dart';
+import 'package:uuid/uuid.dart';
 import '../../blocs/place/placeList_bloc.dart';
+import '../../blocs/place/place_event.dart';
 import '../../blocs/place/place_state.dart';
 import '../../blocs/trip/trip_bloc.dart';
 import '../../models/place.dart';
-import '../../models/review.dart';
 import '../../models/trip.dart';
+import '../../repositories/user/userAuth_repo.dart';
 import '../components/shimmerLoading.dart';
 import 'placesList.dart';
 import 'reviewList.dart';
@@ -47,7 +49,13 @@ class _locationDetailsState extends State<locationDetails> {
   late final String placeType;
   late Place place;
   bool isShowReviews = false;
-  late Future<List<Review>> reviews;
+  List currentReviews = [];
+  String reviewText="";
+  late String userName;
+  late String proPic;
+  late String? userId;
+  bool isLoading = true;
+  bool isfirstLoading = true;
 
   final _shimmerGradient = const LinearGradient(
   colors: [
@@ -67,14 +75,24 @@ class _locationDetailsState extends State<locationDetails> {
 
   _locationDetailsState(this.placeId,this.searchType);
 
-  
   @override
-  void initState () {
-        
+void initState() {
   super.initState();
-  getReviews ();
-       
-  }
+  initializeData();
+}
+
+void initializeData() async {
+  // Perform asynchronous operations here
+  userAuthRep.onAuthStateChanged.listen((user) {
+    setState(() {
+      userId = user!.uid;
+      userName = user.displayName ?? "";
+      proPic = user.photoURL ?? "https://cdn-icons-png.flaticon.com/64/3177/3177440.png";
+    });
+  });
+
+  
+}
 
   @override
   void dispose() {
@@ -83,12 +101,41 @@ class _locationDetailsState extends State<locationDetails> {
     reviewTextController.dispose();
   }
 
-  void getReviews () {
+  void addReview (){
+    if(currentReviews.isEmpty && isfirstLoading == true){
+      currentReviews = place.reviews;
+      print("currentReviews empty");
+      isfirstLoading = false;
+    }
+    var uuid = const Uuid();
+    final newReview = {
+      "userId": userId,
+      "reviewId": uuid.v1(),
+      "name": userName,
+      "publishAt": DateTime.now(), 
+      "reviewerPhotoUrl": proPic, 
+      "text": reviewText,
+    };
     
-   reviews = placeBloc.getReviewList(searchType, placeId);
-   setState(() {
-     reviews;
-   });
+    setState(() {
+      currentReviews.add(newReview);
+    });
+    
+    BlocProvider.of<placeListBloc>(context).add(addReviewEvent(currentReviews, searchType, placeId));
+
+
+  }
+
+  void deleteReview (){
+    BlocProvider.of<placeListBloc>(context).add(deleteReviewEvent(currentReviews, searchType,placeId));
+
+    if(currentReviews.isEmpty){
+      isfirstLoading=false;
+    }
+    print(currentReviews);
+    setState(() {
+      currentReviews;
+    });
 
   }
 
@@ -97,7 +144,7 @@ class _locationDetailsState extends State<locationDetails> {
   Widget build(BuildContext context) {
 
       return locationDetailsBody(context);
-    
+  
   }
 
   
@@ -947,204 +994,21 @@ class _locationDetailsState extends State<locationDetails> {
                                       //resturents list-------------------------------------------------------------
                                       
                                       Visibility(
-                                        visible: searchType =='city',
-                                          child:placesList(placeName:placeDetails.hasData? placeDetails.data!.name:'nan', placeType: 'restaurant',)    
-                                      ),  
+                                        visible: searchType =="city",
+                                          child: ShimmerLoading(
+                                            isLoading: !placeDetails.hasData,
+                                            child: placesList(
+                                              placeName: placeDetails.hasData? placeDetails.data!.name:'nan', placeType: 'restaurant',
+                                              )
+                                            )
+                                      
+                                      ), 
                                                       
                                                       
                                       //reviews-----------------------------------------------------------------
-                                      
-                                      searchType!='city'? FutureBuilder <List<Review>>(
-                                        future:reviews,
-                                        builder: (context, dataReviewListSnapshot) {
-                                          
-                                          if( dataReviewListSnapshot.hasData){
-                                           
-                                            if ( dataReviewListSnapshot.data!.isNotEmpty ) {
-                                             
-                                              return Padding(
-                                                padding: const EdgeInsets.only(top:15,left:10),
-                                                child: Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: (){
-                                                        showGeneralDialog(
-                                                          context: context,
-                                                          
-                                                          pageBuilder: (context, anim1, anim2) {
-                                                          return reviewList(searchType: searchType,
-                                                          placeId: placeId,methodFromParent:getReviews,);
-                                                          } ,
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        width:340,
-                                                        decoration:const BoxDecoration(
-                                                          color: const Color.fromARGB(255, 240, 238, 238),
-                                                          borderRadius: BorderRadius.all(Radius.circular(15))
-                                                        ),
-                                                        child:Column(
-                                                          children: [
-                                                              Padding(
-                                                                padding: const EdgeInsets.only(top:7,left:10),
-                                                                child: Row(
-                                                                  children: [
-                                                                    Text('Reviews',
-                                                                      style: GoogleFonts.cabin(
-                                                                          textStyle:const TextStyle(
-                                                                            color: Color.fromARGB(255, 0, 0, 0),
-                                                                            fontSize: 15,
-                                                                            fontWeight:FontWeight.w600
-                                                                            
-                                                                          ),
-                                                                      ),
-                                                                      textAlign: TextAlign.right,
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.only(left:5),
-                                                                      child: Text('${dataReviewListSnapshot.data?.length}',
-                                                                        style: GoogleFonts.cabin(
-                                                                          textStyle:const TextStyle(
-                                                                            color: Color.fromARGB(255, 112, 112, 112),
-                                                                            fontSize: 13,
-                                                                            fontWeight:FontWeight.w400
-                                                                            
-                                                                          ),
-                                                                        ),
-                                                                      
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                      
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets.only(top:13,left:10,bottom:10),
-                                                                child: Row(
-                                                                  children: [
-                                                                    Container(
-                                                                      width: 35,
-                                                                      height: 35,
-                                                                      child: CircleAvatar(
-                                                                        radius: 40,
-                                                                        backgroundImage: NetworkImage( dataReviewListSnapshot.data!
-                                                                        [ dataReviewListSnapshot.data!.length-1].reviewerPhotoUrl
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.only(left: 13),
-                                                                      child: SizedBox(
-                                                                        width: 250,
-                                                                        child: Text( dataReviewListSnapshot.data!
-                                                                        [ dataReviewListSnapshot.data!.length-1].text,
-                                                                          style: GoogleFonts.cabin(
-                                                                            textStyle: const TextStyle(
-                                                                              color: Color.fromARGB(255, 112, 112, 112),
-                                                                              fontSize: 10,
-                                                                              fontWeight: FontWeight.w400
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              )
-                                                                                                
-                                                            ],
-                                                          )
-                                                        ),
-                                                    )
-                                                    
-                                                  ],
-                                                ),
-                                              );
-
-                                            }else{
-                                              return
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top:15,left:10),
-                                                  child: Row(
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: (){
-                                                          showGeneralDialog(
-                                                            context: context,
-                                                            pageBuilder: (context, anim1, anim2) {
-                                                            return reviewList(searchType: searchType,
-                                                            placeId: placeId,methodFromParent:getReviews,);
-                                                            } ,
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          width:340,
-                                                          height:150,
-                                                          decoration:const BoxDecoration(
-                                                            color: const Color.fromARGB(255, 240, 238, 238),
-                                                            borderRadius: BorderRadius.all(Radius.circular(15))
-                                                          ),
-                                                          child: Column(
-                                                          children: [
-                                                              
-                                                              Padding(
-                                                                padding: const EdgeInsets.only(top:13,left:10,bottom:10),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Row(
-                                                                      children: [
-                                                                      SizedBox(
-                                                                          width: 290,
-                                                                          height:45,
-                                                                          child: TextField(
-                                                                            controller: reviewTextController,                                                            
-                                                                            decoration: InputDecoration(
-                                                                              hintText: "Add first review for this place",
-                                                                              filled: true,
-                                                                              contentPadding: EdgeInsets.only(left: 14),
-                                                                              fillColor: Color.fromARGB(255, 207, 207, 207),
-                                                                              border: OutlineInputBorder(
-                                                                                borderRadius: BorderRadius.circular(25.0),
-                                                                                borderSide: const BorderSide(
-                                                                                  width: 0,
-                                                                                  style: BorderStyle.none,
-                                                                                ),
-                                                                              ),
-                                                                              
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        Padding(
-                                                                          padding: const EdgeInsets.only(left:5),
-                                                                          child: SizedBox(
-                                                                            width:34,
-                                                                            height:34,
-                                                                            child: Image.asset('assets/images/chat-arrow-before.png'
-                                                                            ),
-                                                                          ),
-                                                                        )
-                                                                        
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              )
-                                                                                                
-                                                            ],
-                                                          ),
-                                                          
-                                                          ),
-                                                      )
-                                                    
-                                                    ],
-                                                  ),
-                                          );
-                                          }
-                                             
-                
-                                          }else{
-                
-                                            return Padding(
+                                        Visibility(
+                                          visible: !placeDetails.hasData,
+                                          child: Padding(
                                             padding: const EdgeInsets.only(top:15,left:10),
                                             child: Row(
                                               children: [
@@ -1165,13 +1029,314 @@ class _locationDetailsState extends State<locationDetails> {
                                                 
                                               ],
                                             ),
-                                          );
-                                          }
-                
-                                         
-                                        }
-                                      ):Container(),
-                                     
+                                          ),
+                                        ),    
+                                        placeDetails.hasData && placeDetails.data!.reviews.isNotEmpty && isfirstLoading? 
+                                        Visibility(
+                                          visible: searchType!='city',
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top:15,left:10),
+                                            child: Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    
+                                                    showGeneralDialog(
+                                                      context: context,
+                                                      
+                                                      pageBuilder: (context, anim1, anim2) {
+                                                      return reviewList(mFPAddReview:addReview,
+                                                       currentReviews:currentReviews.isNotEmpty? currentReviews:place.reviews,
+                                                       reviewText: (String val) {reviewText =val;}, deleteReviews:
+                                                        (List<dynamic> val) { 
+                                                            currentReviews = val;
+                                                            deleteReview ();
+                                                        } ,);
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width:340,
+                                                    decoration:const BoxDecoration(
+                                                      color: const Color.fromARGB(255, 240, 238, 238),
+                                                      borderRadius: BorderRadius.all(Radius.circular(15))
+                                                    ),
+                                                    child:Column(
+                                                      children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(top:7,left:10),
+                                                            child: Row(
+                                                              children: [
+                                                                Text('Reviews',
+                                                                  style: GoogleFonts.cabin(
+                                                                      textStyle:const TextStyle(
+                                                                        color: Color.fromARGB(255, 0, 0, 0),
+                                                                        fontSize: 15,
+                                                                        fontWeight:FontWeight.w600
+                                                                        
+                                                                      ),
+                                                                  ),
+                                                                  textAlign: TextAlign.right,
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left:5),
+                                                                  child: Text('${currentReviews.isNotEmpty?
+                                                                   currentReviews.length:place.reviews.length}',
+                                                                    style: GoogleFonts.cabin(
+                                                                      textStyle:const TextStyle(
+                                                                        color: Color.fromARGB(255, 112, 112, 112),
+                                                                        fontSize: 13,
+                                                                        fontWeight:FontWeight.w400
+                                                                        
+                                                                      ),
+                                                                    ),
+                                                                  
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                  
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(top:13,left:10,bottom:10),
+                                                            child: Row(
+                                                              children: [
+                                                                Container(
+                                                                  width: 35,
+                                                                  height: 35,
+                                                                  child: CircleAvatar(
+                                                                    radius: 40,
+                                                                    backgroundImage: NetworkImage(currentReviews.isNotEmpty? currentReviews
+                                                                    [ currentReviews.length-1]["reviewerPhotoUrl"]:
+                                                                    place.reviews[place.reviews.length-1]["reviewerPhotoUrl"]
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left: 13),
+                                                                  child: SizedBox(
+                                                                    width: 250,
+                                                                    child: Text(currentReviews.isNotEmpty? currentReviews
+                                                                    [ currentReviews.length-1]["text"]:place.reviews[place.reviews.length-1]["text"],
+                                                                      style: GoogleFonts.cabin(
+                                                                        textStyle: const TextStyle(
+                                                                          color: Color.fromARGB(255, 112, 112, 112),
+                                                                          fontSize: 10,
+                                                                          fontWeight: FontWeight.w400
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          )
+                                                                                            
+                                                        ],
+                                                      )
+                                                    ),
+                                                )
+                                                
+                                              ],
+                                            ),
+                                          ),
+                                        ):
+                                        currentReviews.isEmpty?
+                                        Visibility(
+                                          visible: searchType!='city',
+                                          child: Padding(
+                                              padding: const EdgeInsets.only(top:15,left:10),
+                                              child: Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: (){
+                                                      showGeneralDialog(
+                                                        context: context,
+                                                        pageBuilder: (context, anim1, anim2) {
+                                                        return reviewList(mFPAddReview:addReview, currentReviews:currentReviews.isNotEmpty?
+                                                         currentReviews:isfirstLoading?place.reviews:currentReviews,reviewText: (String val) {reviewText =val;},
+                                                          deleteReviews: (List<dynamic> val) { 
+                                                            currentReviews = val;
+                                                            deleteReview ();
+                                                           },);
+                                                        } ,
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      width:340,
+                                                      height:150,
+                                                      decoration:const BoxDecoration(
+                                                        color: const Color.fromARGB(255, 240, 238, 238),
+                                                        borderRadius: BorderRadius.all(Radius.circular(15))
+                                                      ),
+                                                      child: Column(
+                                                      children: [
+                                                          
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(top:13,left:10,bottom:10),
+                                                            child: Column(
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                  SizedBox(
+                                                                      width: 290,
+                                                                      height:45,
+                                                                      child: TextField(
+                                                                        controller: reviewTextController,                                                            
+                                                                        decoration: InputDecoration(
+                                                                          hintText: "Add first review for this place",
+                                                                          filled: true,
+                                                                          contentPadding: EdgeInsets.only(left: 14),
+                                                                          fillColor: Color.fromARGB(255, 207, 207, 207),
+                                                                          border: OutlineInputBorder(
+                                                                            borderRadius: BorderRadius.circular(25.0),
+                                                                            borderSide: const BorderSide(
+                                                                              width: 0,
+                                                                              style: BorderStyle.none,
+                                                                            ),
+                                                                          ),
+                                                                          
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.only(left:5),
+                                                                      child: SizedBox(
+                                                                        width:34,
+                                                                        height:34,
+                                                                        child: Image.asset('assets/images/chat-arrow-before.png'
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                    
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                                                            
+                                                        ],
+                                                      ),
+                                                      
+                                                      ),
+                                                  )
+                                                
+                                                ],
+                                              ),
+                                           ),
+                                        ):
+                                        Visibility(
+                                          visible: searchType!='city',
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top:15,left:10),
+                                            child: Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    
+                                                    showGeneralDialog(
+                                                      context: context,
+                                                      
+                                                      pageBuilder: (context, anim1, anim2) {
+                                                      return reviewList(mFPAddReview:addReview,
+                                                       currentReviews:currentReviews,
+                                                       reviewText: (String val) {reviewText =val;},
+                                                        deleteReviews: (List<dynamic> val) { 
+                                                            currentReviews = val;
+                                                            deleteReview ();
+
+                                                         } ,);
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width:340,
+                                                    decoration:const BoxDecoration(
+                                                      color: const Color.fromARGB(255, 240, 238, 238),
+                                                      borderRadius: BorderRadius.all(Radius.circular(15))
+                                                    ),
+                                                    child:Column(
+                                                      children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(top:7,left:10),
+                                                            child: Row(
+                                                              children: [
+                                                                Text('Reviews',
+                                                                  style: GoogleFonts.cabin(
+                                                                      textStyle:const TextStyle(
+                                                                        color: Color.fromARGB(255, 0, 0, 0),
+                                                                        fontSize: 15,
+                                                                        fontWeight:FontWeight.w600
+                                                                        
+                                                                      ),
+                                                                  ),
+                                                                  textAlign: TextAlign.right,
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left:5),
+                                                                  child: Text('${currentReviews.isNotEmpty?
+                                                                   currentReviews.length:place.reviews.length}',
+                                                                    style: GoogleFonts.cabin(
+                                                                      textStyle:const TextStyle(
+                                                                        color: Color.fromARGB(255, 112, 112, 112),
+                                                                        fontSize: 13,
+                                                                        fontWeight:FontWeight.w400
+                                                                        
+                                                                      ),
+                                                                    ),
+                                                                  
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                  
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(top:13,left:10,bottom:10),
+                                                            child: Row(
+                                                              children: [
+                                                                Container(
+                                                                  width: 35,
+                                                                  height: 35,
+                                                                  child: CircleAvatar(
+                                                                    radius: 40,
+                                                                    backgroundImage: NetworkImage(currentReviews.isNotEmpty? currentReviews
+                                                                    [ currentReviews.length-1]["reviewerPhotoUrl"]:
+                                                                    place.reviews[place.reviews.length-1]["reviewerPhotoUrl"]
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left: 13),
+                                                                  child: SizedBox(
+                                                                    width: 250,
+                                                                    child: Text(currentReviews.isNotEmpty? currentReviews
+                                                                    [ currentReviews.length-1]["text"]:place.reviews[place.reviews.length-1]["text"],
+                                                                      style: GoogleFonts.cabin(
+                                                                        textStyle: const TextStyle(
+                                                                          color: Color.fromARGB(255, 112, 112, 112),
+                                                                          fontSize: 10,
+                                                                          fontWeight: FontWeight.w400
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          )
+                                                                                            
+                                                        ],
+                                                      )
+                                                    ),
+                                                )
+                                                
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                          
+                                        
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: TextButton(
@@ -1518,5 +1683,5 @@ class _locationDetailsState extends State<locationDetails> {
     
     
     
+   }
   }
-}

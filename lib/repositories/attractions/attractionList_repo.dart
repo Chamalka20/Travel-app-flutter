@@ -18,7 +18,6 @@ class attractionListRepo {
 
 
     Place data =Place.fromMap(query.docs[0].data());
-    print(data);
     return data;
 
   }
@@ -48,7 +47,7 @@ class attractionListRepo {
 
   Future<List<Place>> getAttractionPlaces(placeName)async{
 
-    
+    print("this is attracRepo"+placeName);
     final query = await FirebaseFirestore.instance
             .collection('attractions')
             .where('city', isEqualTo: placeName)
@@ -97,40 +96,51 @@ class attractionListRepo {
     return reviewslist;
   }
 
-  Future<void> addReview (placeId,Review review) async{
+  Future<void> addReview (placeId,reviews) async{
 
-    try {
+    try{
 
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('attractions')
-          .where('placeId', isEqualTo: placeId)
-          .get();
+      await FirebaseFirestore.instance.collection('attractions')
+      .where('placeId',isEqualTo: placeId).get()
+      .then((querySnapshot) {
+        for (var ele in querySnapshot.docs) {
 
-      for (var ele in querySnapshot.docs) {
-        await ele.reference.collection('reviews').doc(review.reviewId).set(review.toJson());
-      }
+            FirebaseFirestore.instance
+            .collection('attractions')
+            .doc(ele.id)
+            .update({
+              'reviews': reviews});
+          
+        }
 
-    } catch (e) {
+      });
+
+    }catch(e){
       print(e);
     }
     
   }
 
-  Future<void> deleteReview (placeId,reviewId) async{
+  Future<void> deleteReview (reviews,placeId) async{
 
-    try {
-      
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('attractions')
-          .where('placeId', isEqualTo: placeId)
-          .get();
+    try{
 
-      for (var ele in querySnapshot.docs) {
-        
-        await ele.reference.collection('reviews').doc(reviewId).delete();
-      }
+      await FirebaseFirestore.instance.collection('attractions')
+      .where('placeId',isEqualTo: placeId).get()
+      .then((querySnapshot) {
+        for (var ele in querySnapshot.docs) {
 
-    } catch (e) {
+            FirebaseFirestore.instance
+            .collection('attractions')
+            .doc(ele.id)
+            .update({
+              'reviews': reviews});
+          
+        }
+
+      });
+
+    }catch(e){
       print(e);
     }
     

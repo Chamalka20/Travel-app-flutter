@@ -71,10 +71,8 @@ class _PlaceCoveImageState extends State<PlaceCoveImage> {
                             return
                                 InkWell(
                                 onTap: () async =>{
-                                        
                                 if (favSnapshot.data[0] == false) {
-                                        
-                                                            
+                                                       
                                   BlocProvider.of<placeListBloc>(context).add(placeAddToFavorites(atPlaceId: placeDetails.data!.id,
                                     placeName: placeDetails.data!.name, placeImgUrl: placeDetails.data!.photoRef, type: placeDetails.data!.type)),
                                     

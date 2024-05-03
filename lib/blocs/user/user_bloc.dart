@@ -44,6 +44,10 @@ class userBloc extends Bloc<userEvent,userState>{
 
         await userAuthRep.emailVerification();
 
+      }else if (event is editProfile){  
+
+        await userAuthRep.updateProfile(event.user);
+
       }else if (event is resetPassword){
 
         List resetState =await userAuthRep.resetPassword(event.email);
