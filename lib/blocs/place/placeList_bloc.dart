@@ -154,14 +154,14 @@ class placeListBloc extends Bloc<place_event,place_state>{
         
       }else if(event is addReviewEvent){
         if(event.placeType =='attraction') {
-          await attractionListRep.addReview(event.placeId,event.reviews);
+          await attractionListRep.addReview(event.placeId,event.reviews,event.userId);
         }else if(event.placeType =='restaurant'){
           await restaurantRepo.addReview(event.placeId,event.reviews);
         }
       }else if (event is deleteReviewEvent){
 
         if(event.placeType =='attraction') {
-          await attractionListRep.deleteReview(event.reviews,event.placeId);
+          await attractionListRep.deleteReview(event.reviews,event.placeId,event.userId);
         }else if(event.placeType =='restaurant'){
           await restaurantRepo.deleteReview(event.reviews,event.placeId);
         }

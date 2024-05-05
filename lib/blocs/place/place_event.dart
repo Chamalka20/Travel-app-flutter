@@ -56,7 +56,8 @@ class addReviewEvent extends place_event{
   List reviews;
   final String placeType;
   final String placeId;
-  addReviewEvent(this.reviews,this.placeType,this.placeId);
+  final String userId;
+  addReviewEvent(this.reviews,this.placeType,this.placeId,this.userId);
 }
 
 class deleteReviewEvent extends place_event{
@@ -64,7 +65,8 @@ class deleteReviewEvent extends place_event{
   List reviews;
   final String placeType;
   final String placeId;
-  deleteReviewEvent(this.reviews,this.placeType,this.placeId);
+  final String userId;
+  deleteReviewEvent(this.reviews,this.placeType,this.placeId,this.userId);
 
 }
 

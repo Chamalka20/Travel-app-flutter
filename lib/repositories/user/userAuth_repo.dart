@@ -131,12 +131,27 @@ class userAuthRepo {
   }
 
   Future<void> updateProfile(User user) async {
-
+  
     try{
       _firebaseAuth.currentUser?.updateDisplayName(user.name);
       //update user activity
-      await FirebaseFirestore.instance
-          .collection('attractions').doc().collection("reviews");
+       QuerySnapshot attractionsQuery = await FirebaseFirestore.instance
+      .collection('attractions')
+      .where('userIds', arrayContains:"IebH8ix2mePMYHPDe1ardR7Q21g1")
+      .get();
+      
+       
+      for (QueryDocumentSnapshot attractionDoc in attractionsQuery.docs) {
+        List<dynamic> reviews = attractionDoc['reviews'];
+
+        for (int i = 0; i < reviews.length; i++) {
+          if (reviews[i]['userId'] == user.uid) {
+            reviews[i]['name'] = user.name;
+          }
+        }
+        await attractionDoc.reference.update({'reviews': reviews});
+      }
+
     }catch(e){
       print(e);
     }

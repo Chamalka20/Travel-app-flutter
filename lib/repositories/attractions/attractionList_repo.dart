@@ -96,14 +96,26 @@ class attractionListRepo {
     return reviewslist;
   }
 
-  Future<void> addReview (placeId,reviews) async{
+  Future<void> addReview (placeId,reviews,userId) async{
 
+  List<String> userIds = [];
     try{
 
-      await FirebaseFirestore.instance.collection('attractions')
-      .where('placeId',isEqualTo: placeId).get()
-      .then((querySnapshot) {
-        for (var ele in querySnapshot.docs) {
+        QuerySnapshot attractionsQuery =await FirebaseFirestore.instance.collection('attractions')
+      .where('placeId',isEqualTo: placeId).get();
+
+         for (var ele in attractionsQuery.docs) {
+          var value = await FirebaseFirestore.instance.collection('attractions').doc(ele.id).get();
+          List<dynamic>? ids = value.data()?['userIds']; 
+          if (ids != null) {
+            userIds.addAll(ids.cast<String>()); 
+          }
+          if (!userIds.contains(userId)) {
+            userIds.add(userId); 
+          }
+        }
+
+        for (var ele in attractionsQuery.docs) {
 
             FirebaseFirestore.instance
             .collection('attractions')
@@ -113,22 +125,28 @@ class attractionListRepo {
           
         }
 
-      });
-
+        for (var ele in attractionsQuery.docs) {
+          await FirebaseFirestore.instance.collection('attractions').doc(ele.id).update({
+            'userIds': userIds,
+          });
+        }
+ 
     }catch(e){
       print(e);
     }
     
   }
 
-  Future<void> deleteReview (reviews,placeId) async{
+  Future<void> deleteReview (reviews,placeId,userId) async{
 
+    bool isUserFound= false;
+    List userIds = [];
     try{
 
-      await FirebaseFirestore.instance.collection('attractions')
-      .where('placeId',isEqualTo: placeId).get()
-      .then((querySnapshot) {
-        for (var ele in querySnapshot.docs) {
+       QuerySnapshot attractionsQuery =await FirebaseFirestore.instance.collection('attractions')
+      .where('placeId',isEqualTo: placeId).get();
+
+        for (var ele in attractionsQuery.docs) {
 
             FirebaseFirestore.instance
             .collection('attractions')
@@ -138,7 +156,42 @@ class attractionListRepo {
           
         }
 
-      });
+         QuerySnapshot attractionsQuery2 =await FirebaseFirestore.instance.collection('attractions')
+      .where('placeId',isEqualTo: placeId).get();
+
+        for (var ele in attractionsQuery2.docs) {
+
+          reviews=ele.get("reviews");
+        }
+        
+        for(var i=0;i<reviews.length;i++){
+          if(reviews[i]["userId"]==userId){
+            isUserFound= true;
+            print("found");
+            break;
+          }else{
+            isUserFound= false;
+          }
+        
+        }
+
+        if(isUserFound == false){
+          for (var ele in attractionsQuery.docs) {
+            var value = await FirebaseFirestore.instance.collection('attractions').doc(ele.id).get();
+            List<dynamic>? ids = value.data()?['userIds']; 
+            if (ids != null) {
+              userIds.addAll(ids); 
+            }
+            userIds.removeWhere((element) => element==userId);
+            }
+            for (var ele in attractionsQuery.docs) {
+            await FirebaseFirestore.instance.collection('attractions').doc(ele.id).update({
+              'userIds': userIds,
+            });
+        }
+
+        }
+    
 
     }catch(e){
       print(e);

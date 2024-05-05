@@ -104,9 +104,11 @@ void initializeData() async {
   void addReview (){
     if(currentReviews.isEmpty && isfirstLoading == true){
       currentReviews = place.reviews;
-      print("currentReviews empty");
       isfirstLoading = false;
     }
+
+
+
     var uuid = const Uuid();
     final newReview = {
       "userId": userId,
@@ -121,18 +123,17 @@ void initializeData() async {
       currentReviews.add(newReview);
     });
     
-    BlocProvider.of<placeListBloc>(context).add(addReviewEvent(currentReviews, searchType, placeId));
+    BlocProvider.of<placeListBloc>(context).add(addReviewEvent(currentReviews, searchType, placeId,userId!));
 
 
   }
 
   void deleteReview (){
-    BlocProvider.of<placeListBloc>(context).add(deleteReviewEvent(currentReviews, searchType,placeId));
+    BlocProvider.of<placeListBloc>(context).add(deleteReviewEvent(currentReviews, searchType,placeId,userId!));
 
     if(currentReviews.isEmpty){
       isfirstLoading=false;
     }
-    print(currentReviews);
     setState(() {
       currentReviews;
     });
