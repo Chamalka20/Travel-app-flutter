@@ -5,7 +5,10 @@ import '../../models/place.dart';
 
 class cityRepo {
 
-  final auth.User? user=auth.FirebaseAuth.instance.currentUser;
+
+  String? getCurrentUserId(){
+    return auth.FirebaseAuth.instance.currentUser?.uid;
+  }
 
   Future<Place> getcityDetailes(placeId)async{
 
@@ -47,7 +50,7 @@ class cityRepo {
    Future addUserRecentlySearch(Place place)async{
 
     await FirebaseFirestore.instance
-      .collection('users').doc(user?.uid).collection('recentlySearch').add(
+      .collection('users').doc(getCurrentUserId()).collection('recentlySearch').add(
 
         place.toJson()
     
@@ -56,9 +59,9 @@ class cityRepo {
    }
 
    Future<List<Place>> getUserRecentlySearch() async {
-
+    
     final query=await FirebaseFirestore.instance
-                  .collection('users').doc(user?.uid).collection('recentlySearch').get();
+                  .collection('users').doc(getCurrentUserId()).collection('recentlySearch').get();
 
 
      final List<Place> list = [];

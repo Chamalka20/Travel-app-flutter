@@ -150,15 +150,12 @@ class _placesListState extends State<placesList> {
                                                           
                                                           child: InkWell(
                                                             onTap: () =>{
-                                                              //favorites =await fechApiData.getFavorites(),
-                                                                                            
+                                                                                   
                                                                 if (snapshot2.data?[index] == false) {
 
-                                                                  
                                                                       BlocProvider.of<placeListBloc>(context).add(placeAddToFavorites(atPlaceId: atPlaceId,
                                                                         placeName: attractionName, placeImgUrl: attractionImgUrl, type: type)),
                                                                  
-
                                                                   setState(() {
                                                                         snapshot2.data?[index] = true;
                                                                   }),
@@ -169,7 +166,6 @@ class _placesListState extends State<placesList> {
 
                                                                     BlocProvider.of<placeListBloc>(context).add(placeRemoveFromFavorites(atPlaceId: atPlaceId)),
 
-                                                                  
                                                                   setState(() {
                                                                         snapshot2.data?[index] = false;
                                                                   }),

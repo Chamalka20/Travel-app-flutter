@@ -19,6 +19,7 @@ import '../../blocs/trip/trip_bloc.dart';
 import '../../models/place.dart';
 import '../../models/trip.dart';
 import '../../repositories/user/userAuth_repo.dart';
+import '../../timeAgoSinceDate.dart';
 import '../components/shimmerLoading.dart';
 import 'placesList.dart';
 import 'reviewList.dart';
@@ -106,8 +107,6 @@ void initializeData() async {
       currentReviews = place.reviews;
       isfirstLoading = false;
     }
-
-
 
     var uuid = const Uuid();
     final newReview = {
@@ -1099,7 +1098,7 @@ void initializeData() async {
                                                   
                                                           ),
                                                           Padding(
-                                                            padding: const EdgeInsets.only(top:13,left:10,bottom:10),
+                                                            padding: const EdgeInsets.only(top:10,left:10,bottom:10),
                                                             child: Row(
                                                               children: [
                                                                 Container(
@@ -1113,21 +1112,65 @@ void initializeData() async {
                                                                     ),
                                                                   ),
                                                                 ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.only(left: 13),
-                                                                  child: SizedBox(
-                                                                    width: 250,
-                                                                    child: Text(currentReviews.isNotEmpty? currentReviews
-                                                                    [ currentReviews.length-1]["text"]:place.reviews[place.reviews.length-1]["text"],
-                                                                      style: GoogleFonts.cabin(
-                                                                        textStyle: const TextStyle(
-                                                                          color: Color.fromARGB(255, 112, 112, 112),
-                                                                          fontSize: 10,
-                                                                          fontWeight: FontWeight.w400
+                                                                Column(
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width:260,
+                                                                      child: Row(
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.only(left: 13),
+                                                                            child: SizedBox(
+                                                                              
+                                                                              child: Text(currentReviews.isNotEmpty? currentReviews
+                                                                              [ currentReviews.length-1]["name"]:place.reviews[place.reviews.length-1]["name"],
+                                                                                style: GoogleFonts.cabin(
+                                                                                  textStyle: const TextStyle(
+                                                                                    color: Color.fromARGB(255, 0, 0, 0),
+                                                                                    fontSize: 13,
+                                                                                    fontWeight: FontWeight.w600
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.only(left: 13),
+                                                                            child: SizedBox(
+                                                                              
+                                                                              child: Text(currentReviews.isNotEmpty?TimeAgoSince.timeAgoSinceDate( currentReviews
+                                                                              [ currentReviews.length-1]["publishAt"]):
+                                                                              TimeAgoSince.timeAgoSinceDate(place.reviews[place.reviews.length-1]["publishAt"].toDate()),
+                                                                                style: GoogleFonts.cabin(
+                                                                                  textStyle: const TextStyle(
+                                                                                    color: Color.fromARGB(255, 112, 112, 112),
+                                                                                    fontSize: 12,
+                                                                                    fontWeight: FontWeight.w300
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.only(left: 13),
+                                                                      child: SizedBox(
+                                                                        width: 250,
+                                                                        child: Text(currentReviews.isNotEmpty? currentReviews
+                                                                        [ currentReviews.length-1]["text"]:place.reviews[place.reviews.length-1]["text"],
+                                                                          style: GoogleFonts.cabin(
+                                                                            textStyle: const TextStyle(
+                                                                              color: Color.fromARGB(255, 112, 112, 112),
+                                                                              fontSize: 10,
+                                                                              fontWeight: FontWeight.w400
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                  ),
+                                                                  ],
                                                                 )
                                                               ],
                                                             ),
@@ -1149,78 +1192,70 @@ void initializeData() async {
                                               padding: const EdgeInsets.only(top:15,left:10),
                                               child: Row(
                                                 children: [
-                                                  GestureDetector(
-                                                    onTap: (){
-                                                      showGeneralDialog(
-                                                        context: context,
-                                                        pageBuilder: (context, anim1, anim2) {
-                                                        return reviewList(mFPAddReview:addReview, currentReviews:currentReviews.isNotEmpty?
-                                                         currentReviews:isfirstLoading?place.reviews:currentReviews,reviewText: (String val) {reviewText =val;},
-                                                          deleteReviews: (List<dynamic> val) { 
-                                                            currentReviews = val;
-                                                            deleteReview ();
-                                                           },);
-                                                        } ,
-                                                      );
-                                                    },
-                                                    child: Container(
-                                                      width:340,
-                                                      height:150,
-                                                      decoration:const BoxDecoration(
-                                                        color: const Color.fromARGB(255, 240, 238, 238),
-                                                        borderRadius: BorderRadius.all(Radius.circular(15))
-                                                      ),
-                                                      child: Column(
-                                                      children: [
-                                                          
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(top:13,left:10,bottom:10),
-                                                            child: Column(
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                  SizedBox(
-                                                                      width: 290,
-                                                                      height:45,
-                                                                      child: TextField(
-                                                                        controller: reviewTextController,                                                            
-                                                                        decoration: InputDecoration(
-                                                                          hintText: "Add first review for this place",
-                                                                          filled: true,
-                                                                          contentPadding: EdgeInsets.only(left: 14),
-                                                                          fillColor: Color.fromARGB(255, 207, 207, 207),
-                                                                          border: OutlineInputBorder(
-                                                                            borderRadius: BorderRadius.circular(25.0),
-                                                                            borderSide: const BorderSide(
-                                                                              width: 0,
-                                                                              style: BorderStyle.none,
-                                                                            ),
+                                                  Container(
+                                                    width:340,
+                                                    height:150,
+                                                    decoration:const BoxDecoration(
+                                                      color: const Color.fromARGB(255, 240, 238, 238),
+                                                      borderRadius: BorderRadius.all(Radius.circular(15))
+                                                    ),
+                                                    child: Column(
+                                                    children: [
+                                                        
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top:13,left:10,bottom:10),
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                SizedBox(
+                                                                    width: 290,
+                                                                    height:45,
+                                                                    child: TextField(
+                                                                      controller: reviewTextController,                                                            
+                                                                      decoration: InputDecoration(
+                                                                        hintText: "Add first review for this place",
+                                                                        filled: true,
+                                                                        contentPadding: EdgeInsets.only(left: 14),
+                                                                        fillColor: Color.fromARGB(255, 207, 207, 207),
+                                                                        border: OutlineInputBorder(
+                                                                          borderRadius: BorderRadius.circular(25.0),
+                                                                          borderSide: const BorderSide(
+                                                                            width: 0,
+                                                                            style: BorderStyle.none,
                                                                           ),
-                                                                          
                                                                         ),
+                                                                        
                                                                       ),
                                                                     ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.only(left:5),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.only(left:5),
+                                                                    child: GestureDetector(
+                                                                      onTap: () {
+                                                                        reviewText=reviewTextController.text;
+                                                                        addReview();
+                                                                        reviewTextController.text="";
+                                                                      },
                                                                       child: SizedBox(
                                                                         width:34,
                                                                         height:34,
                                                                         child: Image.asset('assets/images/chat-arrow-before.png'
                                                                         ),
                                                                       ),
-                                                                    )
-                                                                    
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                                                            
-                                                        ],
-                                                      ),
-                                                      
-                                                      ),
-                                                  )
+                                                                    ),
+                                                                  )
+                                                                  
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                                                          
+                                                      ],
+                                                    ),
+                                                    
+                                                    )
                                                 
                                                 ],
                                               ),
@@ -1293,7 +1328,7 @@ void initializeData() async {
                                                   
                                                           ),
                                                           Padding(
-                                                            padding: const EdgeInsets.only(top:13,left:10,bottom:10),
+                                                            padding: const EdgeInsets.only(top:10,left:10,bottom:10),
                                                             child: Row(
                                                               children: [
                                                                 Container(
@@ -1307,21 +1342,66 @@ void initializeData() async {
                                                                     ),
                                                                   ),
                                                                 ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.only(left: 13),
-                                                                  child: SizedBox(
-                                                                    width: 250,
-                                                                    child: Text(currentReviews.isNotEmpty? currentReviews
-                                                                    [ currentReviews.length-1]["text"]:place.reviews[place.reviews.length-1]["text"],
-                                                                      style: GoogleFonts.cabin(
-                                                                        textStyle: const TextStyle(
-                                                                          color: Color.fromARGB(255, 112, 112, 112),
-                                                                          fontSize: 10,
-                                                                          fontWeight: FontWeight.w400
+                                                                Column(
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width:260,
+                                                                      child: Row(
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.only(left: 13),
+                                                                            child: SizedBox(
+                                                                              
+                                                                              child: Text(currentReviews.isNotEmpty? currentReviews
+                                                                              [ currentReviews.length-1]["name"]:place.reviews[place.reviews.length-1]["name"],
+                                                                                style: GoogleFonts.cabin(
+                                                                                  textStyle: const TextStyle(
+                                                                                    color: Color.fromARGB(255, 0, 0, 0),
+                                                                                    fontSize: 13,
+                                                                                    fontWeight: FontWeight.w600
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.only(left: 18),
+                                                                            child: SizedBox(
+                                                                              
+                                                                              child: Text(currentReviews.isNotEmpty?TimeAgoSince.timeAgoSinceDate(currentReviews
+                                                                              [ currentReviews.length-1]["publishAt"]):
+                                                                              TimeAgoSince.timeAgoSinceDate(place.reviews[place.reviews.length-1]["publishAt"].toDate()),
+                                                                                style: GoogleFonts.cabin(
+                                                                                  textStyle: const TextStyle(
+                                                                                    color: Color.fromARGB(255, 112, 112, 112),
+                                                                                    fontSize: 12,
+                                                                                    fontWeight: FontWeight.w300
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                      
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.only(left: 13),
+                                                                      child: SizedBox(
+                                                                        width: 250,
+                                                                        child: Text(currentReviews.isNotEmpty? currentReviews
+                                                                        [ currentReviews.length-1]["text"]:place.reviews[place.reviews.length-1]["text"],
+                                                                          style: GoogleFonts.cabin(
+                                                                            textStyle: const TextStyle(
+                                                                              color: Color.fromARGB(255, 112, 112, 112),
+                                                                              fontSize: 10,
+                                                                              fontWeight: FontWeight.w400
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                  ),
+                                                                  ],
                                                                 )
                                                               ],
                                                             ),

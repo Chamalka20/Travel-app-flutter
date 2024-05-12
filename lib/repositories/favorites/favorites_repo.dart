@@ -4,8 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class favoritesRepo {
 
-  final auth.User? user=auth.FirebaseAuth.instance.currentUser;
-
+  String? getCurrentUserId(){
+    return auth.FirebaseAuth.instance.currentUser?.uid;
+  }
+  
   Future<List> isChecktFavorites (ids) async{
       
       List isaddRestaurantToFavorite = [];
@@ -14,7 +16,7 @@ class favoritesRepo {
 
         if (e.id != null) {
         QuerySnapshot querySnapshot=  await FirebaseFirestore.instance
-          .collection('users').doc(user?.uid).collection('favorites').where('placeId',isEqualTo: e.id).get();
+          .collection('users').doc(getCurrentUserId()).collection('favorites').where('placeId',isEqualTo: e.id).get();
 
           if(querySnapshot.docs.isNotEmpty){
 
@@ -37,12 +39,13 @@ class favoritesRepo {
   }
 
   Future<List<Favorite>> getFavorites () async{
-
+      
       var data =[];
       final List<Favorite> list = [];
 
       await FirebaseFirestore.instance
-        .collection('users').doc(user?.uid).collection('favorites').get().then((QuerySnapshot querySnapshot) => {
+        .collection('users').doc(getCurrentUserId()).collection('favorites').get()
+        .then((QuerySnapshot querySnapshot) => {
 
            querySnapshot.docs.forEach((doc) {
               
@@ -53,12 +56,12 @@ class favoritesRepo {
         });
 
       
-      data.forEach((element) {
+      for (var element in data) {
         
         var attr = Favorite.fromMap(element);
         list.add(attr);
 
-      });
+      }
 
 
       return list;
@@ -70,7 +73,7 @@ class favoritesRepo {
       bool isDataAdd = false;       
 
         await FirebaseFirestore.instance
-        .collection('users').doc(user?.uid).collection('favorites').add(
+        .collection('users').doc(getCurrentUserId()).collection('favorites').add(
            favorite.toJson()
         ).then((value) => {
           print('add'),
@@ -94,7 +97,7 @@ class favoritesRepo {
     //get spesific id to remove the favorite place-------------------
       await FirebaseFirestore.instance
             .collection('users')
-            .doc(user?.uid).collection('favorites').where('placeId',isEqualTo: placeId).get()
+            .doc(getCurrentUserId()).collection('favorites').where('placeId',isEqualTo: placeId).get()
             .then((QuerySnapshot querySnapshot) {
                 querySnapshot.docs.forEach((doc) {
 

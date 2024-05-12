@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -8,10 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/ui/navigationPage.dart';
 import 'package:travelapp/ui/tripDetailsPlan.dart';
-import 'package:travelapp/ui/fechApiData.dart';
 import 'package:uuid/uuid.dart';
 import '../blocs/trip/trip_bloc.dart';
 import '../models/place.dart';
@@ -684,18 +680,7 @@ class _createNewTripState extends State<createTrip> {
                                             child: TextButton(
                                               onPressed: () async {
         
-                                                //save user edit details--------------------------------------
-                                                final prefs = await SharedPreferences.getInstance();
-                                                final endata = prefs.getString('tripdays');
-                                                final storeTripDays =jsonDecode(endata!);
-        
-                                                final places = jsonEncode(storeTripDays['places']);
-                                                
-        
-                                                await fechApiData.editTrip(TripNameController.text,TripBudgetController.text
-                                                    ,TripLocationController.text,dateinput.text,TripDescriptionController.text,
-                                                    defultBacPhotoUrl.isNotEmpty?defultBacPhotoUrl:backGroundPlacePhotoUrl,daysDuration==null? storeTripDays['durationCount']:daysDuration.toString(),endDate?? storeTripDays['endDate'],places);
-        
+                                               
                                                 Navigator.push(
                                                 context,
                                                 MaterialPageRoute(builder: (context) =>  navigationPage(isBackButtonClick: true,autoSelectedIndex: 2,)),

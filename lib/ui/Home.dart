@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelapp/ui/fechApiData.dart';
 import "package:travelapp/ui/fechLastViews.dart";
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import '../blocs/user/user_bloc.dart';
@@ -69,27 +68,10 @@ class _homeState extends State<home> {
      
     
     var apiUrl1 = 'https://api.apify.com/v2/actor-tasks/detailed_camel~google-maps-scraper-task-1/runs?token=';
-    var apiUrl2 ='https://api.apify.com/v2/actor-tasks/detailed_camel~tripadvisor-scraper-task-2/runs?token=';
     final payload1 = {};
     
 
-final payload3 = {
-    "currency": "USD",
-    "debugLog": false,
-    "includeAttractions": true,
-    "includeHotels": true,
-    "includeRestaurants": true,
-    "includeReviews": true,
-    "includeTags": true,
-    "language": "en",
-    "locationFullName": "Colombo, Sri Lanka", 
-    "maxItems": 39,
-    "maxReviews": 20,
-    "proxyConfiguration": {
-      "useApifyProxy": true
-    },
-    "scrapeReviewerInfo": true
-  };
+
     
     
     //myLocationList= await fechApiData.fetchSuggestions(apiUrl2,payload2);
@@ -99,7 +81,7 @@ final payload3 = {
     if(lastViewsList.isEmpty && isBackButtonClick == false){
 
    
-    hotelList = await fechApiData.fetchSuggestions(apiUrl2,payload3);
+    
     lastViewsList = await fechLastViews.fetchSuggestions(apiUrl1,payload1);
     
       if (lastViewsList.isNotEmpty ){
@@ -191,7 +173,7 @@ final payload3 = {
 
         print("attractions:${attractionList.length}");
 
-      favorites =await fechApiData.getFavorites();
+
       
       print(isaddAttractionToFavorite);
 
@@ -768,7 +750,6 @@ final payload3 = {
                             itemCount: attractionList.length,
                             itemBuilder: (context, index) {
                               final attraction = attractionList[index];
-                              final atPlaceId = attraction['id'];
                               final attractionName = attraction['name'];
                               final attractionImgUrl = attraction['photoRef'];
                               final attractionRating = attraction['rating'];
@@ -848,14 +829,14 @@ final payload3 = {
                                                             child: GestureDetector(
                                                               onTap: () async =>{
 
-                                                                favorites =await fechApiData.getFavorites(),
+                                                               
 
                                                                 if (isaddAttractionToFavorite[index] == false) {
                                                                   
                                                                   setState(() {
                                                                     isaddAttractionToFavorite[index] = true;
                                                                   }),
-                                                                  await fechApiData.addToFavorite(atPlaceId,attractionName,attractionImgUrl,type),
+                                                                  
 
                                                                   //show message to the user-----------------
                                                                   ScaffoldMessenger.of(context)
@@ -867,7 +848,7 @@ final payload3 = {
                                                                     isaddAttractionToFavorite[index] = false;
                                                                   }),
                                                                   //remove favorite form the database-----------------
-                                                                  await fechApiData.removeFavorites(atPlaceId),
+                                                                  
 
                                                                   //show message to the user-----------------
                                                                     ScaffoldMessenger.of(context)

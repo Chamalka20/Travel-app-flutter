@@ -88,6 +88,14 @@ class placeListBloc extends Bloc<place_event,place_state>{
 
   }
 
+  Future <List<Favorite>> getFavorites() async {
+    
+    final List<Favorite> Favorites = await favRepo.getFavorites();
+      
+      return Favorites;
+
+  }
+
   Future <List> getWeather(lat,lng) async {
 
     weatherRepo repo = weatherRepo(lat: lat, lng: lng);

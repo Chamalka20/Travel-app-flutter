@@ -80,6 +80,7 @@ class userAuthRepo {
         email: email,
         password: password
       );
+      
     } on auth.FirebaseAuthException catch (e) {
       isSignIn=false;
       if (e.code == 'user-not-found') {
