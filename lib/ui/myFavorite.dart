@@ -34,8 +34,9 @@ class _myFavoriteState extends State<myFavorite> {
   tileMode: TileMode.clamp,
 );
 
-List<Favorite> favListSnapshot = [];
-bool isLoading= true;
+  List<Favorite> favListSnapshot = [];
+  bool isLoading= true;
+  bool isback = false;
 
   @override
   void initState() {
@@ -51,6 +52,30 @@ bool isLoading= true;
     });
   }
 
+  Future<void> navigateAndDisplaySelection(BuildContext context,placeType,placeId) async {
+
+    if(placeType=='locality'){
+                
+      isback=await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => locationDetails(
+            placeId:placeId,searchType:'city')));
+
+    }else{
+    
+      isback=await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => locationDetails(
+          placeId:placeId,searchType:'attraction')));
+
+    }
+    //refresh ui when pop--------
+    if(isback == true){
+      getFavorites();
+      isback=false;
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,22 +111,8 @@ bool isLoading= true;
                         return
                           GestureDetector(
                             onTap: () {
-                              if(favListSnapshot[index].placeType=='locality'){
-                
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => locationDetails(
-                                  placeId:favListSnapshot[index].placeId,searchType:'city')));
-                
-                              }else{
-                              
-                                Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => locationDetails(
-                                  placeId:favListSnapshot[index].placeId,searchType:'attraction')));
-                
-                              }  
-                
+                                navigateAndDisplaySelection(context,favListSnapshot[index].placeType,
+                                favListSnapshot[index].placeId);
                             },
                             child: Card(
                             color:const Color.fromARGB(255, 253, 250, 250),

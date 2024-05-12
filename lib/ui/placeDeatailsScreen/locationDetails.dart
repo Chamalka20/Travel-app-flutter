@@ -180,7 +180,7 @@ void initializeData() async {
       , child:WillPopScope(
     onWillPop: () async {
       
-      Navigator.pop(context);
+      Navigator.pop(context,true);
       return true;
     }, 
     child: Shimmer(
