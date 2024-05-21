@@ -8,7 +8,7 @@ import '../../models/place.dart';
 
 class PlaceCoveImage extends StatefulWidget {
   final bool isLoading;
-  final AsyncSnapshot<Place> placeDetails; 
+  final Place placeDetails; 
   const PlaceCoveImage({required this.isLoading,required this.placeDetails,super.key});
 
   @override
@@ -19,7 +19,7 @@ class PlaceCoveImage extends StatefulWidget {
 class _PlaceCoveImageState extends State<PlaceCoveImage> {
 
   final bool isLoading;
-  final AsyncSnapshot<Place> placeDetails; 
+  final Place placeDetails; 
 
   _PlaceCoveImageState(this.isLoading,this.placeDetails);
 
@@ -44,7 +44,7 @@ class _PlaceCoveImageState extends State<PlaceCoveImage> {
         decoration: BoxDecoration(
         
         image: DecorationImage(
-        image: NetworkImage(placeDetails.data!.photoRef),
+        image: NetworkImage(placeDetails.photoRef),
         fit: BoxFit.cover
                     
           ),
@@ -63,7 +63,7 @@ class _PlaceCoveImageState extends State<PlaceCoveImage> {
                       width:55,
                       height:55,
                       child: FutureBuilder(
-                        future:placeBloc.checkFavorites([placeDetails.data]),
+                        future:placeBloc.checkFavorites([placeDetails]),
                         builder: (BuildContext context, AsyncSnapshot<dynamic> favSnapshot) { 
                           
                           if(favSnapshot.hasData){
@@ -73,8 +73,8 @@ class _PlaceCoveImageState extends State<PlaceCoveImage> {
                                 onTap: () async =>{
                                 if (favSnapshot.data[0] == false) {
                                                        
-                                  BlocProvider.of<placeListBloc>(context).add(placeAddToFavorites(atPlaceId: placeDetails.data!.id,
-                                    placeName: placeDetails.data!.name, placeImgUrl: placeDetails.data!.photoRef, type: placeDetails.data!.type)),
+                                  BlocProvider.of<placeListBloc>(context).add(placeAddToFavorites(atPlaceId: placeDetails.id,
+                                    placeName: placeDetails.name, placeImgUrl: placeDetails.photoRef, type: placeDetails.type)),
                                     
                                         
                                     setState(() {
@@ -85,7 +85,7 @@ class _PlaceCoveImageState extends State<PlaceCoveImage> {
                                     
                                     //remove favorite form the database-----------------
                                         
-                                      BlocProvider.of<placeListBloc>(context).add(placeRemoveFromFavorites(atPlaceId:placeDetails.data!.id)),
+                                      BlocProvider.of<placeListBloc>(context).add(placeRemoveFromFavorites(atPlaceId:placeDetails.id)),
                                         
                                     
                                     setState(() {

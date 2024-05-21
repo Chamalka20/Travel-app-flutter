@@ -38,7 +38,7 @@ Other tools used included, Git for version control, Visual Studio Code IDEA for 
 •Trip Planning and Itinerary Creation: Users can plan their trips by selecting destinations, 
 specifying travel dates, and creating detailed itineraries. They can add activities, 
 attractions, and accommodations to their trip plans.<br>
-• Place Management: Users can search for places of interest, view detailed information 
+• place Management: Users can search for places of interest, view detailed information 
 about them, and add them to their trips or favorites. This feature enables users to 
 discover and organize places they want to visit.<br>
 • Favorites: The app allows users to curate a list of their favorite places, making it easy to 
