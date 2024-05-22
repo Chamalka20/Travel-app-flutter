@@ -1,20 +1,38 @@
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class NetworkController extends GetxController {
   final Connectivity _connectivity = Connectivity();
 
  @override
-void onInit() {
+Future<void> onInit() async {
   super.onInit();
+  initConnectivity();
   _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 }
 
-  void _updateConnectionStatus(ConnectivityResult connectivityResult) {
+Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      if (kDebugMode) {
+        print('Couldn\'t check connectivity status, error:${e}' );
+      }
+      return;
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult connectivityResult) async {
       
       if (connectivityResult == ConnectivityResult.none) {
+        await Future.delayed(const Duration(milliseconds: 100));
         Get.rawSnackbar(
           messageText: const Text(
             'PLEASE CONNECT TO THE INTERNET',
@@ -30,10 +48,14 @@ void onInit() {
           margin: EdgeInsets.zero,
           snackStyle: SnackStyle.GROUNDED
         );
+        
       } else {
+        
         if (Get.isSnackbarOpen) {
-          Get.closeCurrentSnackbar();
+            Get.closeCurrentSnackbar();
         }
+
+        
       }
   }
 }

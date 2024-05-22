@@ -15,7 +15,7 @@ import 'ui/Welcomepage.dart';
 import 'ui/navigationPage.dart';
 
 Future<void> checkLoggedIn() async {
- 
+  
   FirebaseAuth.instance.currentUser?.reload();
   FirebaseAuth.instance.authStateChanges().listen((user) { 
     if(user != null) {
@@ -37,8 +37,9 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await dotenv.load(fileName: '.env');
-  checkLoggedIn();
   Get.put<NetworkController>(NetworkController(),permanent:true);
+  checkLoggedIn();
+  
 }
 
 class MyApp extends StatelessWidget {
