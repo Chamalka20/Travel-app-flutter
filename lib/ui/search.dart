@@ -213,6 +213,14 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
               future:placeBloc.searchPlaces(capitalize(inputData), searchType),
               builder: (BuildContext context, results) { 
                 
+                if(results.connectionState==ConnectionState.waiting){
+                  return
+                  LoadingAnimationWidget.discreteCircle(
+                    color: const Color.fromARGB(255, 129, 129, 129), 
+                    size: 12,
+                  );
+                }
+
                 if(results.hasData){
 
                   return

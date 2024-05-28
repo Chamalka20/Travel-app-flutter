@@ -77,7 +77,7 @@ class _locationDetailsState extends State<locationDetails> {
 
   _locationDetailsState(this.placeId,this.searchType);
 
-  @override
+@override
 void initState() {
   super.initState();
   getplacesDetails();
