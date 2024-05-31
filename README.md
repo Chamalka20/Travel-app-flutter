@@ -22,6 +22,7 @@ synchronization.
   <img src="https://drive.google.com/uc?export=view&id=1F4iLS2x6eBN64COIh1t57wbmtqewqRbx" width="120px" height="250px">
   <img src="https://drive.google.com/uc?export=view&id=1voFcFy5W8ug0C0TB4ytVFq5OgkYr8hsY" width="120px" height="250px">
   <img src="https://drive.google.com/uc?export=view&id=18S26Hoey8R3UWmD8ruxovFv0z2MjVRBC" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=12XLg4tPy5i1oK_kEXpgXbRKO0rcAHjs1" width="120px" height="250px">
 </div>
 
 
