@@ -17,11 +17,12 @@ synchronization.
 <div style="display: flex;">
   <img src="https://drive.google.com/uc?export=view&id=1iMQIj6OKjwtvhL5JpSx4QslXlpOx4goI" width="120px" height="250px">
   <img src="https://drive.google.com/uc?export=view&id=1TGNtkOFRS_UWdvc3GhI79Hz6Lc_0vPC0" width="120px" height="250px">
-  <img src="https://drive.google.com/uc?export=view&id=1ofYLVtIuY0U9PeOAY6GZj2D41fJGV1zP" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=12zuyoLLoILR-cz3enrUqyX-GneD1TuoM" width="120px" height="250px">
   <img src="https://drive.google.com/uc?export=view&id=1EgH13X9ut5lxBklpI-39jhUQRoyc1e91" width="120px" height="250px">
   <img src="https://drive.google.com/uc?export=view&id=1F4iLS2x6eBN64COIh1t57wbmtqewqRbx" width="120px" height="250px">
   <img src="https://drive.google.com/uc?export=view&id=1voFcFy5W8ug0C0TB4ytVFq5OgkYr8hsY" width="120px" height="250px">
   <img src="https://drive.google.com/uc?export=view&id=18S26Hoey8R3UWmD8ruxovFv0z2MjVRBC" width="120px" height="250px">
+  <img src="https://drive.google.com/uc?export=view&id=12XLg4tPy5i1oK_kEXpgXbRKO0rcAHjs1" width="120px" height="250px">
 </div>
 
 
