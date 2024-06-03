@@ -118,130 +118,137 @@ class _mytripsState extends State<mytrips> {
                     Stack(
                       children: [
                         onGoingTrips.isNotEmpty?
-                        ListView.builder(
-                          cacheExtent: 9999, 
-                          itemCount: onGoingTrips.length,
-                          scrollDirection: Axis.horizontal, 
-                          itemBuilder: (context, index) {
-                            return
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 14,left:8),
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () async {
-
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => createTrip(placeName:'',placePhotoUrl: '',isEditTrip: true, trip: onGoingTrips[index],)));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(right:11,),
-                                        child: Container(
-                                          width: 230,
-                                          height: 160,
-                                          decoration: BoxDecoration(
-                                            color: Color.fromARGB(255, 216, 99, 99),
-                                            borderRadius: BorderRadius.circular(17),
-                                            image: DecorationImage(
-                                            image: NetworkImage(onGoingTrips[index].tripCoverPhoto),
-                                            fit: BoxFit.cover
-                                                        
+                        ScrollConfiguration(
+                          behavior:const ScrollBehavior(),
+                          child: GlowingOverscrollIndicator(
+                            axisDirection: AxisDirection.right,
+                            color: Color.fromARGB(255, 83, 83, 83),
+                            child: ListView.builder(
+                              cacheExtent: 9999, 
+                              itemCount: onGoingTrips.length,
+                              scrollDirection: Axis.horizontal, 
+                              itemBuilder: (context, index) {
+                                return
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 14,left:8),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                            
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => createTrip(placeName:'',placePhotoUrl: '',isEditTrip: true, trip: onGoingTrips[index],)));
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(right:11,),
+                                            child: Container(
+                                              width: 230,
+                                              height: 160,
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(255, 216, 99, 99),
+                                                borderRadius: BorderRadius.circular(17),
+                                                image: DecorationImage(
+                                                image: NetworkImage(onGoingTrips[index].tripCoverPhoto),
+                                                fit: BoxFit.cover
+                                                            
+                                                  ),
+                                              
                                               ),
-                                          
-                                          ),
-                                          child:Padding(
-                                            padding: const EdgeInsets.only(left:13,top:11),
-                                            child: Column(
-                                              children: [
-                                                Row(
+                                              child:Padding(
+                                                padding: const EdgeInsets.only(left:13,top:11),
+                                                child: Column(
                                                   children: [
-                                                    SizedBox(
-                                                      height:25,
-                                                      width:60,
-                                                      child: Card(
-                                                          elevation: 0,
-                                                            color:const Color.fromARGB(200, 240, 238, 238),
-                                                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                            shape: RoundedRectangleBorder(
-                                                                    borderRadius: BorderRadius.circular(5.0),
-                                                                  ),
-                                                              child: FittedBox(
-                                                                      fit: BoxFit.cover,
-                                                                      child:Padding(
-                                                                        padding: const EdgeInsets.all(10.0),
-                                                                        child: Text('${onGoingTrips[index].places.length} days',
-                                                                          style: GoogleFonts.cabin(
-                                                                            // ignore: prefer_const_constructors
-                                                                            textStyle: TextStyle(
-                                                                            color: Color.fromARGB(255, 95, 95, 95),
-                                                                            fontSize: 12,
-                                                                            fontWeight: FontWeight.bold,
-                                                                                                                                      
-                                                                            ) 
-                                                                          )
-                                                                                                                                        
-                                                                        ),
-                                                                      ), 
-                                                                )
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          height:25,
+                                                          width:60,
+                                                          child: Card(
+                                                              elevation: 0,
+                                                                color:const Color.fromARGB(200, 240, 238, 238),
+                                                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                                shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(5.0),
+                                                                      ),
+                                                                  child: FittedBox(
+                                                                          fit: BoxFit.cover,
+                                                                          child:Padding(
+                                                                            padding: const EdgeInsets.all(10.0),
+                                                                            child: Text('${onGoingTrips[index].places.length} days',
+                                                                              style: GoogleFonts.cabin(
+                                                                                // ignore: prefer_const_constructors
+                                                                                textStyle: TextStyle(
+                                                                                color: Color.fromARGB(255, 95, 95, 95),
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                                                                          
+                                                                                ) 
+                                                                              )
+                                                                                                                                            
+                                                                            ),
+                                                                          ), 
+                                                                    )
+                                                              
+                                                          ),
+                                                    ),
+                                                      ],
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(top:70),
+                                                      child: Row(
+                                                        children: [
                                                           
+                                                          Text('${onGoingTrips[index].tripName}',
+                                                                style: GoogleFonts.cabin(
+                                                              // ignore: prefer_const_constructors
+                                                              textStyle: TextStyle(
+                                                              color: Color.fromARGB(255, 255, 255, 255),
+                                                              fontSize: 23,
+                                                              fontWeight: FontWeight.bold,
+                                                                                              
+                                                              ) 
+                                                          
+                                                          ),
+                                                        ),
+                                                        ],
                                                       ),
-                                                ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(top:4),
+                                                      child: Row(
+                                                        children: [
+                                                          
+                                                          Text(onGoingTrips[index].tripDuration,
+                                                                style: GoogleFonts.cabin(
+                                                              // ignore: prefer_const_constructors
+                                                              textStyle: TextStyle(
+                                                              color: Color.fromARGB(255, 255, 255, 255),
+                                                              fontSize: 11,
+                                                              fontWeight: FontWeight.bold,
+                                                                                              
+                                                              ) 
+                                                          
+                                                          ),
+                                                        ),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ],
+                                              
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top:70),
-                                                  child: Row(
-                                                    children: [
-                                                      
-                                                      Text('${onGoingTrips[index].tripName}',
-                                                            style: GoogleFonts.cabin(
-                                                          // ignore: prefer_const_constructors
-                                                          textStyle: TextStyle(
-                                                          color: Color.fromARGB(255, 255, 255, 255),
-                                                          fontSize: 23,
-                                                          fontWeight: FontWeight.bold,
-                                                                                          
-                                                          ) 
-                                                      
-                                                      ),
-                                                    ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top:4),
-                                                  child: Row(
-                                                    children: [
-                                                      
-                                                      Text(onGoingTrips[index].tripDuration,
-                                                            style: GoogleFonts.cabin(
-                                                          // ignore: prefer_const_constructors
-                                                          textStyle: TextStyle(
-                                                          color: Color.fromARGB(255, 255, 255, 255),
-                                                          fontSize: 11,
-                                                          fontWeight: FontWeight.bold,
-                                                                                          
-                                                          ) 
-                                                      
-                                                      ),
-                                                    ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                          
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-                          
-                          }
-                        
+                                  );
+                              
+                              }
+                            
+                            ),
+                          ),
                         ):
                         Padding(
                           padding: const EdgeInsets.only(top:47),
@@ -310,125 +317,132 @@ class _mytripsState extends State<mytrips> {
                     Stack(
                       children: [
                         pastTrips.isNotEmpty?
-                        GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 190,
-                            childAspectRatio: 3 / 2,
-                            crossAxisSpacing:3,
-                            mainAxisSpacing: 10),
-                          cacheExtent: 9999, 
-                          itemCount: pastTrips.length,
-                          itemBuilder: (context, index) {
-                            return
-                              GestureDetector(
-                                onTap: () async {
-              
-                                 
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right:11,left:10),
-                                  child: Container(
-                                    width: 180,
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 216, 99, 99),
-                                      borderRadius: BorderRadius.circular(17),
-                                      image: DecorationImage(
-                                      image: NetworkImage(pastTrips[index].tripCoverPhoto),
-                                      fit: BoxFit.cover
-                                                  
+                        ScrollConfiguration(
+                          behavior: const ScrollBehavior(),
+                          child: GlowingOverscrollIndicator(
+                            axisDirection: AxisDirection.down,
+                            color: Color.fromARGB(255, 83, 83, 83),
+                            child: GridView.builder(
+                              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 190,
+                                childAspectRatio: 3 / 2,
+                                crossAxisSpacing:3,
+                                mainAxisSpacing: 10),
+                              cacheExtent: 9999, 
+                              itemCount: pastTrips.length,
+                              itemBuilder: (context, index) {
+                                return
+                                  GestureDetector(
+                                    onTap: () async {
+                                          
+                                     
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right:11,left:10),
+                                      child: Container(
+                                        width: 180,
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 216, 99, 99),
+                                          borderRadius: BorderRadius.circular(17),
+                                          image: DecorationImage(
+                                          image: NetworkImage(pastTrips[index].tripCoverPhoto),
+                                          fit: BoxFit.cover
+                                                      
+                                            ),
+                                        
                                         ),
-                                    
-                                    ),
-                                    child:Padding(
-                                      padding: const EdgeInsets.only(left:9,top:11),
-                                      child: Column(
-                                        children: [
-                                          Row(
+                                        child:Padding(
+                                          padding: const EdgeInsets.only(left:9,top:11),
+                                          child: Column(
                                             children: [
-                                              SizedBox(
-                                                height:20,
-                                                width:50,
-                                                child: Card(
-                                                    elevation: 0,
-                                                      color:const Color.fromARGB(200, 240, 238, 238),
-                                                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                      shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(5.0),
-                                                            ),
-                                                        child: FittedBox(
-                                                                fit: BoxFit.cover,
-                                                                child:Padding(
-                                                                  padding: const EdgeInsets.all(10.0),
-                                                                  child: Text('${pastTrips[index].places.length} days',
-                                                                    style: GoogleFonts.cabin(
-                                                                      // ignore: prefer_const_constructors
-                                                                      textStyle: TextStyle(
-                                                                      color: Color.fromARGB(255, 95, 95, 95),
-                                                                      fontSize: 8,
-                                                                      fontWeight: FontWeight.bold,
-                                                                                                                                
-                                                                      ) 
-                                                                    )
-                                                                                                                                  
-                                                                  ),
-                                                                ), 
-                                                          )
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    height:20,
+                                                    width:50,
+                                                    child: Card(
+                                                        elevation: 0,
+                                                          color:const Color.fromARGB(200, 240, 238, 238),
+                                                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                          shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(5.0),
+                                                                ),
+                                                            child: FittedBox(
+                                                                    fit: BoxFit.cover,
+                                                                    child:Padding(
+                                                                      padding: const EdgeInsets.all(10.0),
+                                                                      child: Text('${pastTrips[index].places.length} days',
+                                                                        style: GoogleFonts.cabin(
+                                                                          // ignore: prefer_const_constructors
+                                                                          textStyle: TextStyle(
+                                                                          color: Color.fromARGB(255, 95, 95, 95),
+                                                                          fontSize: 8,
+                                                                          fontWeight: FontWeight.bold,
+                                                                                                                                    
+                                                                          ) 
+                                                                        )
+                                                                                                                                      
+                                                                      ),
+                                                                    ), 
+                                                              )
+                                                        
+                                                    ),
+                                              ),
+                                                ],
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top:45),
+                                                child: Row(
+                                                  children: [
                                                     
+                                                    Text(pastTrips[index].tripName,
+                                                          style: GoogleFonts.cabin(
+                                                        // ignore: prefer_const_constructors
+                                                        textStyle: TextStyle(
+                                                        color: Color.fromARGB(255, 255, 255, 255),
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                                                        
+                                                        ) 
+                                                    
+                                                    ),
+                                                  ),
+                                                  ],
                                                 ),
-                                          ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top:4),
+                                                child: Row(
+                                                  children: [
+                                                    
+                                                    Text(pastTrips[index].tripDuration,
+                                                          style: GoogleFonts.cabin(
+                                                        // ignore: prefer_const_constructors
+                                                        textStyle: TextStyle(
+                                                        color: Color.fromARGB(255, 255, 255, 255),
+                                                        fontSize: 8,
+                                                        fontWeight: FontWeight.bold,
+                                                                                        
+                                                        ) 
+                                                    
+                                                    ),
+                                                  ),
+                                                  ],
+                                                ),
+                                              ),
                                             ],
+                                        
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top:45),
-                                            child: Row(
-                                              children: [
-                                                
-                                                Text(pastTrips[index].tripName,
-                                                      style: GoogleFonts.cabin(
-                                                    // ignore: prefer_const_constructors
-                                                    textStyle: TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255),
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                                                    
-                                                    ) 
-                                                
-                                                ),
-                                              ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top:4),
-                                            child: Row(
-                                              children: [
-                                                
-                                                Text(pastTrips[index].tripDuration,
-                                                      style: GoogleFonts.cabin(
-                                                    // ignore: prefer_const_constructors
-                                                    textStyle: TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255),
-                                                    fontSize: 8,
-                                                    fontWeight: FontWeight.bold,
-                                                                                    
-                                                    ) 
-                                                
-                                                ),
-                                              ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                    
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
-                          
-                          }
-                        
+                                  );
+                              
+                              }
+                            
+                            ),
+                          ),
                         ):
                         Container(
                           child: Column(

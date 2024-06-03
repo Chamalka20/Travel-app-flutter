@@ -213,104 +213,111 @@ class _tripDetailsPlanState extends State<tripDetailsPlan> {
             child: Column(
               children: [
                 Expanded(
-                    child: ListView.builder(
-                              cacheExtent: 9999,
-                              scrollDirection: Axis.vertical, 
-                              itemCount: listTiles.length,
-                              itemBuilder: (context, index) {
-                                
-                                if (index == listTiles.length - 1) {
-                
-                                  
-                                  return GestureDetector(
-                                    // add trip days------------------------------
-                                    onTap: ()  {
-            
-                                     
-                                      
-                                    },
-                                    child: Container(
-                                        width: 40,
-                                        height:40,
-                                        color:Color.fromARGB(0, 230, 230, 230),
-                                        child: Image.asset('assets/images/add-black.png')
-                                        
-                                        ),
-                                  );
-                                }else{
-                
-                                  return GestureDetector(
-                                    onTap: () async {
-            
-                                        BlocProvider.of<tripBloc>(context).add
-                                            (planingPlaces([place],index));
-                                        
-                                        setState(() {
-            
-                                          day =listTiles[index];
-                                          isAddPlace = false;
-                                          currentIndex=index;
-                                          //when tap the add button scrolling to the related day-----------------------------
-                                          scrollController.animateTo(
-                                              index * (100),
-                                              duration: const Duration(microseconds: 800),
-                                              curve: Curves.decelerate,
-                                          );
-            
-                                          tripDays;
-                                        });
-                                        print(index);
-                                      
-            
-                                      Navigator.pop(context, true);
-                                      
-                                      
+                    child: ScrollConfiguration(
+                      behavior:const ScrollBehavior(),
+                      child: GlowingOverscrollIndicator(
+                        axisDirection: AxisDirection.down,
+                        color:Color.fromARGB(255, 83, 83, 83),
+                        child: ListView.builder(
+                                  cacheExtent: 9999,
+                                  scrollDirection: Axis.vertical, 
+                                  itemCount: listTiles.length,
+                                  itemBuilder: (context, index) {
                                     
-                                    },
-                                    child: Card(
-                                    elevation: 0,
-                                    color:Color.fromARGB(255, 0, 0, 0),
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10.0),
-                                          ),
-                                    child:Container(
-                                      height:60,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
+                                    if (index == listTiles.length - 1) {
+                                        
+                                      
+                                      return GestureDetector(
+                                        // add trip days------------------------------
+                                        onTap: ()  {
+                                    
+                                         
+                                          
+                                        },
+                                        child: Container(
+                                            width: 40,
+                                            height:40,
+                                            color:Color.fromARGB(0, 230, 230, 230),
+                                            child: Image.asset('assets/images/add-black.png')
+                                            
+                                            ),
+                                      );
+                                    }else{
+                                        
+                                      return GestureDetector(
+                                        onTap: () async {
+                                    
+                                            BlocProvider.of<tripBloc>(context).add
+                                                (planingPlaces([place],index));
+                                            
+                                            setState(() {
+                                    
+                                              day =listTiles[index];
+                                              isAddPlace = false;
+                                              currentIndex=index;
+                                              //when tap the add button scrolling to the related day-----------------------------
+                                              scrollController.animateTo(
+                                                  index * (100),
+                                                  duration: const Duration(microseconds: 800),
+                                                  curve: Curves.decelerate,
+                                              );
+                                    
+                                              tripDays;
+                                            });
+                                            print(index);
+                                          
+                                    
+                                          Navigator.pop(context, true);
+                                          
+                                          
+                                        
+                                        },
+                                        child: Card(
+                                        elevation: 0,
+                                        color:Color.fromARGB(255, 0, 0, 0),
+                                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                                        shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                        child:Container(
+                                          height:60,
+                                          child: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
-                                              Text(
-                                                'Day ${index+1}',
-                                                style: GoogleFonts.cabin(
-                                                          // ignore: prefer_const_constructors
-                                                          textStyle: TextStyle(
-                                                          color: Color.fromARGB(255, 255, 255, 255),
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight.bold,
-                                                                                        
-                                                          ) 
-                                                        )
-                                              ),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    'Day ${index+1}',
+                                                    style: GoogleFonts.cabin(
+                                                              // ignore: prefer_const_constructors
+                                                              textStyle: TextStyle(
+                                                              color: Color.fromARGB(255, 255, 255, 255),
+                                                              fontSize: 14,
+                                                              fontWeight: FontWeight.bold,
+                                                                                            
+                                                              ) 
+                                                            )
+                                                  ),
+                                                ],
+                                              )
                                             ],
-                                          )
-                                        ],
-                                      ),
+                                          ),
+                                          
+                                        )
+                                          
+                                        
+                                        ),
+                                      );
+                                        
+                                    }
                                       
-                                    )
-                                      
-                                    
-                                    ),
-                                  );
-                
-                                }
-                                  
-                              },
-                            ),
+                                  },
+                                ),
+                      ),
+                    ),
                 ),
               ],
             ),
@@ -464,121 +471,128 @@ Widget buildBody(BuildContext parentContext) {
                                      child: Row(
                                        children: [
                                          Expanded(
-                                         child: ListView.builder(
-                                           controller: scrollController,
-                                           cacheExtent: 9999,
-                                           scrollDirection: Axis.horizontal, 
-                                           itemCount: listTiles.length,
-                                           itemBuilder: (context, index) {
+                                         child: ScrollConfiguration(
+                                           behavior:const ScrollBehavior(),
+                                           child: GlowingOverscrollIndicator(
+                                             axisDirection: AxisDirection.right,
+                                             color:Color.fromARGB(255, 83, 83, 83),
+                                             child: ListView.builder(
+                                               controller: scrollController,
+                                               cacheExtent: 9999,
+                                               scrollDirection: Axis.horizontal, 
+                                               itemCount: listTiles.length,
+                                               itemBuilder: (context, index) {
+                                                 
+                                                 if (index == listTiles.length - 1) {
+                                                       
+                                                   
+                                                   return GestureDetector(
+                                                     // add trip days------------------------------
+                                                     onTap: () async {
+                                                       currentIndex=0;
+                                                       
+                                                       setState(()  {
+                                                         listTiles.add(listTiles.length+1);
+                                                         isAddDay =true;
+                                                         currentIndex =index;
+                                                         
+                                                       });
                                              
-                                             if (index == listTiles.length - 1) {
-          
-                                               
-                                               return GestureDetector(
-                                                 // add trip days------------------------------
-                                                 onTap: () async {
-                                                   currentIndex=0;
-                                                   
-                                                   setState(()  {
-                                                     listTiles.add(listTiles.length+1);
-                                                     isAddDay =true;
-                                                     currentIndex =index;
-                                                     
-                                                   });
-
-                                                   if(newEndDate!=null && newDurationCount!=null){
-                                                    var oldDate =newEndDate;
-                                                    var newDate=DateTime(oldDate.year,oldDate.month,oldDate.day+1);
-                                                    newEndDate= newDate;
-                                                    newDurationCount+=1;
-                                                    print(newDurationCount);
-                                                   }else{
-
-                                                    var oldDate =trip.endDate;
-                                                    var newDate=DateTime(oldDate.year,oldDate.month,oldDate.day+1);
-                                                    newEndDate= newDate;
-                                                    newDurationCount=trip.durationCount+1;
-                                                    print(newDurationCount);
-
-                                                   }
-
-                                                    //when tap the add button scrolling to the center-----------------------------
-                                                   scrollController.animateTo(scrollController.offset + 130,
-                                                     curve: Curves.linear, duration: Duration(milliseconds: 500));
-
-                                                    BlocProvider.of<tripBloc>(context).add
-                                                      (planingPlaces([],currentIndex));
-                                                  
-                                                   
-
-                                                   
-                                                   
-                                                 },
-                                                 child: Container(
-                                                     width: 40,
-                                                     height:40,
-                                                     color:Color.fromARGB(0, 230, 230, 230),
-                                                     child: Image.asset('assets/images/add-black.png')
-                                                     
-                                                     ),
-                                               );
-                                             }else{
-                 
-                                               return InkWell(
-                                                 onTap: ()=>{
-          
-                                                  setState(() {
-              
-                                                    day =listTiles[index];
-                                                    currentIndex = index;
-                                                    tripDays;
-                                                  }),
-                                                  
-                                                 },
-                                                 child: Card(
-                                                 elevation: 0,
-                                                 color:currentIndex==index?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 230, 230, 230),
-                                                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                 shape: RoundedRectangleBorder(
-                                                         borderRadius: BorderRadius.circular(10.0),
-                                                       ),
-                                                 child:Container(
-                                                   width: 100,
-                                                   height:30,
-                                                   child: Column(
-                                                     mainAxisAlignment: MainAxisAlignment.center,
-                                                     crossAxisAlignment: CrossAxisAlignment.center,
-                                                     children: [
-                                                       Row(
+                                                       if(newEndDate!=null && newDurationCount!=null){
+                                                        var oldDate =newEndDate;
+                                                        var newDate=DateTime(oldDate.year,oldDate.month,oldDate.day+1);
+                                                        newEndDate= newDate;
+                                                        newDurationCount+=1;
+                                                        print(newDurationCount);
+                                                       }else{
+                                             
+                                                        var oldDate =trip.endDate;
+                                                        var newDate=DateTime(oldDate.year,oldDate.month,oldDate.day+1);
+                                                        newEndDate= newDate;
+                                                        newDurationCount=trip.durationCount+1;
+                                                        print(newDurationCount);
+                                             
+                                                       }
+                                             
+                                                        //when tap the add button scrolling to the center-----------------------------
+                                                       scrollController.animateTo(scrollController.offset + 130,
+                                                         curve: Curves.linear, duration: Duration(milliseconds: 500));
+                                             
+                                                        BlocProvider.of<tripBloc>(context).add
+                                                          (planingPlaces([],currentIndex));
+                                                      
+                                                       
+                                             
+                                                       
+                                                       
+                                                     },
+                                                     child: Container(
+                                                         width: 40,
+                                                         height:40,
+                                                         color:Color.fromARGB(0, 230, 230, 230),
+                                                         child: Image.asset('assets/images/add-black.png')
+                                                         
+                                                         ),
+                                                   );
+                                                 }else{
+                                                              
+                                                   return InkWell(
+                                                     onTap: ()=>{
+                                                       
+                                                      setState(() {
+                                                           
+                                                        day =listTiles[index];
+                                                        currentIndex = index;
+                                                        tripDays;
+                                                      }),
+                                                      
+                                                     },
+                                                     child: Card(
+                                                     elevation: 0,
+                                                     color:currentIndex==index?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 230, 230, 230),
+                                                     clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                     shape: RoundedRectangleBorder(
+                                                             borderRadius: BorderRadius.circular(10.0),
+                                                           ),
+                                                     child:Container(
+                                                       width: 100,
+                                                       height:30,
+                                                       child: Column(
                                                          mainAxisAlignment: MainAxisAlignment.center,
                                                          crossAxisAlignment: CrossAxisAlignment.center,
                                                          children: [
-                                                           Text(
-                                                             'Day ${index+1}',
-                                                             style: GoogleFonts.cabin(
-                                                                       // ignore: prefer_const_constructors
-                                                                       textStyle: TextStyle(
-                                                                       color: currentIndex==index?Color.fromARGB(255, 255, 255, 255):Color.fromARGB(255, 0, 0, 0),
-                                                                       fontSize: 14,
-                                                                       fontWeight: FontWeight.bold,
-                                                                                                     
-                                                                       ) 
-                                                                     )
-                                                           ),
+                                                           Row(
+                                                             mainAxisAlignment: MainAxisAlignment.center,
+                                                             crossAxisAlignment: CrossAxisAlignment.center,
+                                                             children: [
+                                                               Text(
+                                                                 'Day ${index+1}',
+                                                                 style: GoogleFonts.cabin(
+                                                                           // ignore: prefer_const_constructors
+                                                                           textStyle: TextStyle(
+                                                                           color: currentIndex==index?Color.fromARGB(255, 255, 255, 255):Color.fromARGB(255, 0, 0, 0),
+                                                                           fontSize: 14,
+                                                                           fontWeight: FontWeight.bold,
+                                                                                                         
+                                                                           ) 
+                                                                         )
+                                                               ),
+                                                             ],
+                                                           )
                                                          ],
-                                                       )
-                                                     ],
-                                                   ),
+                                                       ),
+                                                       
+                                                     )
+                                                       
+                                                     
+                                                     ),
+                                                   );
+                                                              
+                                                 }
                                                    
-                                                 )
-                                                   
-                                                 
-                                                 ),
-                                               );
-                 
-                                             }
-                                               
-                                           },
+                                               },
+                                             ),
+                                           ),
                                          ),  
                                  
                                          ),
@@ -638,95 +652,102 @@ Widget buildBody(BuildContext parentContext) {
                       Expanded(
                         child: Stack(
                           children: [
-                          ReorderableListView(
-                            
-                            padding: const EdgeInsets.symmetric(horizontal: 10,),
-                            onReorder: reorderData,
-                            children: <Widget>[
-                              
-                              for (int index = 0; index < state.storeTripPlaces['$currentIndex'].length; index += 1)
+                         ScrollConfiguration(
+                           behavior:const ScrollBehavior(),
+                           child: GlowingOverscrollIndicator(
+                            axisDirection: AxisDirection.down,
+                            color:Color.fromARGB(255, 83, 83, 83),
+                            child: ReorderableListView(
                                 
+                                padding: const EdgeInsets.symmetric(horizontal: 10,),
+                                onReorder: reorderData,
+                                children: <Widget>[
                                   
-                                    Card(
-                                      color:const Color.fromARGB(255, 240, 238, 238),
-                                      key: ValueKey(index),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(17.0),
-                                      ),
-                                      elevation: 2,
-                                      child: Container(
-                                        height:90,
-                                        child: Row(
-                                        children: [
-                                          Container(
-                                            height: 90,
-                                            width: 90,
-                                              decoration: BoxDecoration(
-                                              
-                                              borderRadius: BorderRadius.circular(17),
-                                              image: DecorationImage(
-                                                image: NetworkImage(state.storeTripPlaces['$currentIndex'][index]['imageUrls']),
-                                                fit: BoxFit.cover
-                                                        
+                                  for (int index = 0; index < state.storeTripPlaces['$currentIndex'].length; index += 1)
+                                    
+                                      
+                                        Card(
+                                          color:const Color.fromARGB(255, 240, 238, 238),
+                                          key: ValueKey(index),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(17.0),
+                                          ),
+                                          elevation: 2,
+                                          child: Container(
+                                            height:90,
+                                            child: Row(
+                                            children: [
+                                              Container(
+                                                height: 90,
+                                                width: 90,
+                                                  decoration: BoxDecoration(
+                                                  
+                                                  borderRadius: BorderRadius.circular(17),
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(state.storeTripPlaces['$currentIndex'][index]['imageUrls']),
+                                                    fit: BoxFit.cover
+                                                            
+                                                  ),
+                                                
+                                                ),
                                               ),
-                                            
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(left:6,top:5),
-                                            child: Column(
-                                              children: [
-                                                Row(
+                                              Padding(
+                                                padding: const EdgeInsets.only(left:6,top:5),
+                                                child: Column(
                                                   children: [
-                                                    SizedBox(
-                                                      width: 200,
-                                                      child: Text(state.storeTripPlaces['$currentIndex'][index]['title'],
-                                                        style: GoogleFonts.cabin(
-                                                              // ignore: prefer_const_constructors
-                                                              textStyle: TextStyle(
-                                                              color: const Color.fromARGB(255, 27, 27, 27),
-                                                              fontSize: 15,
-                                                              fontWeight: FontWeight.w600,
-                                                      
-                                                              ) 
-                                                            ),
-                                                      
-                                                      ),
-                                                    )
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                            
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top:35),
-                                            child: Column(
-                                              children: [
-                                                SizedBox(
-                                                  width:30,
-                                                  child: Text('${index+1}',
-                                                    style: GoogleFonts.cabin(
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 200,
+                                                          child: Text(state.storeTripPlaces['$currentIndex'][index]['title'],
+                                                            style: GoogleFonts.cabin(
                                                                   // ignore: prefer_const_constructors
                                                                   textStyle: TextStyle(
                                                                   color: const Color.fromARGB(255, 27, 27, 27),
-                                                                  fontSize: 20,
+                                                                  fontSize: 15,
                                                                   fontWeight: FontWeight.w600,
                                                           
                                                                   ) 
                                                                 ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
+                                                          
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top:35),
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      width:30,
+                                                      child: Text('${index+1}',
+                                                        style: GoogleFonts.cabin(
+                                                                      // ignore: prefer_const_constructors
+                                                                      textStyle: TextStyle(
+                                                                      color: const Color.fromARGB(255, 27, 27, 27),
+                                                                      fontSize: 20,
+                                                                      fontWeight: FontWeight.w600,
+                                                              
+                                                                      ) 
+                                                                    ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                            )
                                           )
-                                        ],
-                                        )
-                                      )
-                                    ),
-                              
-                            ]
-                          ),
+                                        ),
+                                  
+                                ]
+                              ),
+                            ),
+                         ),
                           Visibility(
                           visible: state.storeTripPlaces['$currentIndex'].isNotEmpty,
                             child: Positioned(

@@ -229,191 +229,198 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
                       child: Expanded(
                         child:Stack(
                           children:[ 
-                            ListView.builder(
-                              itemCount: results.data?.length,
-                              itemBuilder: (context, index) {
-                                final searchRe = results.data?[index];
-                                final name = searchRe?.name;
-                                final photoReference =searchRe?.photoRef;
-                                final  placeId = searchRe?.id;
+                            ScrollConfiguration(
+                              behavior:const ScrollBehavior(),
+                              child: GlowingOverscrollIndicator(
+                                axisDirection: AxisDirection.down,
+                                color:Color.fromARGB(255, 100, 100, 100),
+                                child: ListView.builder(
+                                  itemCount: results.data?.length,
+                                  itemBuilder: (context, index) {
+                                    final searchRe = results.data?[index];
+                                    final name = searchRe?.name;
+                                    final photoReference =searchRe?.photoRef;
+                                    final  placeId = searchRe?.id;
+                                    
+                                                          
+                                    return Column(
+                                      children: [
+                                        //set bottom border-----------------------------
+                                        GestureDetector(
+                                          onLongPress: () {
+                                                          
+                                            // visible only places select------------------- 
+                                            if(isSelectPlaces ==true){
+                                                          
+                                              setState(() {
+                                              isOnLongPress = true;
+                                            });
+                                                          
+                                            }
+                                            
+                                            
+                                          },
+                                          onTap: () {
+                                                          
+                                            if(isOnLongPress!= true){
+                                                          
+                                              if(searchType == 'city'){
+                                                          
+                                              Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) =>  locationDetails(placeId:placeId,searchType:'city')));
                                 
-                          
-                                return Column(
-                                  children: [
-                                    //set bottom border-----------------------------
-                                    GestureDetector(
-                                      onLongPress: () {
-                          
-                                        // visible only places select------------------- 
-                                        if(isSelectPlaces ==true){
-                          
-                                          setState(() {
-                                          isOnLongPress = true;
-                                        });
-                          
-                                        }
-                                        
-                                        
-                                      },
-                                      onTap: () {
-                          
-                                        if(isOnLongPress!= true){
-                          
-                                          if(searchType == 'city'){
-                          
-                                          Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) =>  locationDetails(placeId:placeId,searchType:'city')));
-
-                                          if(RecentlySearchList.isNotEmpty){
-                                            bool contains=false;
-                                            for (var element in RecentlySearchList) { 
-   
-                                              if(element.name.contains(results.data![index].name)){
-
-                                               contains = true;
+                                              if(RecentlySearchList.isNotEmpty){
+                                                bool contains=false;
+                                                for (var element in RecentlySearchList) { 
+                                   
+                                                  if(element.name.contains(results.data![index].name)){
+                                
+                                                   contains = true;
+                                                    
+                                                  }else{
+                                                    
+                                                    
+                                                  }
+                                                  
+                                                }
+                                                if(contains!=true){
+                                                   BlocProvider.of<placeListBloc>(context).add(addUserRecentlySearch(id:results.data![index].id , name: results.data![index].name, address: results.data![index].address,
+                                                  openingHours: results.data![index].openingHours, phone: results.data![index].phone, photoRef: results.data![index].photoRef,
+                                                  type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
+                                                }
+                                                
                                                 
                                               }else{
-                                                
+                                
+                                                BlocProvider.of<placeListBloc>(context).add(addUserRecentlySearch(id:results.data![index].id , name: results.data![index].name, address: results.data![index].address,
+                                                openingHours: results.data![index].openingHours, phone: results.data![index].phone, photoRef: results.data![index].photoRef,
+                                                type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
                                                 
                                               }
                                               
-                                            }
-                                            if(contains!=true){
-                                               BlocProvider.of<placeListBloc>(context).add(addUserRecentlySearch(id:results.data![index].id , name: results.data![index].name, address: results.data![index].address,
-                                              openingHours: results.data![index].openingHours, phone: results.data![index].phone, photoRef: results.data![index].photoRef,
-                                              type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
-                                            }
-                                            
-                                            
-                                          }else{
-
-                                            BlocProvider.of<placeListBloc>(context).add(addUserRecentlySearch(id:results.data![index].id , name: results.data![index].name, address: results.data![index].address,
-                                            openingHours: results.data![index].openingHours, phone: results.data![index].phone, photoRef: results.data![index].photoRef,
-                                            type: results.data![index].type, latitude: results.data![index].latitude, longitude: results.data![index].longitude));
-                                            
-                                          }
-                                          
-
-                                         
-                                                        
-                          
-                                        }else if(searchType == 'attraction'){
-                                          Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) =>  locationDetails(placeId:placeId,searchType:'attraction')));
-                          
-                          
-                                        }
-                          
-                                      }
-                          
-                                      
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(left:6),
-                                            child: Container(
-                                              width: 340,
-                                              decoration: BoxDecoration(
-                                                border: Border(
-                                                  bottom: BorderSide(
-                                                    color: Color.fromARGB(255, 226, 226, 226).withOpacity(0.5), 
-                                                    width: 1, 
-                                                  ),
-                                                ),
-                                              ),//------------------------
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(left: 9),
-                                                      child: Container(
-                                                        width:37,
-                                                        height:37,
-                                                        child: CircleAvatar(
-                                                          radius: 40,
-                                                          backgroundImage:NetworkImage(photoReference!),
+                                
+                                             
+                                                            
                                                           
-                                                        ),
+                                            }else if(searchType == 'attraction'){
+                                              Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) =>  locationDetails(placeId:placeId,searchType:'attraction')));
+                                                          
+                                                          
+                                            }
+                                                          
+                                          }
+                                                          
+                                          
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left:6),
+                                                child: Container(
+                                                  width: 340,
+                                                  decoration: BoxDecoration(
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                        color: Color.fromARGB(255, 226, 226, 226).withOpacity(0.5), 
+                                                        width: 1, 
                                                       ),
                                                     ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(left:6),
-                                                      child: Column(
-                                                        
-                                                        children: [
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(bottom:4),
-                                                            child: Row(
-                                                              children: [
-                                                                SizedBox(
-                                                                  width:245,
-                                                                  child: Text(name!,
-                                                                    overflow: TextOverflow.ellipsis,
-                                                                    style: GoogleFonts.cabin(
-                                                                      // ignore: prefer_const_constructors
-                                                                      textStyle: TextStyle(
-                                                                      color: const Color.fromARGB(255, 27, 27, 27),
-                                                                      fontSize: 14,
-                                                                      fontWeight: FontWeight.w700,
-                                                                                                              
-                                                                      ) 
-                                                                    )
-                                                                  ),
-                                                                ),
-                                                                
-                                                              ],
+                                                  ),//------------------------
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Row(
+                                                      
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(left: 9),
+                                                          child: Container(
+                                                            width:37,
+                                                            height:37,
+                                                            child: CircleAvatar(
+                                                              radius: 40,
+                                                              backgroundImage:NetworkImage(photoReference!),
+                                                              
                                                             ),
                                                           ),
-                                                          
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: isOnLongPress,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          setState(() {
-                                                    
-                                                            if(selectedIds[0]['places'].contains(placeId)){
-                                                            selectedIds[0]['places'].remove(placeId);
-                                                    
-                                                            }else{
-                                                              selectedIds[0]['places'].add(placeId);
-                                                    
-                                                            }
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(left:6),
+                                                          child: Column(
                                                             
-                                                          });
-                                                    
-                                                              print(selectedIds);
-                                                        },
-                                                        child: SizedBox(
-                                                          height: 25,
-                                                          width: 25,
-                                                          child:selectedIds[0]['places'].contains(placeId)?Image.asset("assets/images/correct.png") :Image.asset("assets/images/dry-clean.png")
-                                                          
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(bottom:4),
+                                                                child: Row(
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width:245,
+                                                                      child: Text(name!,
+                                                                        overflow: TextOverflow.ellipsis,
+                                                                        style: GoogleFonts.cabin(
+                                                                          // ignore: prefer_const_constructors
+                                                                          textStyle: TextStyle(
+                                                                          color: const Color.fromARGB(255, 27, 27, 27),
+                                                                          fontSize: 14,
+                                                                          fontWeight: FontWeight.w700,
+                                                                                                                  
+                                                                          ) 
+                                                                        )
+                                                                      ),
+                                                                    ),
+                                                                    
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              
+                                                            ],
                                                           ),
-                                                      ),
-                                                    )
-                                                  ],
+                                                        ),
+                                                        Visibility(
+                                                          visible: isOnLongPress,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              setState(() {
+                                                        
+                                                                if(selectedIds[0]['places'].contains(placeId)){
+                                                                selectedIds[0]['places'].remove(placeId);
+                                                        
+                                                                }else{
+                                                                  selectedIds[0]['places'].add(placeId);
+                                                        
+                                                                }
+                                                                
+                                                              });
+                                                        
+                                                                  print(selectedIds);
+                                                            },
+                                                            child: SizedBox(
+                                                              height: 25,
+                                                              width: 25,
+                                                              child:selectedIds[0]['places'].contains(placeId)?Image.asset("assets/images/correct.png") :Image.asset("assets/images/dry-clean.png")
+                                                              
+                                                              ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ), 
                                                 ),
-                                              ), 
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    )
-                                    
+                                        )
+                                        
+                                              
+                                      ],
+                                              
+                                    );
                                           
-                                  ],
-                                          
-                                );
-                                      
-                              }
+                                  }
+                                ),
+                              ),
                             ),
                             Visibility(
                               visible: isOnLongPress,
@@ -508,76 +515,81 @@ String capitalize(String s) =>s.isNotEmpty? s[0].toUpperCase() + s.substring(1):
                       RecentlySearchList =recentlySearch.data!;  
                       return
                          Expanded(
-                           child: SingleChildScrollView(
-                             child: ListView.builder(
-                               shrinkWrap: true,
-                               physics: const ScrollPhysics(),
-                               scrollDirection: Axis.vertical,
-                               itemCount: recentlySearch.data!.length,
-                               itemBuilder: (context, index) {
-                                 
-                                 return
-                                   Row(
-                                     children: [
-                                       GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) =>  locationDetails(placeId:recentlySearch.data![index].id,searchType:'city')));
-                                        },
-                                         child: SizedBox(
-                                           child: Card(
-                                             elevation: 0,
-                                             color:const Color.fromARGB(255, 240, 238, 238),
-                                             shape: RoundedRectangleBorder(
-                                                     borderRadius: BorderRadius.circular(17.0),
-                                                   ),
-                                         
-                                             child:Column(
-                                               mainAxisAlignment: MainAxisAlignment.center,
-                                               crossAxisAlignment: CrossAxisAlignment.center, 
-                                               children: [
-                                                 SizedBox(
-                                                 
+                           child: ScrollConfiguration(
+                             behavior:const ScrollBehavior(),
+                             child: GlowingOverscrollIndicator(
+                               axisDirection: AxisDirection.down,
+                               color:const Color.fromARGB(255, 0, 0, 0),
+                               child: ListView.builder(
+                                 shrinkWrap: true,
+                                 physics: const ScrollPhysics(),
+                                 scrollDirection: Axis.vertical,
+                                 itemCount: recentlySearch.data!.length,
+                                 itemBuilder: (context, index) {
+                                   
+                                   return
+                                     Row(
+                                       children: [
+                                         GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) =>  locationDetails(placeId:recentlySearch.data![index].id,searchType:'city')));
+                                          },
+                                           child: SizedBox(
+                                             child: Card(
+                                               elevation: 0,
+                                               color:const Color.fromARGB(255, 240, 238, 238),
+                                               shape: RoundedRectangleBorder(
+                                                       borderRadius: BorderRadius.circular(17.0),
+                                                     ),
+                                           
+                                               child:Column(
+                                                 mainAxisAlignment: MainAxisAlignment.center,
+                                                 crossAxisAlignment: CrossAxisAlignment.center, 
+                                                 children: [
+                                                   SizedBox(
                                                    
-                                                   child: Row(
-                                                     mainAxisAlignment: MainAxisAlignment.center,
-                                                     crossAxisAlignment: CrossAxisAlignment.center,
-                                                     children: [
                                                      
-                                                       FittedBox(
-                                                         fit: BoxFit.cover,
-                                                         child: Padding(
-                                                           padding: const EdgeInsets.only(left:8,right:8,top:8,bottom:8),
-                                                           child: Text(recentlySearch.data![index].name,
-                                                                 style: GoogleFonts.cabin(
-                                                             // ignore: prefer_const_constructors
-                                                             textStyle: TextStyle(
-                                                             color: const Color.fromARGB(255, 27, 27, 27),
-                                                             fontSize: 14,
-                                                             fontWeight: FontWeight.bold,
-                                                                                           
-                                                             ) 
-                                                             )
+                                                     child: Row(
+                                                       mainAxisAlignment: MainAxisAlignment.center,
+                                                       crossAxisAlignment: CrossAxisAlignment.center,
+                                                       children: [
+                                                       
+                                                         FittedBox(
+                                                           fit: BoxFit.cover,
+                                                           child: Padding(
+                                                             padding: const EdgeInsets.only(left:8,right:8,top:8,bottom:8),
+                                                             child: Text(recentlySearch.data![index].name,
+                                                                   style: GoogleFonts.cabin(
+                                                               // ignore: prefer_const_constructors
+                                                               textStyle: TextStyle(
+                                                               color: const Color.fromARGB(255, 27, 27, 27),
+                                                               fontSize: 14,
+                                                               fontWeight: FontWeight.bold,
+                                                                                             
+                                                               ) 
+                                                               )
+                                                             ),
                                                            ),
-                                                         ),
-                                                       ),          
-                                                     ],
+                                                         ),          
+                                                       ],
+                                                     ),
                                                    ),
-                                                 ),
-                                                 
-                                               ],
-                                                             
-                                                             
-                                             )
+                                                   
+                                                 ],
+                                                               
+                                                               
+                                               )
+                                             ),
                                            ),
                                          ),
-                                       ),
-                                     ],
-                                   );
-                                                        
-                                },
-                               
+                                       ],
+                                     );
+                                                          
+                                  },
+                                 
+                               ),
                              ),
                            ),
                          );
