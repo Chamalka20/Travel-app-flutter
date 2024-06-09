@@ -22,6 +22,7 @@ import '../../models/trip.dart';
 import '../../repositories/user/userAuth_repo.dart';
 import '../../timeAgoSinceDate.dart';
 import '../components/shimmerLoading.dart';
+import '../components/topButtonIndicator.dart';
 import 'placesList.dart';
 import 'reviewList.dart';
 
@@ -1091,18 +1092,25 @@ void initializeData() async {
                                             children: [
                                               GestureDetector(
                                                 onTap: (){
-                                                  
-                                                  showGeneralDialog(
+                                                  showModalBottomSheet(
+                                                    isDismissible: false,
+                                                    backgroundColor: Colors.transparent,
                                                     context: context,
-                                                    
-                                                    pageBuilder: (context, anim1, anim2) {
-                                                    return reviewList(mFPAddReview:addReview,
+                                                    isScrollControlled: true,
+                                                    useSafeArea: true,
+                                                    barrierLabel:
+                                                        MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                                                    barrierColor: const Color.fromARGB(137, 0, 0, 0).withOpacity(0.35),
+                                                    shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20),
+                                                    ),
+                                                    builder: (context) => reviewList(mFPAddReview:addReview,
                                                       currentReviews:currentReviews.isNotEmpty? currentReviews:placeDetails.reviews,
                                                       reviewText: (String val) {reviewText =val;}, deleteReviews:
                                                       (List<dynamic> val) { 
                                                           deleteReview (val);
-                                                      } ,);
-                                                    },
+                                                      } ,
+                                                    ),
                                                   );
                                                 },
                                                 child: Container(
@@ -1320,19 +1328,25 @@ void initializeData() async {
                                               GestureDetector(
                                                 onTap: (){
                                                   
-                                                  showGeneralDialog(
+                                                  showModalBottomSheet(
+                                                    isDismissible: false,
+                                                    backgroundColor: Colors.transparent,
                                                     context: context,
-                                                    
-                                                    pageBuilder: (context, anim1, anim2) {
-                                                    return reviewList(mFPAddReview:addReview,
+                                                    isScrollControlled: true,
+                                                    useSafeArea: true,
+                                                    barrierLabel:
+                                                        MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                                                    barrierColor: const Color.fromARGB(137, 0, 0, 0).withOpacity(0.35),
+                                                    shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20),
+                                                    ),
+                                                    builder: (context) => reviewList(mFPAddReview:addReview,
                                                       currentReviews:currentReviews,
                                                       reviewText: (String val) {reviewText =val;},
                                                       deleteReviews: (List<dynamic> val) { 
-                                                          
                                                           deleteReview (val);
-              
-                                                        } ,);
-                                                    },
+                                                        } ,
+                                                      ),
                                                   );
                                                 },
                                                 child: Container(
@@ -1467,8 +1481,6 @@ void initializeData() async {
                                           ),
                                         ),
                                       ),
-                                        
-                                      
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: TextButton(
@@ -1485,9 +1497,10 @@ void initializeData() async {
                           
                                               return
                                               SizedBox(
-                                                height:200,
+                                                height:210,
                                                 child: Column(
                                                   children: [
+                                                    const TopButtonIndicator(),
                                                     Padding(
                                                       padding: const EdgeInsets.only(left:12,top:12),
                                                       child: Row(
